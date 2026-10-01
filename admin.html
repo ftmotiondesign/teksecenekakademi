@@ -166,7 +166,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
 <section id="applications" class="section"><div class="box">
 <div class="section-head"><div><h2>Başvurular</h2><small>Ön kayıt, bursluluk, deneme ve seviye tespit.</small></div><button class="secondary" id="exportApps">CSV Dışa Aktar</button></div>
 <div class="toolbar"><input id="appSearch" placeholder="Ad, telefon, başvuru no ara"><select id="appType"><option value="">Tüm Türler</option><option>Ön Kayıt</option><option>Bursluluk</option><option>Deneme Sınavı</option><option>Seviye Tespit</option></select><select id="appStatus"><option value="">Tüm Durumlar</option><option>Yeni Başvuru</option><option>Arandı</option><option>Görüşüldü</option><option>Kayıt Oldu</option><option>Kayıt Olmadı</option></select></div>
-<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>İlçe / Okul</th><th>Veli Durumu</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
 </div></section>
 
 <section id="people" class="section">
@@ -321,7 +321,10 @@ function renderPeople(){
   var parentUrl='https://ftmotiondesign.github.io/teksecenekakademi/parent.html';
   var waText='Merhaba '+(x.veliAd||'')+', Tek Seçenek Akademi başvurunuz alınmıştır.\n\nÖğrenci: '+(x.ad||'-')+'\nSınıf: '+(x.sinif||'-')+'\nTakip No: '+(x.basvuruNo||'-')+'\n\nTakip numaranız ve başvuruda kullandığınız veli telefon numarasıyla Veli Girişi bölümünden giriş yaparak öğrencinizin başvuru durumunu, kayıt sürecini, sınav sonuçlarını, puan ve sıralamasını ve kurum duyurularını takip edebilirsiniz.\n\nVeli Paneli: '+parentUrl;
   var waUrl=phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(waText):'#';
-  return '<tr><td><b>'+esc(x.veliAd||'-')+'</b></td><td><b>'+esc(x.telefon||'-')+'</b></td><td>'+esc(x.ad||'-')+'</td><td>'+esc(x.sinif||'-')+'</td><td><b>'+esc(x.basvuruNo||'-')+'</b></td><td>'+esc(x.type||'-')+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><span class="pill">'+esc(x.status||'Yeni Başvuru')+'</span></td><td>'+(phone?'<a class="wa-send" target="_blank" rel="noopener" href="'+waUrl+'">WhatsApp Gönder</a>':'<span class="pill">Telefon yok</span>')+'</td></tr>';
+  var vs=x.veliStatus||'Yeni Veli';
+  var opts=['Yeni Veli','Giriş Bilgisi Gönderildi','Panel Aktif','İletişime Geçildi','Kayıt Sürecinde','Kayıt Tamamlandı','Pasif'];
+  var statusSelect='<select data-velistatus="'+esc(x.id)+'">'+opts.map(function(s){return '<option'+(s===vs?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>';
+  return '<tr><td><b>'+esc(x.veliAd||'-')+'</b></td><td><b>'+esc(x.telefon||'-')+'</b></td><td>'+esc(x.ad||'-')+'</td><td>'+esc(x.sinif||'-')+'</td><td><b>'+esc(x.basvuruNo||'-')+'</b></td><td>'+esc(x.type||'-')+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td>'+statusSelect+'</td><td>'+(phone?'<a class="wa-send" target="_blank" rel="noopener" href="'+waUrl+'">WhatsApp Gönder</a>':'<span class="pill">Telefon yok</span>')+'</td></tr>';
  }).join(''):'<tr><td colspan="9" class="empty">Veli kaydı bulunamadı.</td></tr>';
 
  var students=[];
@@ -389,7 +392,18 @@ document.body.addEventListener('click',function(e){
  if(d.hasAttribute('data-delsimple')){var t=d.getAttribute('data-delsimple'),m=SIMPLE[t],sid=d.getAttribute('data-id');set(m[0],get(m[0],[]).filter(function(x){return String(x.id)!==sid}));renderSimple(t)}
  if(d.hasAttribute('data-addsimple')){var t2=d.getAttribute('data-addsimple'),m2=SIMPLE[t2],h=prompt(m2[2]+' başlığı / adı:');if(h){var tx=prompt('Açıklama:')||'';var arr=get(m2[0],[]);arr.unshift({id:String(Date.now()),head:h,text:tx});set(m2[0],arr);renderSimple(t2)}}
 });
-document.body.addEventListener('change',function(e){if(e.target.hasAttribute('data-status')){var id=e.target.getAttribute('data-status'),a=get(APP_KEY,[]);a.forEach(function(x){if(String(x.id)===id)x.status=e.target.value});set(APP_KEY,a);updateStats()}});
+document.body.addEventListener('change',function(e){
+ if(e.target.hasAttribute('data-status')){
+  var id=e.target.getAttribute('data-status'),a=get(APP_KEY,[]);
+  a.forEach(function(x){if(String(x.id)===id)x.status=e.target.value});
+  set(APP_KEY,a);updateStats();
+ }
+ if(e.target.hasAttribute('data-velistatus')){
+  var vid=e.target.getAttribute('data-velistatus'),va=get(APP_KEY,[]);
+  va.forEach(function(x){if(String(x.id)===vid)x.veliStatus=e.target.value});
+  set(APP_KEY,va);renderPeople();
+ }
+});
 
 function addCategoryNow(){
  var input=el('newCategory'); if(!input)return;
