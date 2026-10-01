@@ -48,6 +48,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <button data-page="results">📊 Sonuçlar</button>
 <button data-page="result-categories">🗂 Sonuç Kategorileri</button>
 <button data-page="announcements">◉ Duyuru & Kampanya</button>
+<button data-page="banner">🖼 Ana Sayfa Banner</button>
 <button data-page="teachers">👩‍🏫 Öğretmenler</button>
 <button data-page="success">★ Başarılar</button>
 <button data-page="reviews">♡ Yorumlar</button>
@@ -233,6 +234,22 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <section id="success" class="section"><div class="box"><div class="section-head"><h2>Başarılar</h2><button class="primary" data-addsimple="success">+ Başarı Ekle</button></div><div id="successList" class="list"></div></div></section>
 <section id="reviews" class="section"><div class="box"><div class="section-head"><h2>Yorumlar</h2><button class="primary" data-addsimple="review">+ Yorum Ekle</button></div><div id="reviewList" class="list"></div></div></section>
 
+
+<section id="banner" class="section">
+  <div class="box">
+    <div class="section-head">
+      <div><h2>Ana Sayfa Banner</h2><small>Ana sayfadaki 3 bannerı buradan yönetin.</small></div>
+      <button class="secondary" id="resetHero">Varsayılana Dön</button>
+    </div>
+    <div class="hint">Görsel alanına repo içindeki dosya adını yazabilirsiniz: bina.png, Başlıksız-1.png, Başlıksız-2.png gibi.</div>
+    <div id="heroAdminList" class="list"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="primary" id="saveHero">Bannerları Kaydet</button>
+      <span id="heroSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
+    </div>
+  </div>
+</section>
+
 <section id="programs" class="section"><div class="box"><h2>Programlar</h2><div class="list">
 <div class="item"><b>5–7. Sınıf</b><span class="pill">Aktif</span></div>
 <div class="item"><b>8. Sınıf LGS</b><span class="pill">Aktif</span></div>
@@ -256,8 +273,9 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 var APP_KEY='tsa_applications_v1';
 var RESULT_KEY='tsa_results_v1';
 var CAT_KEY='tsa_result_categories_v1';
+var HERO_KEY='tsa_hero_slides_v1';
 var SIMPLE={announcement:['tsa_announcements_v1','announcementList','Duyuru'],teacher:['tsa_teachers_v1','teacherList','Öğretmen'],success:['tsa_success_v1','successList','Başarı'],review:['tsa_reviews_v1','reviewList','Yorum']};
-var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
+var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],banner:['Ana Sayfa Banner','Ana sayfadaki slider bannerlarını yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
 function el(id){return document.getElementById(id)}
 function get(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function set(key,val){localStorage.setItem(key,JSON.stringify(val))}
@@ -275,6 +293,7 @@ function showPage(id){
  if(id==='results')renderResults();
  if(id==='result-categories')renderCategories();
  if(id==='announcements')renderSimple('announcement');
+ if(id==='banner')renderHeroAdmin();
  if(id==='teachers')renderSimple('teacher');
  if(id==='success')renderSimple('success');
  if(id==='reviews')renderSimple('review');
@@ -451,6 +470,42 @@ function renderCategories(){
 }
 function renderResults(){var q=el('resultSearch').value.toLowerCase(),exam=el('examFilter').value;var all=get(RESULT_KEY,[]);var exams=[];all.forEach(function(x){var n=x.examName||x.code||'Sınav';if(exams.indexOf(n)<0)exams.push(n)});exams.sort();var old=exam;el('examFilter').innerHTML='<option value="">Tüm Sınavlar</option>'+exams.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');el('examFilter').value=old;var list=all.filter(function(x){var n=x.examName||x.code||'Sınav';return(!q||[x.category,x.examName,x.code,x.studentNo,x.name].join(' ').toLowerCase().indexOf(q)>-1)&&(!old||n===old)});el('resultsBody').innerHTML=list.length?list.map(function(x){return '<tr><td>'+esc(x.category||'-')+'</td><td><b>'+esc(x.examName||x.code||'Sınav')+'</b></td><td>'+esc(x.code)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.score)+'</td><td>'+esc(x.percentile||'-')+'</td><td>'+esc(x.rank||'-')+'</td><td><button class="danger" data-delresult="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="9" class="empty">Henüz sonuç eklenmedi.</td></tr>'}
 function csvDownload(name,rows){var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}).join(';')}).join('\n');var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+
+function defaultHeroSlides(){
+ return [
+  {image:'bina.png',tag:'ŞEHZADELER • MANİSA',title:'Geleceğin İçin',highlight:'Tek Seçenek',text:'5, 6, 7, 8, 9, 10, 11 ve 12. sınıflar; LGS, TYT, AYT, YDT, İngilizce ve Deneme Kulübü.',btn1:'Ön Kayıt Oluştur',link1:'#basvurular',btn2:'Sana Uygun Programı Bul',link2:'#program-bul'},
+  {image:'Başlıksız-1.png',tag:'BURSULULUK SINAVI',title:'Başarıya Giden Yolda',highlight:'Şansını Yakala',text:'Bursluluk sınavı başvurunu oluştur, eğitim fırsatlarını değerlendir ve geleceğin için güçlü bir adım at.',btn1:'Bursluluk Başvurusu',link1:'#basvurular',btn2:'Bilgi Al',link2:'#iletisim'},
+  {image:'Başlıksız-2.png',tag:'DENEME KULÜBÜ',title:'Hedefini Ölç,',highlight:'Gelişimini Takip Et',text:'Türkiye geneli ve kurum içi denemelerle seviyeni gör, eksiklerini belirle ve sınava daha güçlü hazırlan.',btn1:'Deneme Başvurusu',link1:'#basvurular',btn2:'Sonuç Sorgula',link2:'#sonuc'}
+ ];
+}
+function heroSlidesData(){var a=get(HERO_KEY,[]);return Array.isArray(a)&&a.length?a:defaultHeroSlides()}
+function renderHeroAdmin(){
+ var a=heroSlidesData();
+ el('heroAdminList').innerHTML=a.map(function(x,i){
+  return '<div class="item" style="display:block"><div style="font-weight:900;margin-bottom:10px">Banner '+(i+1)+'</div>'+
+   '<div class="form">'+
+   '<div class="field"><label>Görsel Dosyası</label><input data-hero="'+i+'" data-key="image" value="'+esc(x.image||'')+'"></div>'+
+   '<div class="field"><label>Üst Etiket</label><input data-hero="'+i+'" data-key="tag" value="'+esc(x.tag||'')+'"></div>'+
+   '<div class="field"><label>Ana Başlık</label><input data-hero="'+i+'" data-key="title" value="'+esc(x.title||'')+'"></div>'+
+   '<div class="field"><label>Turuncu Vurgu</label><input data-hero="'+i+'" data-key="highlight" value="'+esc(x.highlight||'')+'"></div>'+
+   '<div class="field full"><label>Açıklama</label><textarea data-hero="'+i+'" data-key="text">'+esc(x.text||'')+'</textarea></div>'+
+   '<div class="field"><label>1. Buton Yazısı</label><input data-hero="'+i+'" data-key="btn1" value="'+esc(x.btn1||'')+'"></div>'+
+   '<div class="field"><label>1. Buton Linki</label><input data-hero="'+i+'" data-key="link1" value="'+esc(x.link1||'')+'"></div>'+
+   '<div class="field"><label>2. Buton Yazısı</label><input data-hero="'+i+'" data-key="btn2" value="'+esc(x.btn2||'')+'"></div>'+
+   '<div class="field"><label>2. Buton Linki</label><input data-hero="'+i+'" data-key="link2" value="'+esc(x.link2||'')+'"></div>'+
+   '</div></div>';
+ }).join('');
+}
+function saveHeroAdmin(){
+ var a=heroSlidesData().map(function(x){return Object.assign({},x)});
+ document.querySelectorAll('[data-hero][data-key]').forEach(function(inp){
+  var i=parseInt(inp.getAttribute('data-hero'),10),k=inp.getAttribute('data-key');
+  if(a[i])a[i][k]=inp.value.trim();
+ });
+ set(HERO_KEY,a);
+ var s=el('heroSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+}
+
 function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
 
 document.getElementById('nav').addEventListener('click',function(e){var b=e.target.closest('button[data-page]');if(!b)return;showPage(b.getAttribute('data-page'))});
@@ -596,6 +651,8 @@ var templates={
 el('bulkTemplate').addEventListener('change',function(){if(this.value&&templates[this.value])el('bulkMessage').value=templates[this.value]});
 el('prepareBulk').addEventListener('click',renderBulkRecipients);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi'});
+var saveHeroBtn=el('saveHero');if(saveHeroBtn)saveHeroBtn.addEventListener('click',saveHeroAdmin);
+var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){set(HERO_KEY,defaultHeroSlides());renderHeroAdmin();});
 showPage(location.hash.slice(1)||'dashboard');
 })();
 </script>
