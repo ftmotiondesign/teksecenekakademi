@@ -341,7 +341,7 @@ function renderPeople(){
  students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.telefon,x.okul,x.action].join(' ').toLowerCase().indexOf(q)>-1});
  el('studentsBody').innerHTML=students.length?students.map(function(x){
   var sel=x.appId?'<select data-studentaction="'+esc(x.appId)+'">'+studentOpts.map(function(s){return '<option'+(s===x.action?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>':'<span class="pill">'+esc(x.action)+'</span>';
-  var save=x.appId?'<button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button>':'<span class="pill">Başvuru kaydı yok</span>';
+  var save=x.appId?'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button><span id="studentSaved-'+esc(x.appId)+'" style="display:none;color:#187f4a;font-weight:900;font-size:12px">✓ Kaydedildi</span></div>':'<span class="pill">Başvuru kaydı yok</span>';
   return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td>'+sel+'</td><td>'+save+'</td></tr>';
  }).join(''):'<tr><td colspan="8" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
 }
@@ -392,8 +392,14 @@ document.body.addEventListener('click',function(e){
  if(saveStudent){
   var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
   sa.forEach(function(x){if(String(x.id)===String(sid)){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.studentActionUpdatedAt=new Date().toISOString();studentSaved=true}});
-  if(studentSaved){set(APP_KEY,sa);renderPeople();alert('Öğrenci durumu kaydedildi.');}
-  else alert('Öğrenci kaydı bulunamadı.');
+  if(studentSaved){
+   set(APP_KEY,sa);
+   var savedText=document.getElementById('studentSaved-'+sid);
+   if(savedText){
+    savedText.style.display='inline';
+    setTimeout(function(){savedText.style.display='none';},2200);
+   }
+  }else alert('Öğrenci kaydı bulunamadı.');
   return;
  }
  if(d.hasAttribute('data-editcat')){
