@@ -95,11 +95,6 @@ form.addEventListener('submit',async e=>{
   const password=passwordInput.value;
   const remember=rememberInput.checked;
 
-  if(email!==ADMIN_EMAIL){
-    showError('Bu hesap yönetici olarak yetkili değil.');
-    return;
-  }
-
   loginBtn.disabled=true;
   loginBtn.textContent='Giriş yapılıyor...';
 
@@ -107,8 +102,10 @@ form.addEventListener('submit',async e=>{
     await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);
     const credential=await signInWithEmailAndPassword(auth,email,password);
 
-    if(!credential.user || String(credential.user.email||'').toLowerCase()!==ADMIN_EMAIL){
-      showError('Bu hesap yönetici olarak yetkili değil.');
+    const signedInEmail=String(credential.user?.email||'').trim().toLowerCase();
+    if(signedInEmail!==ADMIN_EMAIL){
+      await auth.signOut();
+      showError('Giriş başarılı ancak bu Firebase hesabına yönetici yetkisi verilmemiş.');
       return;
     }
 
