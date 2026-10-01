@@ -881,6 +881,7 @@ footer{
 .finder-options{display:flex;gap:10px;flex-wrap:wrap}
 .finder-option{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.09);color:#fff;border-radius:25px;padding:12px 17px;font-weight:800;cursor:pointer}
 .finder-option:hover,.finder-option.active{background:var(--turuncu);border-color:var(--turuncu)}
+.finder-detail{display:block;font-size:11px;font-weight:600;opacity:.78;margin-top:4px}
 .finder-result{display:none;margin-top:20px;background:#fff;color:var(--lacivert);border-radius:18px;padding:20px}
 .finder-result.show{display:block}.finder-result p{color:var(--yazi);margin:7px 0 15px;line-height:1.6}
 
@@ -1045,13 +1046,13 @@ YDT Dil sınıfları ve farklı seviyelere yönelik
 <section class="program-finder">
 <div class="container"><div class="finder-box">
 <h3>Hangi Program Size Uygun?</h3>
-<p>Öğrencinin durumunu seçin; uygun programı hemen görün.</p>
+<p>Öğrencinin durumunu seçin; uygun programı hemen görün. <strong>Detay için aşağıdaki programa tıklayın.</strong></p>
 <div class="finder-options">
-<button class="finder-option" type="button" data-program="5–7. Sınıf Ortaokul Programı" data-text="Okul derslerini destekleyen, konu takibi ve akademik gelişime odaklanan program.">5–7. Sınıf</button>
-<button class="finder-option" type="button" data-program="8. Sınıf LGS Hazırlık" data-text="LGS için konu çalışması, soru çözümü, denemeler ve düzenli öğrenci takibi.">8. Sınıf</button>
-<button class="finder-option" type="button" data-program="9–11. Sınıf Lise Programı" data-text="Okul başarısını destekleyen ve TYT temeli oluşturan sistemli lise programı.">9–11. Sınıf</button>
-<button class="finder-option" type="button" data-program="12. Sınıf / Mezun TYT–AYT" data-text="Üniversite hedefi için TYT–AYT odaklı çalışma, deneme ve gelişim takibi.">12 / Mezun</button>
-<button class="finder-option" type="button" data-program="YDT Dil Programı" data-text="YDT hazırlığı ve İngilizce gelişimine yönelik dil programı.">YDT</button>
+<button class="finder-option" type="button" data-program="5–7. Sınıf Ortaokul Programı" data-text="Okul derslerini destekleyen, konu takibi ve akademik gelişime odaklanan program.">5–7. Sınıf <span class="finder-detail">Detay için tıkla</span></button>
+<button class="finder-option" type="button" data-program="8. Sınıf LGS Hazırlık" data-text="LGS için konu çalışması, soru çözümü, denemeler ve düzenli öğrenci takibi.">8. Sınıf <span class="finder-detail">Detay için tıkla</span></button>
+<button class="finder-option" type="button" data-program="9–11. Sınıf Lise Programı" data-text="Okul başarısını destekleyen ve TYT temeli oluşturan sistemli lise programı.">9–11. Sınıf <span class="finder-detail">Detay için tıkla</span></button>
+<button class="finder-option" type="button" data-program="12. Sınıf / Mezun TYT–AYT" data-text="Üniversite hedefi için TYT–AYT odaklı çalışma, deneme ve gelişim takibi.">12 / Mezun <span class="finder-detail">Detay için tıkla</span></button>
+<button class="finder-option" type="button" data-program="YDT Dil Programı" data-text="YDT hazırlığı ve İngilizce gelişimine yönelik dil programı.">YDT <span class="finder-detail">Detay için tıkla</span></button>
 </div>
 <div id="finderResult" class="finder-result"><strong id="finderTitle"></strong><p id="finderText"></p><a id="finderWhatsapp" class="small-btn whatsapp-btn" target="_blank" rel="noopener">WhatsApp'tan Bilgi Al</a></div>
 </div></div>
