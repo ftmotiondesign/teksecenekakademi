@@ -67,7 +67,7 @@ onAuthStateChanged(auth,async user=>{
     sessionStorage.removeItem('tsa_admin_email');
     localStorage.removeItem('tsa_admin_remember_v1');
     localStorage.removeItem('tsa_admin_email');
-    if(!location.pathname.endsWith('/login.html')) location.replace('login.html?reauth=1');
+    if(!location.pathname.endsWith('/login.html')) location.replace('login.html?v=60&reauth=1');
     return;
   }
   try{ await load(); }
@@ -84,5 +84,5 @@ window.TSAFirebaseLogout=async function(){
   sessionStorage.removeItem('tsa_admin_email');
   localStorage.removeItem('tsa_admin_remember_v1');
   localStorage.removeItem('tsa_admin_email');
-  location.href='login.html?logout=1';
+  location.href='login.html?v=60&logout=1';
 };
