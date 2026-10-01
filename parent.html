@@ -33,7 +33,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     <h1>Veli Girişi</h1>
     <div class="desc">Size iletilen takip numarası ve başvuru sırasında kullanılan veli telefon numarasıyla giriş yapın. Bu bilgilerle öğrencinizin başvuru ve sınav sürecini takip edebilirsiniz.</div>
     <div class="login-grid">
-      <input id="applicationNo" placeholder="Takip No">
+      <input id="applicationNo" placeholder="Takip No (örn. TSA-12345678)" autocomplete="off">
       <input id="parentPhone" placeholder="Veli Telefonu">
     </div>
     <button id="parentBtn" class="login-btn">Giriş Yap</button>
@@ -111,11 +111,18 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 <script>
 const APP_KEY='tsa_applications_v1',RESULT_KEY='tsa_results_v1',ANN_KEY='tsa_announcements_v1',SESSION_KEY='tsa_parent_session_v1';
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
-function normPhone(v){return String(v||'').replace(/\D/g,'').replace(/^90(?=5\d{9}$)/,'0')}
+function normPhone(v){
+ let p=String(v||'').replace(/\D/g,'');
+ if(p.startsWith('90')&&p.length===12)p=p.slice(2);
+ if(p.startsWith('0')&&p.length===11)p=p.slice(1);
+ if(p.length>10)p=p.slice(-10);
+ return p;
+}
+function normTrack(v){return String(v||'').trim().replace(/\s+/g,'').toUpperCase()}
 function get(key){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}}
 function findApplication(no,phone){
- const n=String(no||'').trim().toLowerCase(),p=normPhone(phone);
- return get(APP_KEY).find(x=>String(x.basvuruNo||'').trim().toLowerCase()===n && normPhone(x.telefon)===p);
+ const n=normTrack(no),p=normPhone(phone);
+ return get(APP_KEY).find(x=>normTrack(x.basvuruNo)===n && normPhone(x.telefon)===p);
 }
 function studentResults(app){
  const all=get(RESULT_KEY);
