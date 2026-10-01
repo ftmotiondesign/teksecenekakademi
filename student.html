@@ -56,9 +56,9 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 
   <div class="container content">
     <div class="stats">
+      <div class="stat"><span>Kurumdaki Durumum</span><strong id="statAction">-</strong></div>
       <div class="stat"><span>Son Puan</span><strong id="statLast">-</strong></div>
       <div class="stat"><span>Toplam Sınav</span><strong id="statExam">0</strong></div>
-      <div class="stat"><span>En Yüksek Puan</span><strong id="statBest">-</strong></div>
       <div class="stat"><span>Son Sıralama</span><strong id="statRank">-</strong></div>
     </div>
 
@@ -82,8 +82,8 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
         <div id="progressList" class="progress-list"></div>
       </div>
       <div class="box">
-        <h3>Bilgilendirme</h3><div class="sub">Öğrenci paneli</div>
-        <div class="info">Burada yalnızca kurum tarafından yayınlanan sonuçlar görünür. Eksik veya hatalı bir sonuç görürsen Tek Seçenek Akademi ile iletişime geçebilirsin.</div>
+        <h3>Son Yapılan İşlem</h3><div class="sub">Kurum tarafından kaydedilen öğrenci durumu</div>
+        <div id="studentActionBox" class="info">Henüz işlem kaydı yok.</div>
       </div>
     </div>
 
@@ -96,10 +96,17 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 
 <script>
 const RESULTS_KEY='tsa_results_v1';
+const APP_KEY='tsa_applications_v1';
 const SESSION_KEY='tsa_student_session_v1';
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
 function numberVal(v){const n=parseFloat(String(v??'').replace(',','.'));return Number.isFinite(n)?n:null}
 function getResults(){try{return JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){return[]}}
+function getApps(){try{return JSON.parse(localStorage.getItem(APP_KEY)||'[]')}catch(e){return[]}}
+function findStudentApp(latest){
+ const no=String(latest.studentNo||'').trim();
+ const name=String(latest.name||'').trim().toLocaleLowerCase('tr-TR');
+ return getApps().find(x=>(no&&String(x.studentNo||'').trim()===no)||String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===name)||null;
+}
 function studentResults(query){
  const q=String(query||'').trim().toLowerCase(); if(!q)return [];
  const all=getResults();
@@ -111,7 +118,7 @@ function studentResults(query){
 function percentFor(v,max){const n=numberVal(v);if(n===null)return 0;return Math.max(0,Math.min(100,(n/max)*100))}
 function openPanel(list){
  if(!list.length)return;
- const latest=list[0], name=latest.name||'Öğrenci', no=latest.studentNo||'-', sinif=latest.sinif||latest.className||'';
+ const latest=list[0], name=latest.name||'Öğrenci', no=latest.studentNo||'-', sinif=latest.sinif||latest.className||'', app=findStudentApp(latest);
  document.getElementById('loginView').classList.add('hidden');
  document.getElementById('panelView').classList.remove('hidden');
  document.getElementById('welcomeName').textContent='Hoş geldin, '+name;
@@ -119,10 +126,11 @@ function openPanel(list){
  document.getElementById('profileNo').textContent=no;
 
  const scores=list.map(x=>numberVal(x.score)).filter(x=>x!==null);
+ document.getElementById('statAction').textContent=app?(app.studentAction||'Yeni Öğrenci'):'-';
  document.getElementById('statLast').textContent=latest.score||'-';
  document.getElementById('statExam').textContent=list.length;
- document.getElementById('statBest').textContent=scores.length?Math.max(...scores).toLocaleString('tr-TR'):'-';
  document.getElementById('statRank').textContent=latest.rank||'-';
+ document.getElementById('studentActionBox').innerHTML=app?('<b>'+esc(app.studentAction||'Yeni Öğrenci')+'</b>'+(app.studentActionUpdatedAt?'<br><small>Son güncelleme: '+new Date(app.studentActionUpdatedAt).toLocaleString('tr-TR')+'</small>':'')):'Henüz öğrenci işlem kaydı bulunmuyor.';
 
  document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
  document.getElementById('lastScore').textContent=latest.score||'-';
