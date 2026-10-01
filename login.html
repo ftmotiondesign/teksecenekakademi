@@ -113,10 +113,18 @@ form.addEventListener('submit',async e=>{
     location.href='admin.html';
   }catch(err){
     console.error('Firebase giriş hatası:',err);
-    let text='E-posta veya şifre hatalı.';
-    if(err && err.code==='auth/too-many-requests') text='Çok fazla giriş denemesi yapıldı. Bir süre sonra tekrar deneyin.';
-    if(err && err.code==='auth/network-request-failed') text='Firebase bağlantısı kurulamadı. İnternet bağlantısını kontrol edin.';
-    if(err && err.code==='auth/unauthorized-domain') text='Bu web adresi Firebase Authentication için yetkilendirilmemiş.';
+    const code=err && err.code ? err.code : '';
+    let text='Firebase giriş hatası.';
+    if(code==='auth/invalid-credential') text='Firebase bu e-posta/şifre bilgisini kabul etmedi. Authentication\u00a0> Kullanıcılar bölümünde bu e-postanın kayıtlı olduğunu ve şifrenin doğru olduğunu kontrol edin.';
+    else if(code==='auth/user-not-found') text='Bu e-posta ile Firebase Authentication kullanıcısı bulunamadı.';
+    else if(code==='auth/wrong-password') text='Şifre hatalı.';
+    else if(code==='auth/invalid-email') text='E-posta adresi geçersiz.';
+    else if(code==='auth/operation-not-allowed') text='Firebase\'de E-posta/Şifre giriş yöntemi etkin değil.';
+    else if(code==='auth/too-many-requests') text='Çok fazla giriş denemesi yapıldı. Bir süre sonra tekrar deneyin.';
+    else if(code==='auth/network-request-failed') text='Firebase bağlantısı kurulamadı. İnternet bağlantısını kontrol edin.';
+    else if(code==='auth/unauthorized-domain') text='Bu web adresi Firebase Authentication için yetkilendirilmemiş.';
+    else if(code==='auth/api-key-not-valid.-please-pass-a-valid-api-key.') text='Firebase API anahtarı geçersiz görünüyor.';
+    else if(code) text='Firebase hatası: '+code;
     showError(text);
   }finally{
     loginBtn.disabled=false;
