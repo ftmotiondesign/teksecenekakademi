@@ -294,6 +294,7 @@ function loadResultCategories(){
  s.innerHTML='<option value="all">Hepsi</option>'+cats.map(c=>'<option value="'+escapeHtml(c.name)+'">'+escapeHtml(c.name)+'</option>').join('');
 }
 loadResultCategories();
+window.addEventListener('tsa:result-categories-updated',loadResultCategories);
 document.getElementById('resultBtn').onclick=async()=>{
  const code=document.getElementById('resultCode').value.trim(),phone=document.getElementById('resultPhone').value.trim(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');
  box.classList.add('show');
@@ -434,5 +435,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 <script type="module" src="firebase-announcements-public.js?v=1"></script>
 <script type="module" src="firebase-applications-public.js?v=1"></script>
 <script type="module" src="firebase-portal-public.js?v=1"></script>
+<script type="module" src="firebase-result-categories-public.js?v=1"></script>
 </body>
 </html>
