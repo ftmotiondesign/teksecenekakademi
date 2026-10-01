@@ -393,6 +393,7 @@ function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(
 loadManagedContent();
 window.addEventListener('tsa:simple-public-updated',loadManagedContent);
 loadSiteContent();
+window.addEventListener('tsa:site-content-updated',loadSiteContent);
 
 function loadManagedHero(){
  let slides=[];try{slides=JSON.parse(localStorage.getItem(HERO_KEY)||'[]')}catch(e){}
@@ -411,6 +412,7 @@ function loadManagedHero(){
 }
 
 loadManagedHero();
+window.addEventListener('tsa:hero-updated',loadManagedHero);
 const heroSlides=[...document.querySelectorAll('.hero-slide')];
 const heroDots=document.getElementById('heroDots');
 let heroIndex=0,heroTimer=null;
@@ -438,5 +440,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 <script type="module" src="firebase-portal-public.js?v=1"></script>
 <script type="module" src="firebase-result-categories-public.js?v=1"></script>
 <script type="module" src="firebase-simple-content-public.js?v=1"></script>
+<script type="module" src="firebase-site-public.js?v=1"></script>
 </body>
 </html>
