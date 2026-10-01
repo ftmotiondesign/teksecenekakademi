@@ -12,7 +12,8 @@
 .logo{display:flex;align-items:center;gap:14px;margin-bottom:24px}.logo img{width:64px;height:64px;object-fit:contain}.logo b{display:block;font-size:20px}.logo span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
 h1{font-size:27px;margin:0 0 8px}p{color:var(--muted);line-height:1.6;margin:0 0 22px}.field{display:grid;gap:7px;margin-bottom:14px}.field label{font-size:12px;font-weight:900}.field input{width:100%;padding:13px 14px;border:1px solid #dfe1ea;border-radius:11px;font:inherit;outline:none}.field input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #f28a0017}
 button{width:100%;border:0;border-radius:24px;padding:14px;background:var(--orange);color:#fff;font-weight:900;font-size:15px;cursor:pointer;margin-top:5px}.msg{display:none;margin-top:14px;padding:11px;border-radius:10px;font-size:13px;font-weight:800}.msg.show{display:block}.msg.error{background:#ffeded;color:#b73737}.back{display:block;text-align:center;margin-top:18px;color:var(--navy);font-size:13px;font-weight:800;text-decoration:none}
-.remember{display:flex;align-items:center;gap:9px;margin:4px 0 10px;color:var(--navy);font-size:13px;font-weight:800;cursor:pointer}.remember input{width:17px;height:17px;accent-color:var(--orange);cursor:pointer}\n.note{font-size:11px;color:#8a8d99;text-align:center;margin-top:18px;line-height:1.5}
+.remember{display:flex;align-items:center;gap:9px;margin:4px 0 10px;color:var(--navy);font-size:13px;font-weight:800;cursor:pointer}.remember input{width:17px;height:17px;accent-color:var(--orange);cursor:pointer}
+.note{font-size:11px;color:#8a8d99;text-align:center;margin-top:18px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -22,7 +23,9 @@ button{width:100%;border:0;border-radius:24px;padding:14px;background:var(--oran
 <p>Başvuruları, sonuçları ve site içeriklerini yönetmek için giriş yapın.</p>
 <form id="loginForm">
 <div class="field"><label>E-posta</label><input id="email" type="email" autocomplete="username" required placeholder="E-posta adresi"></div>
-<div class="field"><label>Şifre</label><input id="password" type="password" autocomplete="current-password" required placeholder="Şifreniz"></div>\n<label class="remember"><input id="rememberMe" type="checkbox"> Beni Hatırla</label>\n<button type="submit">Giriş Yap</button>
+<div class="field"><label>Şifre</label><input id="password" type="password" autocomplete="current-password" required placeholder="Şifreniz"></div>
+<label class="remember"><input id="rememberMe" type="checkbox"> Beni Hatırla</label>
+<button type="submit">Giriş Yap</button>
 <div id="msg" class="msg error">E-posta veya şifre hatalı.</div>
 </form>
 <a class="back" href="index.html">← Web Sitesine Dön</a>
@@ -42,7 +45,20 @@ document.getElementById('loginForm').addEventListener('submit',async e=>{
  const email=document.getElementById('email').value.trim().toLowerCase();
  const pass=document.getElementById('password').value;
  const ok=email===ADMIN_EMAIL && (await sha256(pass))===ADMIN_HASH;
- if(ok){\n  const remember=document.getElementById('rememberMe').checked;\n  if(remember){\n   localStorage.setItem('tsa_admin_remember_v1','1');\n   localStorage.setItem('tsa_admin_email',email);\n   sessionStorage.removeItem('tsa_admin_session_v1');\n   sessionStorage.removeItem('tsa_admin_email');\n  }else{\n   sessionStorage.setItem('tsa_admin_session_v1','1');\n   sessionStorage.setItem('tsa_admin_email',email);\n   localStorage.removeItem('tsa_admin_remember_v1');\n   localStorage.removeItem('tsa_admin_email');\n  }\n  location.href='admin.html';
+ if(ok){
+  const remember=document.getElementById('rememberMe').checked;
+  if(remember){
+   localStorage.setItem('tsa_admin_remember_v1','1');
+   localStorage.setItem('tsa_admin_email',email);
+   sessionStorage.removeItem('tsa_admin_session_v1');
+   sessionStorage.removeItem('tsa_admin_email');
+  }else{
+   sessionStorage.setItem('tsa_admin_session_v1','1');
+   sessionStorage.setItem('tsa_admin_email',email);
+   localStorage.removeItem('tsa_admin_remember_v1');
+   localStorage.removeItem('tsa_admin_email');
+  }
+  location.href='admin.html';
  }else{
   document.getElementById('msg').classList.add('show');
  }
