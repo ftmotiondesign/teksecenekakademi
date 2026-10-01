@@ -15,6 +15,8 @@
   --acik:#f6f7fb;
   --yazi:#5f6472;
   --beyaz:#ffffff;
+  --whatsapp:#25D366;
+  --whatsapp-dark:#1ebe5d;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -425,16 +427,36 @@ input,select,textarea{
   color:#7b7b85;
 }
 
+/* WHATSAPP BUTONU */
+
 .form-submit{
   grid-column:1/-1;
   border:none;
-  background:var(--turuncu);
+  background:var(--whatsapp);
   color:#fff;
-  padding:17px;
+  padding:17px 22px;
   border-radius:12px;
-  font-size:16px;
+  font-size:17px;
   font-weight:800;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  transition:.25s;
+}
+
+.form-submit:hover{
+  background:var(--whatsapp-dark);
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(37,211,102,.25);
+}
+
+.whatsapp-icon{
+  width:24px;
+  height:24px;
+  fill:#fff;
+  flex:none;
 }
 
 .form-note{
@@ -489,9 +511,26 @@ input,select,textarea{
   padding:13px 18px;
   border-radius:25px;
   font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
 }
 
 .small-btn.orange{background:var(--turuncu)}
+
+.small-btn.whatsapp-btn{
+  background:var(--whatsapp);
+}
+
+.small-btn.whatsapp-btn:hover{
+  background:var(--whatsapp-dark);
+}
+
+.small-btn .whatsapp-icon{
+  width:20px;
+  height:20px;
+}
 
 .map-box{
   background:linear-gradient(135deg,#e9e9f2,#d8d8e7);
@@ -544,6 +583,7 @@ footer{
 .mobile-bar{display:none}
 
 @media(max-width:900px){
+
   header{height:75px}
   .logo img{width:65px;height:65px}
   nav a:not(.menu-btn){display:none}
@@ -584,10 +624,24 @@ footer{
 
   .mobile-bar a{
     text-align:center;
-    padding:14px 5px;
+    padding:12px 5px;
     color:var(--lacivert);
     font-size:13px;
     font-weight:800;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+  }
+
+  .mobile-bar .mobile-whatsapp{
+    background:var(--whatsapp);
+    color:#fff;
+  }
+
+  .mobile-bar .mobile-whatsapp .whatsapp-icon{
+    width:19px;
+    height:19px;
   }
 
   .mobile-bar a:last-child{
@@ -599,6 +653,7 @@ footer{
 }
 
 @media(max-width:600px){
+
   section{padding:70px 0}
   .hero h1{font-size:41px}
   .cards{grid-template-columns:1fr}
@@ -625,18 +680,23 @@ footer{
 
 <header>
 <div class="header-inner">
-  <a class="logo" href="#"><img src="logo.png" alt="Tek Seçenek Akademi"></a>
 
-  <nav>
-    <a href="#egitimler">Eğitimlerimiz</a>
-    <a href="#neden">Neden Biz?</a>
-    <a href="#deneme">Deneme Kulübü</a>
-    <a href="#basari">Başarılarımız</a>
-    <a href="#iletisim">İletişim</a>
-    <a href="#bilgial" class="menu-btn">Bilgi Al</a>
-  </nav>
+<a class="logo" href="#">
+<img src="logo.png" alt="Tek Seçenek Akademi">
+</a>
+
+<nav>
+<a href="#egitimler">Eğitimlerimiz</a>
+<a href="#neden">Neden Biz?</a>
+<a href="#deneme">Deneme Kulübü</a>
+<a href="#basari">Başarılarımız</a>
+<a href="#iletisim">İletişim</a>
+<a href="#bilgial" class="menu-btn">Bilgi Al</a>
+</nav>
+
 </div>
 </header>
+
 
 <section class="hero">
 <div class="hero-content">
@@ -644,7 +704,10 @@ footer{
 
 <span class="location">ŞEHZADELER • MANİSA</span>
 
-<h1>Geleceğin İçin<br><span>Tek Seçenek.</span></h1>
+<h1>
+Geleceğin İçin<br>
+<span>Tek Seçenek.</span>
+</h1>
 
 <p>
 Başarıya giden yolda güçlü eğitim, düzenli takip
@@ -652,26 +715,39 @@ ve hedef odaklı çalışma sistemiyle öğrencilerimizin yanındayız.
 </p>
 
 <div class="hero-buttons">
-<a href="#egitimler" class="btn btn-orange">Eğitimleri İncele</a>
-<a href="#bilgial" class="btn btn-white">Bilgi Al</a>
-</div>
+
+<a href="#egitimler" class="btn btn-orange">
+Eğitimleri İncele
+</a>
+
+<a href="#bilgial" class="btn btn-white">
+Bilgi Al
+</a>
 
 </div>
 </div>
+</div>
 </section>
+
 
 <div class="registration">
 <div class="container registration-inner">
 
 <div>
 <h3>2026–2027 Kayıtlarımız Devam Ediyor</h3>
-<p>5 • 6 • 7 • 8 • 9 • 10 • 11 • 12. Sınıflar • YDT • İngilizce</p>
+
+<p>
+5 • 6 • 7 • 8 • 9 • 10 • 11 • 12. Sınıflar • YDT • İngilizce
+</p>
 </div>
 
-<a href="#bilgial">Kayıt Bilgisi Al</a>
+<a href="#bilgial">
+Kayıt Bilgisi Al
+</a>
 
 </div>
 </div>
+
 
 <section id="egitimler" class="education">
 <div class="container">
@@ -679,38 +755,56 @@ ve hedef odaklı çalışma sistemiyle öğrencilerimizin yanındayız.
 <div class="section-head">
 <small>EĞİTİM PROGRAMLARIMIZ</small>
 <h2>Hedefine Uygun Programı Seç</h2>
-<p>Ortaokuldan üniversite hazırlığa kadar öğrencilerimizin akademik gelişimini destekleyen eğitim programları.</p>
+
+<p>
+Ortaokuldan üniversite hazırlığa kadar öğrencilerimizin
+akademik gelişimini destekleyen eğitim programları.
+</p>
 </div>
+
 
 <div class="cards">
 
 <div class="card">
 <div class="icon">5–7</div>
 <h3>Ortaokul</h3>
-<p>5, 6 ve 7. sınıflara yönelik okul destek, konu takibi ve akademik gelişim programları.</p>
+<p>
+5, 6 ve 7. sınıflara yönelik okul destek, konu takibi
+ve akademik gelişim programları.
+</p>
 </div>
 
 <div class="card">
 <div class="icon">LGS</div>
 <h3>8. Sınıf</h3>
-<p>LGS hazırlığında konu çalışmaları, soru çözümü, düzenli denemeler ve öğrenci takibi.</p>
+<p>
+LGS hazırlığında konu çalışmaları, soru çözümü,
+düzenli denemeler ve öğrenci takibi.
+</p>
 </div>
 
 <div class="card">
 <div class="icon">TYT</div>
 <h3>9–12. Sınıflar</h3>
-<p>Lise destek programları ile TYT ve AYT sınavlarına sistemli hazırlık.</p>
+<p>
+Lise destek programları ile TYT ve AYT sınavlarına
+sistemli hazırlık.
+</p>
 </div>
 
 <div class="card">
 <div class="icon">YDT</div>
 <h3>YDT & İngilizce</h3>
-<p>YDT Dil sınıfları ve farklı seviyelere yönelik İngilizce eğitim programları.</p>
+<p>
+YDT Dil sınıfları ve farklı seviyelere yönelik
+İngilizce eğitim programları.
+</p>
 </div>
 
 </div>
 </div>
 </section>
+
 
 <section id="neden">
 <div class="container">
@@ -718,40 +812,60 @@ ve hedef odaklı çalışma sistemiyle öğrencilerimizin yanındayız.
 <div class="section-head">
 <small>NEDEN TEK SEÇENEK?</small>
 <h2>Başarıyı Birlikte Planlıyoruz</h2>
-<p>Eğitim sürecini yalnızca ders anlatımı olarak değil, düzenli takip ve gelişim süreci olarak ele alıyoruz.</p>
+
+<p>
+Eğitim sürecini yalnızca ders anlatımı olarak değil,
+düzenli takip ve gelişim süreci olarak ele alıyoruz.
+</p>
 </div>
+
 
 <div class="why-grid">
 
 <div class="why-item">
 <div class="why-number">01</div>
+
 <div>
 <h3>Düzenli Öğrenci Takibi</h3>
 <p>Öğrencinin gelişimi ve eksikleri düzenli olarak takip edilir.</p>
 </div>
 </div>
 
+
 <div class="why-item">
 <div class="why-number">02</div>
+
 <div>
 <h3>Deneme Sınavları</h3>
-<p>Farklı yayınlardan denemelerle gerçek sınav deneyimine hazırlık sağlanır.</p>
+<p>
+Farklı yayınlardan denemelerle gerçek sınav
+deneyimine hazırlık sağlanır.
+</p>
 </div>
 </div>
+
 
 <div class="why-item">
 <div class="why-number">03</div>
+
 <div>
 <h3>Hedef Odaklı Çalışma</h3>
-<p>Öğrencinin sınıfına ve hedefine uygun çalışma sistemi oluşturulur.</p>
+<p>
+Öğrencinin sınıfına ve hedefine uygun çalışma sistemi oluşturulur.
+</p>
 </div>
 </div>
 
+
 <div class="why-item">
 <div class="why-number">04</div>
+
 <div>
 <h3>Güçlü Eğitim Ortamı</h3>
-<p>Öğrencinin derslerine odaklanabileceği düzenli ve destekleyici eğitim ortamı.</p>
+<p>
+Öğrencinin derslerine odaklanabileceği düzenli
+ve destekleyici eğitim ortamı.
+</p>
 </div>
 </div>
 
@@ -759,15 +873,21 @@ ve hedef odaklı çalışma sistemiyle öğrencilerimizin yanındayız.
 </div>
 </section>
 
+
 <section id="deneme" class="deneme">
 <div class="container deneme-grid">
 
 <div>
-<h2>Sınava Değil,<br><span>Sınav Gününe Hazırlan.</span></h2>
+
+<h2>
+Sınava Değil,<br>
+<span>Sınav Gününe Hazırlan.</span>
+</h2>
 
 <p class="deneme-text">
 Deneme Kulübü ile farklı yayınların sınavlarını çöz,
-seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
+seviyeni düzenli olarak gör ve eksiklerini gerçek
+sınavdan önce belirle.
 </p>
 
 <div class="checks">
@@ -776,9 +896,12 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 <div>✓ Farklı yayınlardan sınav deneyimi</div>
 <div>✓ Hedef odaklı sınav hazırlığı</div>
 </div>
+
 </div>
 
+
 <div class="packages">
+
 <div class="package">
 <strong>70</strong>
 <span>Deneme Paketi</span>
@@ -788,10 +911,12 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 <strong>120</strong>
 <span>Deneme Paketi</span>
 </div>
+
 </div>
 
 </div>
 </section>
+
 
 <section id="basari">
 <div class="container">
@@ -799,8 +924,13 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 <div class="section-head">
 <small>BAŞARI YOLCULUĞU</small>
 <h2>Her Öğrencinin Bir Hedefi Var</h2>
-<p>Bizim görevimiz o hedefe giden yolu doğru planlamak, gelişimi takip etmek ve öğrencimizin yanında olmak.</p>
+
+<p>
+Bizim görevimiz o hedefe giden yolu doğru planlamak,
+gelişimi takip etmek ve öğrencimizin yanında olmak.
+</p>
 </div>
+
 
 <div class="success-grid">
 
@@ -823,6 +953,7 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 </div>
 </section>
 
+
 <section class="gallery">
 <div class="container">
 
@@ -838,13 +969,19 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 
 <div class="gallery-box">
 <div class="gallery-placeholder">
-<span>Sınıf fotoğraflarımız<br>yakında burada.</span>
+<span>
+Sınıf fotoğraflarımız<br>
+yakında burada.
+</span>
 </div>
 </div>
 
 <div class="gallery-box">
 <div class="gallery-placeholder">
-<span>Etkinlik ve eğitim<br>fotoğraflarımız.</span>
+<span>
+Etkinlik ve eğitim<br>
+fotoğraflarımız.
+</span>
 </div>
 </div>
 
@@ -853,7 +990,7 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 </section>
 
 
-<!-- BİLGİ AL FORMU -->
+<!-- BİLGİ AL -->
 
 <section id="bilgial" class="lead">
 <div class="container">
@@ -866,6 +1003,7 @@ seviyeni düzenli olarak gör ve eksiklerini gerçek sınavdan önce belirle.
 Bilgilerinizi doldurun ve ne hakkında bilgi almak istediğinizi
 kısaca yazın. Talebiniz WhatsApp mesajına otomatik eklenecektir.
 </p>
+
 
 <form class="form-grid" onsubmit="formGonder(event)">
 
@@ -883,7 +1021,9 @@ placeholder="Telefon Numaranız"
 required
 >
 
+
 <select id="sinif" required>
+
 <option value="">Öğrencinin Sınıfı</option>
 <option>5. Sınıf</option>
 <option>6. Sınıf</option>
@@ -894,9 +1034,12 @@ required
 <option>11. Sınıf</option>
 <option>12. Sınıf</option>
 <option>Mezun</option>
+
 </select>
 
+
 <select id="program" required>
+
 <option value="">İlgilendiğiniz Program</option>
 <option>Ortaokul Programı</option>
 <option>LGS Hazırlık</option>
@@ -904,10 +1047,9 @@ required
 <option>YDT Dil</option>
 <option>İngilizce Kursu</option>
 <option>Deneme Kulübü</option>
+
 </select>
 
-
-<!-- YENİ MESAJ BÖLÜMÜ -->
 
 <div class="message-field">
 
@@ -930,8 +1072,15 @@ placeholder="Örn: 8. sınıf LGS programının ders saatleri ve ücretleri hakk
 
 
 <button class="form-submit" type="submit">
+
+<svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+<path d="M16.04 3C8.86 3 3.02 8.78 3.02 15.9c0 2.27.6 4.49 1.73 6.44L3 28.75l6.6-1.72a13.1 13.1 0 0 0 6.43 1.65h.01c7.18 0 13.02-5.78 13.02-12.89C29.06 8.78 23.22 3 16.04 3zm0 23.5h-.01a10.9 10.9 0 0 1-5.55-1.51l-.4-.24-3.92 1.02 1.05-3.79-.26-.4a10.65 10.65 0 0 1-1.69-5.68c0-5.92 4.84-10.73 10.79-10.73 5.95 0 10.79 4.81 10.79 10.73 0 5.91-4.85 10.6-10.8 10.6zm5.92-8.03c-.32-.16-1.92-.94-2.22-1.05-.3-.11-.51-.16-.73.16-.22.32-.84 1.05-1.03 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.58-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.49.14-.65.15-.14.32-.38.49-.57.16-.19.22-.32.32-.54.11-.21.05-.4-.03-.57-.08-.16-.73-1.75-1-2.4-.26-.63-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.4-.3.32-1.14 1.11-1.14 2.7s1.17 3.13 1.33 3.34c.16.21 2.3 3.48 5.57 4.88.78.33 1.39.53 1.86.68.78.25 1.49.21 2.05.13.63-.09 1.92-.78 2.19-1.54.27-.75.27-1.4.19-1.54-.08-.13-.3-.21-.62-.37z"/>
+</svg>
+
 WhatsApp'tan Bilgi Al
+
 </button>
+
 
 <div class="form-note">
 * Talebinizi yazmanız zorunludur. Butona bastığınızda WhatsApp açılır ve bilgileriniz hazır mesaj olarak oluşturulur.
@@ -943,6 +1092,8 @@ WhatsApp'tan Bilgi Al
 </section>
 
 
+<!-- İLETİŞİM -->
+
 <section id="iletisim" class="contact">
 <div class="container">
 
@@ -950,6 +1101,7 @@ WhatsApp'tan Bilgi Al
 <small>İLETİŞİM</small>
 <h2>Tek Seçenek Akademi'ye Ulaşın</h2>
 </div>
+
 
 <div class="contact-grid">
 
@@ -962,11 +1114,17 @@ WhatsApp'tan Bilgi Al
 </div>
 
 <div class="contact-line">
-📱 <a href="tel:+905526959757">0552 695 97 57</a>
+📱
+<a href="tel:+905526959757">
+0552 695 97 57
+</a>
 </div>
 
 <div class="contact-line">
-☎ <a href="tel:+902362380066">0236 238 00 66</a>
+☎
+<a href="tel:+902362380066">
+0236 238 00 66
+</a>
 </div>
 
 <div class="contact-line">
@@ -975,27 +1133,49 @@ WhatsApp'tan Bilgi Al
 
 <div class="contact-line">
 📷
-<a href="https://www.instagram.com/manisateksecenekakademi/" target="_blank" rel="noopener">
+<a
+href="https://www.instagram.com/manisateksecenekakademi/"
+target="_blank"
+rel="noopener">
 @manisateksecenekakademi
 </a>
 </div>
 
+
 <div class="contact-actions">
 
-<a href="tel:+905526959757" class="small-btn">
+<a
+href="tel:+905526959757"
+class="small-btn">
 Hemen Ara
 </a>
 
-<a href="https://wa.me/905526959757" target="_blank" rel="noopener" class="small-btn orange">
+
+<a
+href="https://wa.me/905526959757"
+target="_blank"
+rel="noopener"
+class="small-btn whatsapp-btn">
+
+<svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+<path d="M16.04 3C8.86 3 3.02 8.78 3.02 15.9c0 2.27.6 4.49 1.73 6.44L3 28.75l6.6-1.72a13.1 13.1 0 0 0 6.43 1.65h.01c7.18 0 13.02-5.78 13.02-12.89C29.06 8.78 23.22 3 16.04 3zm0 23.5h-.01a10.9 10.9 0 0 1-5.55-1.51l-.4-.24-3.92 1.02 1.05-3.79-.26-.4a10.65 10.65 0 0 1-1.69-5.68c0-5.92 4.84-10.73 10.79-10.73 5.95 0 10.79 4.81 10.79 10.73 0 5.91-4.85 10.6-10.8 10.6zm5.92-8.03c-.32-.16-1.92-.94-2.22-1.05-.3-.11-.51-.16-.73.16-.22.32-.84 1.05-1.03 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.58-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.49.14-.65.15-.14.32-.38.49-.57.16-.19.22-.32.32-.54.11-.21.05-.4-.03-.57-.08-.16-.73-1.75-1-2.4-.26-.63-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.4-.3.32-1.14 1.11-1.14 2.7s1.17 3.13 1.33 3.34c.16.21 2.3 3.48 5.57 4.88.78.33 1.39.53 1.86.68.78.25 1.49.21 2.05.13.63-.09 1.92-.78 2.19-1.54.27-.75.27-1.4.19-1.54-.08-.13-.3-.21-.62-.37z"/>
+</svg>
+
 WhatsApp
 </a>
 
-<a href="https://www.instagram.com/manisateksecenekakademi/" target="_blank" rel="noopener" class="small-btn">
+
+<a
+href="https://www.instagram.com/manisateksecenekakademi/"
+target="_blank"
+rel="noopener"
+class="small-btn">
 Instagram
 </a>
 
 </div>
 </div>
+
 
 <div class="map-box">
 <div>
@@ -1018,6 +1198,7 @@ Yol Tarifi Al
 </a>
 
 </div>
+
 </div>
 </div>
 
@@ -1025,22 +1206,32 @@ Yol Tarifi Al
 </div>
 </section>
 
+
 <footer>
 <div class="container footer-inner">
 
 <div class="footer-logo">
-<img src="logo.png" alt="Tek Seçenek Akademi">
+
+<img
+src="logo.png"
+alt="Tek Seçenek Akademi">
 
 <div>
 <strong>Tek Seçenek Akademi</strong>
 Şehzadeler • Manisa
 </div>
+
 </div>
 
-<div>© 2026 Tek Seçenek Akademi</div>
+<div>
+© 2026 Tek Seçenek Akademi
+</div>
 
 </div>
 </footer>
+
+
+<!-- MOBİL ALT MENÜ -->
 
 <div class="mobile-bar">
 
@@ -1048,9 +1239,20 @@ Yol Tarifi Al
 ☎ Ara
 </a>
 
-<a href="https://wa.me/905526959757" target="_blank" rel="noopener">
+
+<a
+href="https://wa.me/905526959757"
+target="_blank"
+rel="noopener"
+class="mobile-whatsapp">
+
+<svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+<path d="M16.04 3C8.86 3 3.02 8.78 3.02 15.9c0 2.27.6 4.49 1.73 6.44L3 28.75l6.6-1.72a13.1 13.1 0 0 0 6.43 1.65h.01c7.18 0 13.02-5.78 13.02-12.89C29.06 8.78 23.22 3 16.04 3zm0 23.5h-.01a10.9 10.9 0 0 1-5.55-1.51l-.4-.24-3.92 1.02 1.05-3.79-.26-.4a10.65 10.65 0 0 1-1.69-5.68c0-5.92 4.84-10.73 10.79-10.73 5.95 0 10.79 4.81 10.79 10.73 0 5.91-4.85 10.6-10.8 10.6zm5.92-8.03c-.32-.16-1.92-.94-2.22-1.05-.3-.11-.51-.16-.73.16-.22.32-.84 1.05-1.03 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.58-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.49.14-.65.15-.14.32-.38.49-.57.16-.19.22-.32.32-.54.11-.21.05-.4-.03-.57-.08-.16-.73-1.75-1-2.4-.26-.63-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.4-.3.32-1.14 1.11-1.14 2.7s1.17 3.13 1.33 3.34c.16.21 2.3 3.48 5.57 4.88.78.33 1.39.53 1.86.68.78.25 1.49.21 2.05.13.63-.09 1.92-.78 2.19-1.54.27-.75.27-1.4.19-1.54-.08-.13-.3-.21-.62-.37z"/>
+</svg>
+
 WhatsApp
 </a>
+
 
 <a href="#bilgial">
 Bilgi Al
@@ -1060,6 +1262,7 @@ Bilgi Al
 
 
 <script>
+
 function formGonder(event){
 
   event.preventDefault();
@@ -1110,7 +1313,9 @@ ${mesaj}`;
 
 
   window.location.href = whatsappURL;
+
 }
+
 </script>
 
 </body>
