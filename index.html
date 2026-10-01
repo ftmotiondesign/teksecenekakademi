@@ -103,7 +103,7 @@ footer{background:var(--dark);color:#fff;padding:52px 0 22px}.footer-grid{displa
 </div></div></section>
 
 <section id="sonuc" class="bg"><div class="container"><div class="section-head"><small>ÖĞRENCİ İŞLEMLERİ</small><h2>Sonuç Sorgulama ve Seviye Tespit</h2></div><div class="two">
-<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Öğrenci numaranızı girin; size ait LGS, Türkiye geneli deneme ve kurum içi sınav sonuçlarını birlikte görüntüleyin.</p><div class="form-grid"><select id="resultType"><option value="all">Hepsi</option></select><input id="resultCode" placeholder="Öğrenci No / Sonuç Kodu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
+<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Takip numarası, öğrenci numarası veya sonuç kodunuz ile başvuruda kullanılan veli telefonunu girin.</p><div class="form-grid"><select id="resultType"><option value="all">Hepsi</option></select><input id="resultCode" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><input id="resultPhone" type="tel" inputmode="numeric" placeholder="Veli Telefonu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
 <div class="panel"><h3>🎯 Ücretsiz Seviye Tespit Talebi</h3><p>Seviyenizi değerlendirelim, size uygun programı birlikte belirleyelim.</p><form class="form-grid app-form" data-type="Seviye Tespit"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="veliAd" required placeholder="Veli Ad Soyad"><input name="ogrenciTelefon" type="tel" inputmode="numeric" value="0" placeholder="Öğrenci Cep Telefonu"><input name="telefon" type="tel" inputmode="numeric" value="0" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><textarea name="not" placeholder="Hangi derslerde destek istiyorsunuz?"></textarea><button class="btn orange" type="submit">Talep Oluştur</button><div class="form-message"></div></form></div>
 </div></div></section>
 
@@ -294,13 +294,23 @@ function loadResultCategories(){
  s.innerHTML='<option value="all">Hepsi</option>'+cats.map(c=>'<option value="'+escapeHtml(c.name)+'">'+escapeHtml(c.name)+'</option>').join('');
 }
 loadResultCategories();
-document.getElementById('resultBtn').onclick=()=>{
- const code=document.getElementById('resultCode').value.trim().toLowerCase(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
- const matches=results.filter(x=>(String(x.code||'').toLowerCase()===code||String(x.studentNo||'').toLowerCase()===code)&&(type==='all'||String(x.category||'')===type));
+document.getElementById('resultBtn').onclick=async()=>{
+ const code=document.getElementById('resultCode').value.trim(),phone=document.getElementById('resultPhone').value.trim(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');
  box.classList.add('show');
- if(!matches.length){box.innerHTML='Seçtiğiniz kategoride bu öğrenciye ait yayınlanmış bir sonuç bulunamadı.';return;}
- const name=matches[0].name||'Öğrenci';
- box.innerHTML='<strong>'+escapeHtml(name)+'</strong><div style="margin:4px 0 12px;color:#5f6472">'+matches.length+' sınav sonucu bulundu.</div>'+matches.map(r=>'<div style="background:#fff;border:1px solid #dddfea;border-radius:12px;padding:12px;margin-top:9px"><b style="color:#292557">'+escapeHtml(r.examName||r.code||'Sınav Sonucu')+'</b><div style="margin:7px 0">Puan: '+escapeHtml(r.score||'-')+' · Yüzdelik: '+escapeHtml(r.percentile||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="font-size:13px;line-height:1.7">Türkçe: '+escapeHtml(r.turkce||'-')+' · Matematik: '+escapeHtml(r.matematik||'-')+' · Fen: '+escapeHtml(r.fen||'-')+' · İnkılap: '+escapeHtml(r.inkilap||'-')+' · Din: '+escapeHtml(r.din||'-')+' · İngilizce: '+escapeHtml(r.ingilizce||'-')+'</div></div>').join('');
+ if(!code||!phone){box.innerHTML='Takip/öğrenci/sonuç kodu ve veli telefonu birlikte girilmelidir.';return;}
+ if(!window.TSAFirebasePortal){box.innerHTML='Sonuç sistemi hazırlanıyor. Sayfayı yenileyip tekrar deneyin.';return;}
+ box.innerHTML='Sonuçlar kontrol ediliyor...';
+ try{
+  const data=await window.TSAFirebasePortal.lookup(code,phone);
+  if(!data){box.innerHTML='Girilen bilgilerle eşleşen kayıt bulunamadı.';return;}
+  window.TSAFirebasePortal.hydrate(data);
+  const matches=(data.results||[]).filter(x=>type==='all'||String(x.category||'')===type);
+  if(!matches.length){box.innerHTML='Seçtiğiniz kategoride yayınlanmış bir sonuç bulunamadı.';return;}
+  const name=(data.app&&data.app.ad)||matches[0].name||'Öğrenci';
+  box.innerHTML='<strong>'+escapeHtml(name)+'</strong><div style="margin:4px 0 12px;color:#5f6472">'+matches.length+' sınav sonucu bulundu.</div>'+matches.map(r=>'<div style="background:#fff;border:1px solid #dddfea;border-radius:12px;padding:12px;margin-top:9px"><b style="color:#292557">'+escapeHtml(r.examName||r.code||'Sınav Sonucu')+'</b><div style="margin:7px 0">Puan: '+escapeHtml(r.score||'-')+' · Yüzdelik: '+escapeHtml(r.percentile||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="font-size:13px;line-height:1.7">Türkçe: '+escapeHtml(r.turkce||'-')+' · Matematik: '+escapeHtml(r.matematik||'-')+' · Fen: '+escapeHtml(r.fen||'-')+' · İnkılap: '+escapeHtml(r.inkilap||'-')+' · Din: '+escapeHtml(r.din||'-')+' · İngilizce: '+escapeHtml(r.ingilizce||'-')+'</div></div>').join('');
+ }catch(err){
+  console.error(err);box.innerHTML='Sonuç sorgulanamadı. Lütfen bilgileri kontrol edip tekrar deneyin.';
+ }
 };
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
 
@@ -423,5 +433,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 </script>
 <script type="module" src="firebase-announcements-public.js?v=1"></script>
 <script type="module" src="firebase-applications-public.js?v=1"></script>
+<script type="module" src="firebase-portal-public.js?v=1"></script>
 </body>
 </html>
