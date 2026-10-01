@@ -1,153 +1,164 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tek Seçenek Akademi | Yönetim Paneli</title>
 <style>
 :root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--green:#25b96b;--red:#e24b4b}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#26243f}button,input,textarea,select{font:inherit}.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.sidebar{background:linear-gradient(180deg,var(--navy),var(--dark));color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh}.brand{padding:8px 10px 18px;font-weight:900;font-size:19px}.brand small{display:block;font-size:11px;opacity:.65;margin-top:4px}.nav{display:grid;gap:4px}.nav a{color:#fff;text-decoration:none;padding:11px 12px;border-radius:10px;font-size:13px;font-weight:800;opacity:.82}.nav a:hover,.nav a.active{background:var(--orange);opacity:1}.site-link{border-top:1px solid #ffffff22;margin-top:8px;padding-top:14px!important}main{padding:26px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.topbar h1{margin:0;font-size:26px}.topbar p{margin:5px 0 0;color:var(--muted)}.chip{background:#fff;padding:9px 13px;border-radius:24px;font-size:12px;font-weight:800;box-shadow:0 5px 20px #0000000c}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.stat,.box{background:#fff;border-radius:17px;padding:19px;box-shadow:0 6px 24px #24204d0d}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:28px;color:var(--navy);margin:8px 0 3px}.stat small{color:var(--muted)}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}.box h2{font-size:18px;margin:0 0 15px}.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick{border:1px solid #ececf2;background:#fafafd;border-radius:13px;padding:14px;text-align:left;cursor:pointer}.quick b{display:block;color:var(--navy);margin-bottom:4px}.quick span{font-size:12px;color:var(--muted)}.section{display:none}.section.active{display:block}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-head h2{margin:0}.primary,.secondary,.danger{border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#eef0f7;color:var(--navy)}.danger{background:#ffeded;color:#bd3030}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}.toolbar input,.toolbar select{border:1px solid #dddfea;border-radius:9px;padding:10px;background:#fff}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:900px}.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top}.table th{color:var(--muted);font-size:11px}.empty{text-align:center;padding:30px;color:var(--muted)}.status{border:1px solid #dddfea;border-radius:8px;padding:7px;background:#fff;font-size:12px}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}.field input,.field select,.field textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;background:#fff}.field textarea{min-height:92px}.savebar{grid-column:1/-1;display:flex;justify-content:flex-end;gap:9px}.list{display:grid;gap:10px}.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #ececf2;border-radius:12px;padding:13px}.item small{color:var(--muted)}.hint{padding:12px 14px;border-left:4px solid var(--orange);background:#fff5e7;border-radius:9px;color:#765329;font-size:12px;line-height:1.5;margin-bottom:14px}.pill{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:800}.pill.green{background:#e9f8f0;color:#16844a}.pill.orange{background:#fff1df;color:#a85e00}.pill.gray{background:#eef0f7;color:#555b70}
-@media(max-width:1000px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav a{white-space:nowrap}main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.form{grid-template-columns:1fr}.field.full,.savebar{grid-column:auto}.quick-grid{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#26243f}button,input,select,textarea{font:inherit}
+.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+.sidebar{background:linear-gradient(180deg,var(--navy),var(--dark));color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{padding:8px 10px 18px;font-weight:900;font-size:19px}.brand small{display:block;font-size:11px;opacity:.65;margin-top:4px}
+.nav{display:grid;gap:4px}.nav button,.nav a{display:block;width:100%;text-align:left;border:0;color:#fff;text-decoration:none;padding:12px;border-radius:10px;font-size:13px;font-weight:800;opacity:.85;background:transparent;cursor:pointer}
+.nav button:hover,.nav button.active{background:var(--orange);opacity:1}.nav a{border-top:1px solid #ffffff22;margin-top:8px}
+main{padding:26px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.topbar h1{margin:0;font-size:26px}.topbar p{margin:5px 0 0;color:var(--muted)}
+.section{display:none}.section.active{display:block}.box{background:#fff;border-radius:17px;padding:19px;box-shadow:0 6px 24px #24204d0d;margin-bottom:15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.stat{background:#fff;border-radius:17px;padding:19px}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:28px;color:var(--navy);margin-top:8px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-head h2{margin:0}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
+input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;background:#fff}.primary,.secondary,.danger{border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#eef0f7;color:var(--navy)}.danger{background:#ffeded;color:#bd3030}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:900px}.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top}.table th{color:var(--muted);font-size:11px}.empty{text-align:center;padding:28px;color:var(--muted)}
+.list{display:grid;gap:10px}.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #ececf2;border-radius:12px;padding:13px}.item small{color:var(--muted)}
+.hint{padding:12px 14px;border-left:4px solid var(--orange);background:#fff5e7;border-radius:9px;color:#765329;font-size:12px;line-height:1.5;margin-bottom:14px}
+.pill{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:800;background:#eef0f7;color:#555b70}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}
+@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sidebar"><div class="brand">Tek Seçenek Akademi<small>Yönetim Paneli</small></div><nav class="nav">
-<a class="active" href="#dashboard" data-page="dashboard">⌂ Genel Bakış</a>
-<a href="#applications" data-page="applications">▣ Başvurular</a>
-<a href="#results" data-page="results">📊 Sonuçlar</a>
-<a href="#result-categories" data-page="result-categories">🗂 Sonuç Kategorileri</a>
-<a href="#announcements" data-page="announcements">◉ Duyuru & Kampanya</a>
-<a href="#teachers" data-page="teachers">👩‍🏫 Öğretmenler</a>
-<a href="#success" data-page="success">★ Başarılar</a>
-<a href="#reviews" data-page="reviews">♡ Yorumlar</a>
-<a href="#programs" data-page="programs">▤ Programlar</a>
-<a href="#settings" data-page="settings">⚙ Site Ayarları</a>
-<a class="site-link" href="index.html" target="_blank">↗ Siteyi Gör</a>
-</nav></aside>
+<aside class="sidebar">
+<div class="brand">Tek Seçenek Akademi<small>Yönetim Paneli</small></div>
+<nav class="nav" id="nav">
+<button data-page="dashboard">⌂ Genel Bakış</button>
+<button data-page="applications">▣ Başvurular</button>
+<button data-page="results">📊 Sonuçlar</button>
+<button data-page="result-categories">🗂 Sonuç Kategorileri</button>
+<button data-page="announcements">◉ Duyuru & Kampanya</button>
+<button data-page="teachers">👩‍🏫 Öğretmenler</button>
+<button data-page="success">★ Başarılar</button>
+<button data-page="reviews">♡ Yorumlar</button>
+<button data-page="programs">▤ Programlar</button>
+<button data-page="settings">⚙ Site Ayarları</button>
+<a href="index.html" target="_blank">↗ Siteyi Gör</a>
+</nav>
+</aside>
 <main>
-<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini tek yerden yönetin.</p></div><div class="chip">● Yönetici</div></div>
+<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div></div>
 
-<section class="section active" id="dashboard">
+<section id="dashboard" class="section">
 <div class="stats">
-<div class="stat"><span>Yeni Başvuru</span><strong id="statNew">0</strong><small>İşlem bekleyen</small></div>
-<div class="stat"><span>Toplam Başvuru</span><strong id="statTotal">0</strong><small>Tüm formlar</small></div>
-<div class="stat"><span>Kayıt Olan</span><strong id="statWon">0</strong><small>Dönüşen başvuru</small></div>
-<div class="stat"><span>Yayınlanan Sonuç</span><strong id="statResults">0</strong><small>Sonuç sorgulama</small></div>
+<div class="stat"><span>Yeni Başvuru</span><strong id="statNew">0</strong></div>
+<div class="stat"><span>Toplam Başvuru</span><strong id="statTotal">0</strong></div>
+<div class="stat"><span>Kayıt Olan</span><strong id="statWon">0</strong></div>
+<div class="stat"><span>Yayınlanan Sonuç</span><strong id="statResults">0</strong></div>
 </div>
-<div class="grid"><div class="box"><h2>Hızlı İşlemler</h2><div class="quick-grid">
-<button class="quick" data-go="applications"><b>Başvuruları Gör</b><span>Ön kayıt, bursluluk ve deneme talepleri</span></button>
-<button class="quick" data-go="results"><b>Sonuç Yayınla</b><span>Öğrenci no veya sınav kodu oluştur</span></button>
-<button class="quick" data-go="announcements"><b>Duyuru Ekle</b><span>Kampanya ve kayıt duyuruları</span></button>
-<button class="quick" data-go="teachers"><b>Öğretmen Ekle</b><span>Kadroyu siteye hazırlayın</span></button>
-</div></div>
-<div class="box"><h2>Sistem Durumu</h2><div class="list">
-<div class="item"><span>Web sitesi</span><span class="pill green">Yayında</span></div>
-<div class="item"><span>Başvuru formları</span><span class="pill green">Aktif</span></div>
-<div class="item"><span>Sonuç sorgulama</span><span class="pill green">Aktif</span></div>
-<div class="item"><span>Paylaşımlı Firebase verisi</span><span class="pill orange">Bağlantı bekliyor</span></div>
-</div></div></div>
 </section>
 
-<section class="section" id="applications"><div class="box"><div class="section-head"><div><h2>Başvurular</h2><small>Ön kayıt, bursluluk, deneme ve seviye tespit talepleri.</small></div><button class="secondary" id="exportBtn">Excel/CSV Dışa Aktar</button></div>
-<div class="toolbar"><input id="searchApp" placeholder="Ad, telefon, başvuru no ara"><select id="typeFilter"><option value="">Tüm Türler</option><option>Ön Kayıt</option><option>Bursluluk</option><option>Deneme Sınavı</option><option>Seviye Tespit</option></select><select id="statusFilter"><option value="">Tüm Durumlar</option><option>Yeni Başvuru</option><option>Arandı</option><option>Görüşüldü</option><option>Kayıt Oldu</option><option>Kayıt Olmadı</option></select></div>
-<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No / Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>Program / Not</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div></div></section>
-
-<section class="section" id="results"><div class="box">
-<div class="section-head"><div><h2>Sınav Sonuçları</h2><small>Tek sonuç ekleyin veya CSV dosyasını toplu yükleyin.</small></div></div>
-<div class="toolbar">
-<button class="primary" id="addResult">+ Tek Sonuç Ekle</button>
-<button class="secondary" id="downloadResultTemplate">⬇ Excel/CSV Şablonu İndir</button>
-<button class="secondary" id="importResultsBtn">⬆ CSV Toplu Yükle</button>
-<input id="resultsFile" type="file" accept=".csv" hidden>
-<button class="secondary" id="exportResultsBtn">⇩ Sonuçları Dışa Aktar</button>
-<input id="searchResult" placeholder="Sınav adı, kod, öğrenci no veya ad ara"><select id="examFilter"><option value="">Tüm Sınavlar</option></select>
-</div>
-<div class="hint"><b>Hızlı yükleme:</b> Şablonu indirin, Excel’de açıp öğrenci bilgilerini doldurun ve <b>CSV UTF-8</b> olarak kaydedip tekrar yükleyin. Sütunlar: Sınav Kodu, Öğrenci No, Ad Soyad, Puan, Yüzdelik Dilim, Sıralama, Türkçe, Matematik, Fen, İnkılap, Din, İngilizce. T.C. kimlik numarası tutulmaz.</div>
-<div id="importInfo" style="display:none;margin-bottom:12px;padding:12px;border-radius:10px;background:#e9f8f0;color:#16844a;font-size:13px;font-weight:700"></div>
-<div style="margin:14px 0;padding:14px;border:1px solid #ececf2;border-radius:12px;background:#fafafd">
-  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
-    <div><b>Sonuç Kategorileri</b><div style="font-size:12px;color:#707487;margin-top:3px">Ana sayfadaki sonuç filtreleri buradan yönetilir.</div></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="newResultCategory" placeholder="Yeni kategori adı"><button class="primary" id="addResultCategory">+ Kategori Ekle</button></div>
-  </div>
-  <div id="resultCategoryList" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
-</div>
-<div class="table-wrap"><table class="table"><thead><tr><th>Kategori</th><th>Sınav Adı</th><th>Kod</th><th>Öğrenci No</th><th>Ad Soyad</th><th>Puan</th><th>Yüzdelik</th><th>Sıralama</th><th>Ders Sonuçları</th><th>İşlem</th></tr></thead><tbody id="resultsBody"></tbody></table></div>
+<section id="applications" class="section"><div class="box">
+<div class="section-head"><div><h2>Başvurular</h2><small>Ön kayıt, bursluluk, deneme ve seviye tespit.</small></div><button class="secondary" id="exportApps">CSV Dışa Aktar</button></div>
+<div class="toolbar"><input id="appSearch" placeholder="Ad, telefon, başvuru no ara"><select id="appType"><option value="">Tüm Türler</option><option>Ön Kayıt</option><option>Bursluluk</option><option>Deneme Sınavı</option><option>Seviye Tespit</option></select><select id="appStatus"><option value="">Tüm Durumlar</option><option>Yeni Başvuru</option><option>Arandı</option><option>Görüşüldü</option><option>Kayıt Oldu</option><option>Kayıt Olmadı</option></select></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
 </div></section>
 
-<section class="section" id="result-categories"><div class="box">
-<div class="section-head"><div><h2>Sonuç Kategorileri</h2><small>Ana sayfadaki sonuç sorgulama seçenekleri burada görünür.</small></div></div>
-<div class="hint">Buraya eklediğiniz kategoriler ana sayfadaki sonuç sorgulama menüsünde kullanılacaktır. Örnek: LGS, Türkiye Geneli Deneme, Kurum İçi Deneme, Bursluluk, TYT, AYT, YDT.</div>
-<div class="toolbar"><input id="newResultCategoryPage" placeholder="Yeni kategori adı"><button class="primary" id="addResultCategoryPage">+ Kategori Ekle</button></div>
-<div id="resultCategoryPageList" class="list"></div>
+<section id="results" class="section"><div class="box">
+<div class="section-head"><div><h2>Sınav Sonuçları</h2><small>Tek sonuç veya CSV toplu yükleme.</small></div></div>
+<div class="toolbar"><button class="primary" id="addResult">+ Tek Sonuç Ekle</button><button class="secondary" id="downloadTemplate">⬇ CSV Şablonu</button><button class="secondary" id="importBtn">⬆ CSV Toplu Yükle</button><input type="file" id="resultFile" accept=".csv" hidden><button class="secondary" id="exportResults">⇩ Sonuçları Dışa Aktar</button></div>
+<div class="toolbar"><input id="resultSearch" placeholder="Sınav, kod, öğrenci no veya ad ara"><select id="examFilter"><option value="">Tüm Sınavlar</option></select></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Kategori</th><th>Sınav Adı</th><th>Kod</th><th>Öğrenci No</th><th>Ad Soyad</th><th>Puan</th><th>Yüzdelik</th><th>Sıralama</th><th>İşlem</th></tr></thead><tbody id="resultsBody"></tbody></table></div>
 </div></section>
 
-<section class="section" id="announcements"><div class="box"><div class="section-head"><h2>Duyuru & Kampanyalar</h2><button class="primary" id="addAnnouncement">+ Duyuru Ekle</button></div><div class="list" id="announcementList"></div></div></section>
+<section id="result-categories" class="section"><div class="box">
+<div class="section-head"><div><h2>Sonuç Kategorileri</h2><small>Ana sayfadaki sonuç filtreleri.</small></div></div>
+<div class="hint">Yeni kategori eklediğinde ana sayfadaki sonuç sorgulama seçiminde kullanılabilir.</div>
+<div class="toolbar"><input id="newCategory" placeholder="Örn. Bursluluk Sınavı"><button class="primary" id="addCategory">+ Kategori Ekle</button></div>
+<div class="list" id="categoryList"></div>
+</div></section>
 
-<section class="section" id="teachers"><div class="box"><div class="section-head"><h2>Öğretmen Kadrosu</h2><button class="primary" id="addTeacher">+ Öğretmen Ekle</button></div><div class="list" id="teacherList"></div></div></section>
+<section id="announcements" class="section"><div class="box"><div class="section-head"><h2>Duyuru & Kampanya</h2><button class="primary" data-addsimple="announcement">+ Duyuru Ekle</button></div><div id="announcementList" class="list"></div></div></section>
+<section id="teachers" class="section"><div class="box"><div class="section-head"><h2>Öğretmenler</h2><button class="primary" data-addsimple="teacher">+ Öğretmen Ekle</button></div><div id="teacherList" class="list"></div></div></section>
+<section id="success" class="section"><div class="box"><div class="section-head"><h2>Başarılar</h2><button class="primary" data-addsimple="success">+ Başarı Ekle</button></div><div id="successList" class="list"></div></div></section>
+<section id="reviews" class="section"><div class="box"><div class="section-head"><h2>Yorumlar</h2><button class="primary" data-addsimple="review">+ Yorum Ekle</button></div><div id="reviewList" class="list"></div></div></section>
 
-<section class="section" id="success"><div class="box"><div class="section-head"><h2>Başarılarımız</h2><button class="primary" id="addSuccess">+ Başarı Ekle</button></div><div class="list" id="successList"></div></div></section>
-
-<section class="section" id="reviews"><div class="box"><div class="section-head"><h2>Veli & Öğrenci Yorumları</h2><button class="primary" id="addReview">+ Yorum Ekle</button></div><div class="list" id="reviewList"></div></div></section>
-
-<section class="section" id="programs"><div class="box"><div class="section-head"><h2>Eğitim Programları</h2></div><div class="list">
-<div class="item"><div><b>5–7. Sınıf</b><br><small>Ortaokul okul destek ve akademik gelişim</small></div><span class="pill green">Aktif</span></div>
-<div class="item"><div><b>8. Sınıf LGS</b><br><small>LGS hazırlık, deneme ve rehberlik</small></div><span class="pill green">Aktif</span></div>
-<div class="item"><div><b>9–12. Sınıf TYT / AYT</b><br><small>Üniversite hazırlık ve okul destek</small></div><span class="pill green">Aktif</span></div>
-<div class="item"><div><b>YDT & İngilizce</b><br><small>Dil sınıfları ve İngilizce kursları</small></div><span class="pill green">Aktif</span></div>
-<div class="item"><div><b>Deneme Kulübü</b><br><small>70 ve 120 deneme paketleri</small></div><span class="pill green">Aktif</span></div>
+<section id="programs" class="section"><div class="box"><h2>Programlar</h2><div class="list">
+<div class="item"><b>5–7. Sınıf</b><span class="pill">Aktif</span></div>
+<div class="item"><b>8. Sınıf LGS</b><span class="pill">Aktif</span></div>
+<div class="item"><b>9–12. Sınıf TYT / AYT</b><span class="pill">Aktif</span></div>
+<div class="item"><b>YDT & İngilizce</b><span class="pill">Aktif</span></div>
+<div class="item"><b>Deneme Kulübü</b><span class="pill">Aktif</span></div>
 </div></div></section>
 
-<section class="section" id="settings"><div class="box"><div class="section-head"><h2>Site Ayarları</h2></div><div class="hint">Bu sürümde içerik ve başvuru sistemi tarayıcı depolamasıyla test edilir. Kurumun tüm cihazlarda aynı verileri görmesi için sonraki teknik bağlantı Firebase Firestore olacaktır.</div><div class="form">
+<section id="settings" class="section"><div class="box"><h2>Site Ayarları</h2><div class="form">
 <div class="field"><label>WhatsApp / Cep</label><input value="0552 695 97 57"></div>
 <div class="field"><label>Sabit Telefon</label><input value="0236 238 00 66"></div>
 <div class="field full"><label>Adres</label><input value="Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa"></div>
 <div class="field full"><label>Instagram</label><input value="@manisateksecenekakademi"></div>
-<div class="savebar"><button class="primary" onclick="alert('Temel iletişim bilgileri mevcut siteye işlendi.')">Kaydet</button></div>
 </div></div></section>
-</main></div>
+</main>
+</div>
 
 <script>
-const APP_KEY='tsa_applications_v1',RESULT_KEY='tsa_results_v1',ANN_KEY='tsa_announcements_v1',TEACH_KEY='tsa_teachers_v1',SUCCESS_KEY='tsa_success_v1',REVIEW_KEY='tsa_reviews_v1',RESULT_CAT_KEY='tsa_result_categories_v1';
-const $=id=>document.getElementById(id);
-const pageTitle=$('pageTitle'),pageSub=$('pageSub');
-const statNew=$('statNew'),statTotal=$('statTotal'),statWon=$('statWon'),statResults=$('statResults');
-const searchApp=$('searchApp'),typeFilter=$('typeFilter'),statusFilter=$('statusFilter'),appsBody=$('appsBody'),exportBtn=$('exportBtn');
-const resultsBody=$('resultsBody'),addResult=$('addResult'),downloadResultTemplate=$('downloadResultTemplate'),importResultsBtn=$('importResultsBtn'),resultsFile=$('resultsFile'),exportResultsBtn=$('exportResultsBtn'),searchResult=$('searchResult'),examFilter=$('examFilter'),importInfo=$('importInfo');
-const addAnnouncement=$('addAnnouncement'),addTeacher=$('addTeacher'),addSuccess=$('addSuccess'),addReview=$('addReview');
+(function(){
+'use strict';
+var APP_KEY='tsa_applications_v1';
+var RESULT_KEY='tsa_results_v1';
+var CAT_KEY='tsa_result_categories_v1';
+var SIMPLE={announcement:['tsa_announcements_v1','announcementList','Duyuru'],teacher:['tsa_teachers_v1','teacherList','Öğretmen'],success:['tsa_success_v1','successList','Başarı'],review:['tsa_reviews_v1','reviewList','Yorum']};
+var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
+function el(id){return document.getElementById(id)}
+function get(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
+function set(key,val){localStorage.setItem(key,JSON.stringify(val))}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(s){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]})}
+function showPage(id){
+ if(!pages[id])id='dashboard';
+ var secs=document.querySelectorAll('.section');for(var i=0;i<secs.length;i++)secs[i].classList.remove('active');
+ var btns=document.querySelectorAll('[data-page]');for(var j=0;j<btns.length;j++)btns[j].classList.remove('active');
+ var sec=el(id);if(sec)sec.classList.add('active');
+ var btn=document.querySelector('[data-page="'+id+'"]');if(btn)btn.classList.add('active');
+ el('pageTitle').textContent=pages[id][0];el('pageSub').textContent=pages[id][1];
+ if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);
+ if(id==='applications')renderApps();
+ if(id==='results')renderResults();
+ if(id==='result-categories')renderCategories();
+ if(id==='announcements')renderSimple('announcement');
+ if(id==='teachers')renderSimple('teacher');
+ if(id==='success')renderSimple('success');
+ if(id==='reviews')renderSimple('review');
+ updateStats();
+}
+function updateStats(){var a=get(APP_KEY,[]),r=get(RESULT_KEY,[]);el('statNew').textContent=a.filter(function(x){return x.status==='Yeni Başvuru'}).length;el('statTotal').textContent=a.length;el('statWon').textContent=a.filter(function(x){return x.status==='Kayıt Oldu'}).length;el('statResults').textContent=r.length}
+function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="7" class="empty">Başvuru bulunamadı.</td></tr>'}
+function categories(){var a=get(CAT_KEY,[]);if(!a.length){a=['LGS','Kurum İçi Deneme','Türkiye Geneli Deneme'];set(CAT_KEY,a)}return a}
+function renderCategories(){var a=categories();el('categoryList').innerHTML=a.map(function(c,i){return '<div class="item"><b>'+esc(c)+'</b><button class="danger" data-delcat="'+i+'">Sil</button></div>'}).join('')}
+function renderResults(){var q=el('resultSearch').value.toLowerCase(),exam=el('examFilter').value;var all=get(RESULT_KEY,[]);var exams=[];all.forEach(function(x){var n=x.examName||x.code||'Sınav';if(exams.indexOf(n)<0)exams.push(n)});exams.sort();var old=exam;el('examFilter').innerHTML='<option value="">Tüm Sınavlar</option>'+exams.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');el('examFilter').value=old;var list=all.filter(function(x){var n=x.examName||x.code||'Sınav';return(!q||[x.category,x.examName,x.code,x.studentNo,x.name].join(' ').toLowerCase().indexOf(q)>-1)&&(!old||n===old)});el('resultsBody').innerHTML=list.length?list.map(function(x){return '<tr><td>'+esc(x.category||'-')+'</td><td><b>'+esc(x.examName||x.code||'Sınav')+'</b></td><td>'+esc(x.code)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.score)+'</td><td>'+esc(x.percentile||'-')+'</td><td>'+esc(x.rank||'-')+'</td><td><button class="danger" data-delresult="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="9" class="empty">Henüz sonuç eklenmedi.</td></tr>'}
+function csvDownload(name,rows){var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}).join(';')}).join('\n');var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
 
-const pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini tek yerden yönetin.'],applications:['Başvurular','Ön kayıt, bursluluk, deneme ve seviye tespit taleplerini yönetin.'],results:['Sonuçlar','Öğrenci sonuçlarını yayınlayın ve sorgulama kodlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Ana sayfadaki sınav sonuç filtrelerini buradan yönetin.'],announcements:['Duyuru & Kampanya','Güncel kayıt ve kampanya duyurularını yönetin.'],teachers:['Öğretmenler','Öğretmen kadrosunu yönetin.'],success:['Başarılarımız','Gerçek öğrenci başarılarını ekleyin.'],reviews:['Yorumlar','Veli ve öğrenci yorumlarını yönetin.'],programs:['Programlar','Aktif eğitim programlarını görüntüleyin.'],settings:['Site Ayarları','İletişim ve teknik ayarları yönetin.']};
-function jget(k,d=[]){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch(e){return d}}function jset(k,v){localStorage.setItem(k,JSON.stringify(v))}function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
-function openPage(id){if(!pages[id])id='dashboard';document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));const section=document.getElementById(id);if(section)section.classList.add('active');const nav=document.querySelector('[data-page="'+id+'"]');if(nav)nav.classList.add('active');pageTitle.textContent=pages[id][0];pageSub.textContent=pages[id][1];history.replaceState(null,'','#'+id);window.scrollTo({top:0,behavior:'smooth'});if(id==='applications')renderApps();if(id==='results')renderResults();if(id==='result-categories')renderResultCategoryPage();if(id==='announcements')renderSimple(ANN_KEY,'announcementList');if(id==='teachers')renderSimple(TEACH_KEY,'teacherList');if(id==='success')renderSimple(SUCCESS_KEY,'successList');if(id==='reviews')renderSimple(REVIEW_KEY,'reviewList');}
-document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();openPage(el.dataset.page)}));document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>openPage(el.dataset.go)));window.addEventListener('hashchange',()=>openPage(location.hash.slice(1)||'dashboard'));
-function updateStats(){const a=jget(APP_KEY),r=jget(RESULT_KEY);statNew.textContent=a.filter(x=>x.status==='Yeni Başvuru').length;statTotal.textContent=a.length;statWon.textContent=a.filter(x=>x.status==='Kayıt Oldu').length;statResults.textContent=r.length}
-function renderApps(){const q=searchApp.value.toLowerCase(),type=typeFilter.value,status=statusFilter.value;const list=jget(APP_KEY).filter(x=>(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().includes(q))&&(!type||x.type===type)&&(!status||x.status===status));appsBody.innerHTML=list.length?list.map(x=>`<tr><td>${new Date(x.createdAt).toLocaleString('tr-TR')}</td><td><b>${esc(x.basvuruNo)}</b><br><small>${esc(x.type)}</small></td><td>${esc(x.ad)}</td><td><a href="tel:${esc(x.telefon)}">${esc(x.telefon)}</a></td><td>${esc(x.sinif)}</td><td>${esc(x.program||x.okul||'-')}<br><small>${esc(x.not||'')}</small></td><td><select class="status" onchange="setStatus('${x.id}',this.value)"><option ${x.status==='Yeni Başvuru'?'selected':''}>Yeni Başvuru</option><option ${x.status==='Arandı'?'selected':''}>Arandı</option><option ${x.status==='Görüşüldü'?'selected':''}>Görüşüldü</option><option ${x.status==='Kayıt Oldu'?'selected':''}>Kayıt Oldu</option><option ${x.status==='Kayıt Olmadı'?'selected':''}>Kayıt Olmadı</option></select></td><td><button class="danger" onclick="delApp('${x.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="8" class="empty">Başvuru bulunamadı.</td></tr>';updateStats()}
-function setStatus(id,v){const a=jget(APP_KEY),x=a.find(i=>i.id===id);if(x)x.status=v;jset(APP_KEY,a);renderApps()}function delApp(id){if(!confirm('Başvuru silinsin mi?'))return;jset(APP_KEY,jget(APP_KEY).filter(x=>x.id!==id));renderApps()}
-[searchApp,typeFilter,statusFilter].forEach(x=>x.addEventListener('input',renderApps));
-exportBtn.onclick=()=>{const a=jget(APP_KEY);const rows=[['Başvuru No','Tür','Tarih','Ad Soyad','Telefon','Sınıf','Program','Not','Durum'],...a.map(x=>[x.basvuruNo,x.type,x.createdAt,x.ad,x.telefon,x.sinif,x.program||x.okul||'',x.not||'',x.status])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),ael=document.createElement('a');ael.href=u;ael.download='tek-secenek-basvurular.csv';ael.click();URL.revokeObjectURL(u)};
-function getResultCategories(){let a=jget(RESULT_CAT_KEY);if(!a.length){a=['LGS','Kurum İçi Deneme','Türkiye Geneli Deneme'];jset(RESULT_CAT_KEY,a)}return a}
-function renderResultCategories(){const cats=getResultCategories();const el=document.getElementById('resultCategoryList');if(el)el.innerHTML=cats.map((c,idx)=>'<span class="pill gray">'+esc(c)+' <button onclick="delResultCategory('+idx+')" style="border:0;background:transparent;cursor:pointer;font-weight:900">×</button></span>').join('');}
-function renderResultCategoryPage(){const cats=getResultCategories();const el=document.getElementById('resultCategoryPageList');if(!el)return;el.innerHTML=cats.length?cats.map((c,idx)=>'<div class="item"><div><b>'+esc(c)+'</b><br><small>Ana sayfa sonuç filtresinde kullanılacak.</small></div><button class="danger" onclick="delResultCategory('+idx+')">Sil</button></div>').join(''):'<div class="empty">Henüz kategori yok.</div>';}
-function addResultCategoryPageFn(){const inp=document.getElementById('newResultCategoryPage');const v=(inp.value||'').trim();if(!v)return;const cats=getResultCategories();if(!cats.some(x=>x.toLowerCase()===v.toLowerCase())){cats.push(v);jset(RESULT_CAT_KEY,cats)}inp.value='';renderResultCategoryPage();renderResultCategories();}
-function addResultCategoryFn(){const inp=document.getElementById('newResultCategory');const v=(inp.value||'').trim();if(!v)return;const cats=getResultCategories();if(!cats.some(x=>x.toLowerCase()===v.toLowerCase())){cats.push(v);jset(RESULT_CAT_KEY,cats)}inp.value='';renderResultCategories();renderResults();}
-function delResultCategory(idx){const cats=getResultCategories();cats.splice(idx,1);jset(RESULT_CAT_KEY,cats);renderResultCategories();renderResultCategoryPage();renderResults();}
-function resultDetail(x){return ['Türkçe: '+(x.turkce||'-'),'Matematik: '+(x.matematik||'-'),'Fen: '+(x.fen||'-'),'İnkılap: '+(x.inkilap||'-'),'Din: '+(x.din||'-'),'İngilizce: '+(x.ingilizce||'-')].join(' · ')}
-function renderResults(){const q=(document.getElementById('searchResult')?.value||'').toLowerCase(),exam=(document.getElementById('examFilter')?.value||'');const all=jget(RESULT_KEY);const exams=[...new Set(all.map(x=>x.examName||x.code||'Sınav').filter(Boolean))].sort();if(examFilter){const current=examFilter.value;examFilter.innerHTML='<option value="">Tüm Sınavlar</option>'+exams.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');examFilter.value=current}renderResultCategories();const list=all.filter(x=>(!q||[x.examName,x.code,x.studentNo,x.name].join(' ').toLowerCase().includes(q))&&(!exam||(x.examName||x.code||'Sınav')===exam));resultsBody.innerHTML=list.length?list.map(x=>`<tr><td>${esc(x.category||'-')}</td><td><b>${esc(x.examName||x.code||'Sınav')}</b></td><td>${esc(x.code)}</td><td>${esc(x.studentNo)}</td><td>${esc(x.name)}</td><td>${esc(x.score)}</td><td>${esc(x.percentile||'-')}</td><td>${esc(x.rank||'-')}</td><td><small>${esc(resultDetail(x))}</small></td><td><button class="danger" onclick="delResult('${x.id}')">Sil</button></td></tr>`).join(''):'<tr><td colspan="10" class="empty">Henüz sonuç eklenmedi.</td></tr>';updateStats()}
-addResult.onclick=()=>{const name=prompt('Öğrenci Ad Soyad:');if(!name)return;const studentNo=prompt('Öğrenci No / TC:')||'';const cats=getResultCategories();const category=prompt('Kategori:\n'+cats.join(' / '),cats[0]||'LGS')||'';const examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';const code=prompt('Sınav Kodu:','SINAV-'+Date.now().toString().slice(-5))||'';const score=prompt('Puan:')||'';const percentile=prompt('Yüzdelik Dilim:')||'';const rank=prompt('Sıralama:')||'';const turkce=prompt('Türkçe neti:')||'';const matematik=prompt('Matematik neti:')||'';const fen=prompt('Fen neti:')||'';const inkilap=prompt('İnkılap neti:')||'';const din=prompt('Din neti:')||'';const ingilizce=prompt('İngilizce neti:')||'';const a=jget(RESULT_KEY);a.unshift({id:String(Date.now()),name,studentNo,category,examName,code,score,percentile,rank,turkce,matematik,fen,inkilap,din,ingilizce});jset(RESULT_KEY,a);renderResults()};
-function delResult(id){if(!confirm('Bu sonuç silinsin mi?'))return;jset(RESULT_KEY,jget(RESULT_KEY).filter(x=>x.id!==id));renderResults()}
-document.getElementById('searchResult').addEventListener('input',renderResults);document.getElementById('examFilter').addEventListener('change',renderResults);const addCatBtn=$('addResultCategory'),addCatPageBtn=$('addResultCategoryPage');if(addCatBtn)addCatBtn.addEventListener('click',addResultCategoryFn);if(addCatPageBtn)addCatPageBtn.addEventListener('click',addResultCategoryPageFn);
-function downloadCsv(filename,rows){const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=filename;a.click();URL.revokeObjectURL(u)}
-downloadResultTemplate.onclick=()=>downloadCsv('tek-secenek-sonuc-sablonu.csv',[
-['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],
-['LGS','LGS 2026','LGS-2026','1001','Örnek Öğrenci','450,125','2,15','1250','18,75','17,50','19,25','9,50','9,00','8,75']
-]);
-exportResultsBtn.onclick=()=>{const a=jget(RESULT_KEY);downloadCsv('tek-secenek-sinav-sonuclari.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],...a.map(x=>[x.category||'',x.examName||x.code||'Sınav',x.code,x.studentNo,x.name,x.score,x.percentile,x.rank,x.turkce,x.matematik,x.fen,x.inkilap,x.din,x.ingilizce])])};
-importResultsBtn.onclick=()=>resultsFile.click();
-resultsFile.onchange=async(e)=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{if(!file.name.toLowerCase().endsWith('.csv'))throw new Error('Lütfen CSV dosyası seçin.');const text=await file.text();const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(line=>line.trim()!=='');if(lines.length<2)throw new Error('Dosyada öğrenci satırı bulunamadı.');const sep=(lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length?';':',';const parseLine=(line)=>{const out=[];let cur='',q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}else if(ch===sep&&!q){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out};const rows=lines.map(parseLine);const h=rows[0].map(x=>String(x).trim().toLowerCase());const col=(...names)=>h.findIndex(v=>names.some(n=>v===n));const ix={category:col('kategori','sınav kategorisi','sinav kategorisi'),examName:col('sınav adı','sinav adi','sınav','sinav'),code:col('sınav kodu','sinav kodu','kod'),studentNo:col('öğrenci no','ogrenci no','öğrenci numarası','ogrenci numarasi'),name:col('ad soyad','öğrenci','ogrenci'),score:col('puan'),percentile:col('yüzdelik dilim','yuzdelik dilim','yüzdelik','yuzdelik'),rank:col('sıralama','siralama'),turkce:col('türkçe','turkce'),matematik:col('matematik'),fen:col('fen'),inkilap:col('inkılap','inkilap'),din:col('din'),ingilizce:col('ingilizce','ingilizce net')};if(ix.name<0||ix.code<0)throw new Error('En az “Sınav Kodu” ve “Ad Soyad” sütunları bulunmalı.');const existing=jget(RESULT_KEY),byKey=new Map(existing.map(x=>[(x.code||'')+'|'+(x.studentNo||'')+'|'+(x.name||''),x]));let imported=0;for(const r of rows.slice(1)){if(!r[ix.name])continue;const obj={id:String(Date.now())+'-'+imported,category:ix.category>=0?String(r[ix.category]||'').trim():'',examName:ix.examName>=0?String(r[ix.examName]||'').trim():'',code:ix.code>=0?String(r[ix.code]||'').trim():'',studentNo:ix.studentNo>=0?String(r[ix.studentNo]||'').trim():'',name:String(r[ix.name]||'').trim(),score:ix.score>=0?String(r[ix.score]||'').trim():'',percentile:ix.percentile>=0?String(r[ix.percentile]||'').trim():'',rank:ix.rank>=0?String(r[ix.rank]||'').trim():'',turkce:ix.turkce>=0?String(r[ix.turkce]||'').trim():'',matematik:ix.matematik>=0?String(r[ix.matematik]||'').trim():'',fen:ix.fen>=0?String(r[ix.fen]||'').trim():'',inkilap:ix.inkilap>=0?String(r[ix.inkilap]||'').trim():'',din:ix.din>=0?String(r[ix.din]||'').trim():'',ingilizce:ix.ingilizce>=0?String(r[ix.ingilizce]||'').trim():''};const key=obj.code+'|'+obj.studentNo+'|'+obj.name;if(byKey.has(key))Object.assign(byKey.get(key),obj,{id:byKey.get(key).id});else{existing.unshift(obj);byKey.set(key,obj)}imported++}jset(RESULT_KEY,existing);importInfo.style.display='block';importInfo.textContent=imported+' öğrenci sonucu başarıyla yüklendi/güncellendi.';renderResults()}catch(err){alert('Dosya yüklenemedi: '+err.message)}finally{e.target.value=''}};
+document.getElementById('nav').addEventListener('click',function(e){var b=e.target.closest('button[data-page]');if(!b)return;showPage(b.getAttribute('data-page'))});
+window.addEventListener('hashchange',function(){showPage(location.hash.slice(1)||'dashboard')});
+['appSearch','appType','appStatus'].forEach(function(id){el(id).addEventListener('input',renderApps)});
+el('resultSearch').addEventListener('input',renderResults);el('examFilter').addEventListener('change',renderResults);
 
-function addSimple(key,title){const head=prompt(title+' başlığı / adı:');if(!head)return;const text=prompt('Açıklama:')||'';const a=jget(key);a.unshift({id:String(Date.now()),head,text,active:true});jset(key,a);renderSimple(key,key===ANN_KEY?'announcementList':key===TEACH_KEY?'teacherList':key===SUCCESS_KEY?'successList':'reviewList')}
-function renderSimple(key,id){const list=jget(key),el=document.getElementById(id);el.innerHTML=list.length?list.map(x=>`<div class="item"><div><b>${esc(x.head)}</b><br><small>${esc(x.text)}</small></div><div><span class="pill green">Yayında</span> <button class="danger" onclick="delSimple('${key}','${x.id}','${id}')">Sil</button></div></div>`).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
-function delSimple(key,id,target){jset(key,jget(key).filter(x=>x.id!==id));renderSimple(key,target)}
-addAnnouncement.onclick=()=>addSimple(ANN_KEY,'Duyuru');addTeacher.onclick=()=>addSimple(TEACH_KEY,'Öğretmen');addSuccess.onclick=()=>addSimple(SUCCESS_KEY,'Başarı');addReview.onclick=()=>addSimple(REVIEW_KEY,'Yorum');
-updateStats();openPage(location.hash.slice(1)||'dashboard');
+document.body.addEventListener('click',function(e){
+ var d=e.target;
+ if(d.hasAttribute('data-delapp')){var id=d.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats()}
+ if(d.hasAttribute('data-delresult')){var rid=d.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats()}
+ if(d.hasAttribute('data-delcat')){var a=categories(),i=parseInt(d.getAttribute('data-delcat'),10);a.splice(i,1);set(CAT_KEY,a);renderCategories()}
+ if(d.hasAttribute('data-delsimple')){var t=d.getAttribute('data-delsimple'),m=SIMPLE[t],sid=d.getAttribute('data-id');set(m[0],get(m[0],[]).filter(function(x){return String(x.id)!==sid}));renderSimple(t)}
+ if(d.hasAttribute('data-addsimple')){var t2=d.getAttribute('data-addsimple'),m2=SIMPLE[t2],h=prompt(m2[2]+' başlığı / adı:');if(h){var tx=prompt('Açıklama:')||'';var arr=get(m2[0],[]);arr.unshift({id:String(Date.now()),head:h,text:tx});set(m2[0],arr);renderSimple(t2)}}
+});
+document.body.addEventListener('change',function(e){if(e.target.hasAttribute('data-status')){var id=e.target.getAttribute('data-status'),a=get(APP_KEY,[]);a.forEach(function(x){if(String(x.id)===id)x.status=e.target.value});set(APP_KEY,a);updateStats()}});
+
+el('addCategory').addEventListener('click',function(){var v=el('newCategory').value.trim();if(!v)return;var a=categories();if(!a.some(function(x){return x.toLowerCase()===v.toLowerCase()})){a.push(v);set(CAT_KEY,a)}el('newCategory').value='';renderCategories()});
+el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var category=prompt('Kategori:',categories()[0]||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var a=get(RESULT_KEY,[]);a.unshift({id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank});set(RESULT_KEY,a);renderResults();updateStats()});
+el('downloadTemplate').addEventListener('click',function(){csvDownload('tek-secenek-sonuc-sablonu.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],['LGS','LGS 2026','LGS-2026','1001','Örnek Öğrenci','450,125','2,15','1250','18,75','17,50','19,25','9,50','9,00','8,75']])});
+el('exportResults').addEventListener('click',function(){var a=get(RESULT_KEY,[]);csvDownload('tek-secenek-sinav-sonuclari.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama'],].concat(a.map(function(x){return[x.category,x.examName,x.code,x.studentNo,x.name,x.score,x.percentile,x.rank]})))});
+el('exportApps').addEventListener('click',function(){var a=get(APP_KEY,[]);csvDownload('tek-secenek-basvurular.csv',[['Başvuru No','Tür','Tarih','Ad Soyad','Telefon','Sınıf','Durum']].concat(a.map(function(x){return[x.basvuruNo,x.type,x.createdAt,x.ad,x.telefon,x.sinif,x.status]})))});
+el('importBtn').addEventListener('click',function(){el('resultFile').click()});
+el('resultFile').addEventListener('change',async function(e){var file=e.target.files[0];if(!file)return;try{var text=await file.text();var lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(function(x){return x.trim()});if(lines.length<2)throw new Error('Dosyada öğrenci satırı yok.');var sep=((lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length)?';':',';function parse(line){var out=[],cur='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===sep&&!q){out.push(cur);cur=''}else cur+=ch}out.push(cur);return out}var rows=lines.map(parse),h=rows[0].map(function(x){return x.trim().toLowerCase()});function col(){for(var i=0;i<arguments.length;i++){var z=h.indexOf(arguments[i]);if(z>-1)return z}return-1}var ix={category:col('kategori'),examName:col('sınav adı','sinav adi'),code:col('sınav kodu','sinav kodu','kod'),studentNo:col('öğrenci no','ogrenci no'),name:col('ad soyad'),score:col('puan'),percentile:col('yüzdelik dilim','yuzdelik dilim'),rank:col('sıralama','siralama'),turkce:col('türkçe','turkce'),matematik:col('matematik'),fen:col('fen'),inkilap:col('inkılap','inkilap'),din:col('din'),ingilizce:col('ingilizce')};if(ix.name<0||ix.code<0)throw new Error('Sınav Kodu ve Ad Soyad sütunları gerekli.');var a=get(RESULT_KEY,[]);for(var r=1;r<rows.length;r++){if(!rows[r][ix.name])continue;var o={id:String(Date.now())+'-'+r};Object.keys(ix).forEach(function(k){var p=ix[k];o[k]=p>=0?String(rows[r][p]||'').trim():''});a.unshift(o)}set(RESULT_KEY,a);renderResults();updateStats();alert((rows.length-1)+' sonuç yüklendi.')}catch(err){alert('Dosya yüklenemedi: '+err.message)}e.target.value=''});
+
+showPage(location.hash.slice(1)||'dashboard');
+})();
 </script>
-</body></html>
+</body>
+</html>
