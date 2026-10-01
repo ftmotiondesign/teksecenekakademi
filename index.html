@@ -863,6 +863,9 @@ footer{
     grid-column:auto;
   }
 
+  /* Mobilde bilgi formu Eğitimler bölümünün hemen ardından gösterilir */
+  #bilgial{padding-top:55px}
+
   .lead-box{padding:40px 22px}
 
   .footer-inner{
@@ -1001,6 +1004,112 @@ YDT Dil sınıfları ve farklı seviyelere yönelik
 </div>
 </div>
 </section>
+
+<!-- BİLGİ AL -->
+
+<section id="bilgial" class="lead">
+<div class="container">
+
+<div class="lead-box">
+
+<h2>Programlarımız Hakkında Bilgi Al</h2>
+
+<p>
+Bilgilerinizi doldurun ve ne hakkında bilgi almak istediğinizi
+kısaca yazın. Talebiniz WhatsApp mesajına otomatik eklenecektir.
+</p>
+
+
+<form class="form-grid" onsubmit="formGonder(event)">
+
+<input
+type="text"
+id="adsoyad"
+placeholder="Ad Soyad"
+required
+>
+
+<input
+type="tel"
+id="telefon"
+placeholder="Telefon Numaranız"
+required
+>
+
+
+<select id="sinif" required>
+
+<option value="">Öğrencinin Sınıfı</option>
+<option>5. Sınıf</option>
+<option>6. Sınıf</option>
+<option>7. Sınıf</option>
+<option>8. Sınıf</option>
+<option>9. Sınıf</option>
+<option>10. Sınıf</option>
+<option>11. Sınıf</option>
+<option>12. Sınıf</option>
+<option>Mezun</option>
+
+</select>
+
+
+<select id="program" required>
+
+<option value="">İlgilendiğiniz Program</option>
+<option>Ortaokul Programı</option>
+<option>LGS Hazırlık</option>
+<option>TYT / AYT</option>
+<option>YDT Dil</option>
+<option>İngilizce Kursu</option>
+<option>Deneme Kulübü</option>
+
+</select>
+
+
+<div class="message-field">
+
+<label for="mesaj">
+Talebinizi kısaca anlatın <span>*</span>
+</label>
+
+<small class="message-help">
+Örneğin; ücret bilgisi, ders saatleri, kayıt şartları veya
+öğrenciniz için merak ettiğiniz konuyu yazabilirsiniz.
+</small>
+
+<textarea
+id="mesaj"
+required
+placeholder="Örn: 8. sınıf LGS programının ders saatleri ve ücretleri hakkında bilgi almak istiyorum."
+></textarea>
+
+</div>
+
+
+<button class="form-submit" type="submit">
+
+<svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+<path d="M16.04 3C8.86 3 3.02 8.78 3.02 15.9c0 2.27.6 4.49 1.73 6.44L3 28.75l6.6-1.72a13.1 13.1 0 0 0 6.43 1.65h.01c7.18 0 13.02-5.78 13.02-12.89C29.06 8.78 23.22 3 16.04 3zm0 23.5h-.01a10.9 10.9 0 0 1-5.55-1.51l-.4-.24-3.92 1.02 1.05-3.79-.26-.4a10.65 10.65 0 0 1-1.69-5.68c0-5.92 4.84-10.73 10.79-10.73 5.95 0 10.79 4.81 10.79 10.73 0 5.91-4.85 10.6-10.8 10.6zm5.92-8.03c-.32-.16-1.92-.94-2.22-1.05-.3-.11-.51-.16-.73.16-.22.32-.84 1.05-1.03 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.58-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.49.14-.65.15-.14.32-.38.49-.57.16-.19.22-.32.32-.54.11-.21.05-.4-.03-.57-.08-.16-.73-1.75-1-2.4-.26-.63-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.4-.3.32-1.14 1.11-1.14 2.7s1.17 3.13 1.33 3.34c.16.21 2.3 3.48 5.57 4.88.78.33 1.39.53 1.86.68.78.25 1.49.21 2.05.13.63-.09 1.92-.78 2.19-1.54.27-.75.27-1.4.19-1.54-.08-.13-.3-.21-.62-.37z"/>
+</svg>
+
+WhatsApp'tan Bilgi Al
+
+</button>
+
+
+<div class="form-note">
+* Talebinizi yazmanız zorunludur. Butona bastığınızda WhatsApp açılır ve bilgileriniz hazır mesaj olarak oluşturulur.
+</div>
+
+</form>
+</div>
+</div>
+</section>
+
+
+<!-- İLETİŞİM -->
+
+
 
 
 <section id="neden">
@@ -1236,110 +1345,6 @@ Instagram'a Git
 </div>
 </section>
 
-
-<!-- BİLGİ AL -->
-
-<section id="bilgial" class="lead">
-<div class="container">
-
-<div class="lead-box">
-
-<h2>Programlarımız Hakkında Bilgi Al</h2>
-
-<p>
-Bilgilerinizi doldurun ve ne hakkında bilgi almak istediğinizi
-kısaca yazın. Talebiniz WhatsApp mesajına otomatik eklenecektir.
-</p>
-
-
-<form class="form-grid" onsubmit="formGonder(event)">
-
-<input
-type="text"
-id="adsoyad"
-placeholder="Ad Soyad"
-required
->
-
-<input
-type="tel"
-id="telefon"
-placeholder="Telefon Numaranız"
-required
->
-
-
-<select id="sinif" required>
-
-<option value="">Öğrencinin Sınıfı</option>
-<option>5. Sınıf</option>
-<option>6. Sınıf</option>
-<option>7. Sınıf</option>
-<option>8. Sınıf</option>
-<option>9. Sınıf</option>
-<option>10. Sınıf</option>
-<option>11. Sınıf</option>
-<option>12. Sınıf</option>
-<option>Mezun</option>
-
-</select>
-
-
-<select id="program" required>
-
-<option value="">İlgilendiğiniz Program</option>
-<option>Ortaokul Programı</option>
-<option>LGS Hazırlık</option>
-<option>TYT / AYT</option>
-<option>YDT Dil</option>
-<option>İngilizce Kursu</option>
-<option>Deneme Kulübü</option>
-
-</select>
-
-
-<div class="message-field">
-
-<label for="mesaj">
-Talebinizi kısaca anlatın <span>*</span>
-</label>
-
-<small class="message-help">
-Örneğin; ücret bilgisi, ders saatleri, kayıt şartları veya
-öğrenciniz için merak ettiğiniz konuyu yazabilirsiniz.
-</small>
-
-<textarea
-id="mesaj"
-required
-placeholder="Örn: 8. sınıf LGS programının ders saatleri ve ücretleri hakkında bilgi almak istiyorum."
-></textarea>
-
-</div>
-
-
-<button class="form-submit" type="submit">
-
-<svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
-<path d="M16.04 3C8.86 3 3.02 8.78 3.02 15.9c0 2.27.6 4.49 1.73 6.44L3 28.75l6.6-1.72a13.1 13.1 0 0 0 6.43 1.65h.01c7.18 0 13.02-5.78 13.02-12.89C29.06 8.78 23.22 3 16.04 3zm0 23.5h-.01a10.9 10.9 0 0 1-5.55-1.51l-.4-.24-3.92 1.02 1.05-3.79-.26-.4a10.65 10.65 0 0 1-1.69-5.68c0-5.92 4.84-10.73 10.79-10.73 5.95 0 10.79 4.81 10.79 10.73 0 5.91-4.85 10.6-10.8 10.6zm5.92-8.03c-.32-.16-1.92-.94-2.22-1.05-.3-.11-.51-.16-.73.16-.22.32-.84 1.05-1.03 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.58-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.49.14-.65.15-.14.32-.38.49-.57.16-.19.22-.32.32-.54.11-.21.05-.4-.03-.57-.08-.16-.73-1.75-1-2.4-.26-.63-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.4-.3.32-1.14 1.11-1.14 2.7s1.17 3.13 1.33 3.34c.16.21 2.3 3.48 5.57 4.88.78.33 1.39.53 1.86.68.78.25 1.49.21 2.05.13.63-.09 1.92-.78 2.19-1.54.27-.75.27-1.4.19-1.54-.08-.13-.3-.21-.62-.37z"/>
-</svg>
-
-WhatsApp'tan Bilgi Al
-
-</button>
-
-
-<div class="form-note">
-* Talebinizi yazmanız zorunludur. Butona bastığınızda WhatsApp açılır ve bilgileriniz hazır mesaj olarak oluşturulur.
-</div>
-
-</form>
-</div>
-</div>
-</section>
-
-
-<!-- İLETİŞİM -->
 
 <section id="iletisim" class="contact">
 <div class="container">
