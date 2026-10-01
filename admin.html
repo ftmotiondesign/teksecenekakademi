@@ -14,7 +14,14 @@
 .nav button:hover,.nav button.active{background:var(--orange);opacity:1}.nav a{border-top:1px solid #ffffff22;margin-top:8px}
 main{padding:26px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.topbar h1{margin:0;font-size:26px}.topbar p{margin:5px 0 0;color:var(--muted)}
 .section{display:none}.section.active{display:block}.box{background:#fff;border-radius:17px;padding:19px;box-shadow:0 6px 24px #24204d0d;margin-bottom:15px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.stat{background:#fff;border-radius:17px;padding:19px}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:28px;color:var(--navy);margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:13px}
+.dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}
+.dashboard-grid.two{grid-template-columns:1fr 1fr}
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.quick-action{border:1px solid #ececf2;background:#fafafd;border-radius:12px;padding:14px;text-align:left;cursor:pointer}
+.quick-action b{display:block;color:var(--navy);margin-bottom:4px}.quick-action span{font-size:12px;color:var(--muted)}
+.alert-list{display:grid;gap:9px}.alert-item{padding:12px;border-radius:10px;background:#fff8ee;border-left:4px solid var(--orange);font-size:13px}
+.status-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #eee}.status-ok{color:var(--green);font-weight:800}.status-warn{color:var(--orange);font-weight:800}.stat{background:#fff;border-radius:17px;padding:19px}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:28px;color:var(--navy);margin-top:8px}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-head h2{margin:0}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
 input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;background:#fff}.primary,.secondary,.danger{border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#eef0f7;color:var(--navy)}.danger{background:#ffeded;color:#bd3030}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:900px}.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top}.table th{color:var(--muted);font-size:11px}.empty{text-align:center;padding:28px;color:var(--muted)}
@@ -22,7 +29,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 .hint{padding:12px 14px;border-left:4px solid var(--orange);background:#fff5e7;border-radius:9px;color:#765329;font-size:12px;line-height:1.5;margin-bottom:14px}
 .pill{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:800;background:#eef0f7;color:#555b70}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}
-@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}.dashboard-grid,.dashboard-grid.two{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -48,10 +55,53 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 
 <section id="dashboard" class="section">
 <div class="stats">
-<div class="stat"><span>Yeni Başvuru</span><strong id="statNew">0</strong></div>
-<div class="stat"><span>Toplam Başvuru</span><strong id="statTotal">0</strong></div>
-<div class="stat"><span>Kayıt Olan</span><strong id="statWon">0</strong></div>
-<div class="stat"><span>Yayınlanan Sonuç</span><strong id="statResults">0</strong></div>
+<div class="stat"><span>Yeni Başvuru</span><strong id="statNew">0</strong><small>İşlem bekleyen</small></div>
+<div class="stat"><span>Toplam Başvuru</span><strong id="statTotal">0</strong><small>Tüm başvurular</small></div>
+<div class="stat"><span>Kayıt Olan</span><strong id="statWon">0</strong><small>Dönüşen başvuru</small></div>
+<div class="stat"><span>Yayınlanan Sonuç</span><strong id="statResults">0</strong><small>Toplam öğrenci sonucu</small></div>
+<div class="stat"><span>Aktif Sınav</span><strong id="statExams">0</strong><small>Farklı sınav sayısı</small></div>
+<div class="stat"><span>Aktif Kategori</span><strong id="statCats">0</strong><small>Sonuç kategorileri</small></div>
+</div>
+
+<div class="dashboard-grid">
+<div class="box">
+<div class="section-head"><div><h2>Son Başvurular</h2><small>En son gelen 5 başvuru</small></div><button class="secondary" data-dashgo="applications">Tümünü Gör</button></div>
+<div id="dashRecentApps" class="list"></div>
+</div>
+<div class="box">
+<div class="section-head"><div><h2>Son Yayınlanan Sınavlar</h2><small>Son eklenen sonuç grupları</small></div><button class="secondary" data-dashgo="results">Sonuçlara Git</button></div>
+<div id="dashRecentExams" class="list"></div>
+</div>
+</div>
+
+<div class="dashboard-grid two">
+<div class="box">
+<h2>Hızlı İşlemler</h2>
+<div class="quick-grid">
+<button class="quick-action" data-dashgo="results"><b>+ Sonuç Yükle</b><span>Tek veya toplu sınav sonucu ekle</span></button>
+<button class="quick-action" data-dashgo="result-categories"><b>+ Kategori Ekle</b><span>Yeni sonuç kategorisi oluştur</span></button>
+<button class="quick-action" data-dashgo="announcements"><b>+ Duyuru Ekle</b><span>Kampanya veya duyuru yayınla</span></button>
+<button class="quick-action" data-dashgo="teachers"><b>+ Öğretmen Ekle</b><span>Öğretmen kadrosunu düzenle</span></button>
+</div>
+</div>
+<div class="box">
+<h2>Bekleyen İşler / Uyarılar</h2>
+<div id="dashAlerts" class="alert-list"></div>
+</div>
+</div>
+
+<div class="dashboard-grid two">
+<div class="box">
+<h2>Başvuru Dağılımı</h2>
+<div id="dashAppBreakdown" class="list"></div>
+</div>
+<div class="box">
+<h2>Sistem Durumu</h2>
+<div class="status-row"><span>Web sitesi</span><span class="status-ok">Aktif</span></div>
+<div class="status-row"><span>Başvuru formları</span><span class="status-ok">Aktif</span></div>
+<div class="status-row"><span>Sonuç sorgulama</span><span class="status-ok">Aktif</span></div>
+<div class="status-row"><span>Firebase / Ortak veri</span><span class="status-warn">Bağlı değil</span></div>
+</div>
 </div>
 </section>
 
@@ -117,7 +167,7 @@ function showPage(id){
  var btn=document.querySelector('[data-page="'+id+'"]');if(btn)btn.classList.add('active');
  el('pageTitle').textContent=pages[id][0];el('pageSub').textContent=pages[id][1];
  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);
- if(id==='applications')renderApps();
+ if(id==='dashboard')renderDashboard();if(id==='applications')renderApps();
  if(id==='results')renderResults();
  if(id==='result-categories')renderCategories();
  if(id==='announcements')renderSimple('announcement');
@@ -126,7 +176,47 @@ function showPage(id){
  if(id==='reviews')renderSimple('review');
  updateStats();
 }
-function updateStats(){var a=get(APP_KEY,[]),r=get(RESULT_KEY,[]);el('statNew').textContent=a.filter(function(x){return x.status==='Yeni Başvuru'}).length;el('statTotal').textContent=a.length;el('statWon').textContent=a.filter(function(x){return x.status==='Kayıt Oldu'}).length;el('statResults').textContent=r.length}
+function updateStats(){
+ var a=get(APP_KEY,[]),r=get(RESULT_KEY,[]),cats=categories();
+ el('statNew').textContent=a.filter(function(x){return x.status==='Yeni Başvuru'}).length;
+ el('statTotal').textContent=a.length;
+ el('statWon').textContent=a.filter(function(x){return x.status==='Kayıt Oldu'}).length;
+ el('statResults').textContent=r.length;
+ var exams=[];r.forEach(function(x){var n=x.examName||x.code||'Sınav';if(exams.indexOf(n)<0)exams.push(n)});
+ el('statExams').textContent=exams.length;
+ el('statCats').textContent=cats.filter(function(x){return x.active!==false}).length;
+}
+function renderDashboard(){
+ var apps=get(APP_KEY,[]),results=get(RESULT_KEY,[]),cats=categories();
+ var recent=apps.slice(0,5);
+ el('dashRecentApps').innerHTML=recent.length?recent.map(function(x){
+  return '<div class="item"><div><b>'+esc(x.ad||'-')+'</b><br><small>'+esc(x.type||'-')+' · '+esc(x.sinif||'-')+'</small></div><span class="pill">'+esc(x.status||'Yeni Başvuru')+'</span></div>'
+ }).join(''):'<div class="empty">Henüz başvuru yok.</div>';
+
+ var names=[];
+ results.forEach(function(x){
+  var n=x.examName||x.code||'Sınav';
+  if(!names.some(function(y){return y.name===n}))names.push({name:n,category:x.category||'-',code:x.code||'-'});
+ });
+ el('dashRecentExams').innerHTML=names.slice(0,5).length?names.slice(0,5).map(function(x){
+  return '<div class="item"><div><b>'+esc(x.name)+'</b><br><small>'+esc(x.category)+' · '+esc(x.code)+'</small></div><span class="pill">Yayında</span></div>'
+ }).join(''):'<div class="empty">Henüz sınav sonucu yok.</div>';
+
+ var newCount=apps.filter(function(x){return x.status==='Yeni Başvuru'}).length;
+ var passiveCount=cats.filter(function(x){return x.active===false}).length;
+ var alerts=[];
+ if(newCount)alerts.push('<div class="alert-item"><b>'+newCount+' yeni başvuru</b> işlem bekliyor.</div>');
+ if(passiveCount)alerts.push('<div class="alert-item"><b>'+passiveCount+' sonuç kategorisi</b> pasif durumda.</div>');
+ if(!results.length)alerts.push('<div class="alert-item">Henüz yayınlanmış sınav sonucu yok.</div>');
+ alerts.push('<div class="alert-item"><b>Firebase bağlı değil.</b> Veriler şu an bu tarayıcıda tutuluyor.</div>');
+ el('dashAlerts').innerHTML=alerts.join('');
+
+ var types=['Ön Kayıt','Bursluluk','Deneme Sınavı','Seviye Tespit'];
+ el('dashAppBreakdown').innerHTML=types.map(function(t){
+  var n=apps.filter(function(x){return x.type===t}).length;
+  return '<div class="item"><b>'+esc(t)+'</b><span class="pill">'+n+'</span></div>'
+ }).join('');
+}
 function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="7" class="empty">Başvuru bulunamadı.</td></tr>'}
 function categories(){
  var a=get(CAT_KEY,[]);
@@ -147,6 +237,10 @@ function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML
 
 document.getElementById('nav').addEventListener('click',function(e){var b=e.target.closest('button[data-page]');if(!b)return;showPage(b.getAttribute('data-page'))});
 window.addEventListener('hashchange',function(){showPage(location.hash.slice(1)||'dashboard')});
+document.body.addEventListener('click',function(e){
+ var q=e.target.closest('[data-dashgo]');
+ if(q){showPage(q.getAttribute('data-dashgo'));return;}
+});
 ['appSearch','appType','appStatus'].forEach(function(id){el(id).addEventListener('input',renderApps)});
 el('resultSearch').addEventListener('input',renderResults);el('examFilter').addEventListener('change',renderResults);
 
