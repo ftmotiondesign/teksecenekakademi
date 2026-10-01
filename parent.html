@@ -31,10 +31,9 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
   <main class="login-card">
     <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Veli Paneli</span></div></div>
     <h1>Veli Girişi</h1>
-    <div class="desc">Size iletilen takip numarası ve başvuru sırasında kullanılan veli telefon numarasıyla giriş yapın. Bu bilgilerle öğrencinizin başvuru ve sınav sürecini takip edebilirsiniz.</div>
-    <div class="login-grid">
-      <input id="applicationNo" placeholder="Takip No (örn. TSA-12345678)" autocomplete="off">
-      <input id="parentPhone" placeholder="Veli Telefonu">
+    <div class="desc">Takip numaranızı <b>veya</b> başvuru sırasında kullandığınız veli telefon numarasını yazmanız yeterlidir.</div>
+    <div class="login-grid" style="grid-template-columns:1fr">
+      <input id="parentLogin" placeholder="Takip No veya Veli Telefonu" autocomplete="off">
     </div>
     <button id="parentBtn" class="login-btn">Giriş Yap</button>
     <div id="loginError"></div>
@@ -120,9 +119,11 @@ function normPhone(v){
 }
 function normTrack(v){return String(v||'').trim().replace(/\s+/g,'').toUpperCase()}
 function get(key){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}}
-function findApplication(no,phone){
- const n=normTrack(no),p=normPhone(phone);
- return get(APP_KEY).find(x=>normTrack(x.basvuruNo)===n && normPhone(x.telefon)===p);
+function findApplication(value){
+ const raw=String(value||'').trim();
+ if(!raw)return null;
+ const track=normTrack(raw), phone=normPhone(raw);
+ return get(APP_KEY).find(x=>normTrack(x.basvuruNo)===track || normPhone(x.telefon)===phone);
 }
 function studentResults(app){
  const all=get(RESULT_KEY);
@@ -163,15 +164,16 @@ function openPanel(app){
  document.getElementById('announcementList').innerHTML=anns.length?anns.slice(0,5).map(x=>'<div class="announcement"><b>'+esc(x.head||'Duyuru')+'</b><small>'+esc(x.text||'')+'</small></div>').join(''):'<div class="announcement"><b>2026–2027 Kayıtlarımız Devam Ediyor</b><small>Programlarımız ve kayıt süreci hakkında kurumumuzdan bilgi alabilirsiniz.</small></div>';
 }
 function login(){
- const no=document.getElementById('applicationNo').value.trim(),phone=document.getElementById('parentPhone').value.trim(),err=document.getElementById('loginError');
- const app=findApplication(no,phone);
- if(!app){err.innerHTML='<div class="empty">Takip numarası ve veli telefonu eşleşmedi.</div>';return;}
- err.innerHTML='';sessionStorage.setItem(SESSION_KEY,JSON.stringify({no:no,phone:phone}));openPanel(app);
+ const value=document.getElementById('parentLogin').value.trim(),err=document.getElementById('loginError');
+ if(!value){err.innerHTML='<div class="empty">Takip numarası veya veli telefonunuzu yazın.</div>';return;}
+ const app=findApplication(value);
+ if(!app){err.innerHTML='<div class="empty">Bu bilgiyle eşleşen veli / öğrenci kaydı bulunamadı.</div>';return;}
+ err.innerHTML='';sessionStorage.setItem(SESSION_KEY,value);openPanel(app);
 }
 document.getElementById('parentBtn').addEventListener('click',login);
-['applicationNo','parentPhone'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')login()}));
+document.getElementById('parentLogin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
-try{const saved=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');if(saved){const app=findApplication(saved.no,saved.phone);if(app)openPanel(app);else sessionStorage.removeItem(SESSION_KEY)}}catch(e){}
+const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const app=findApplication(saved);if(app)openPanel(app);else sessionStorage.removeItem(SESSION_KEY)}
 </script>
 </body>
 </html>
