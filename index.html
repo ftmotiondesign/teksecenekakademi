@@ -1,32 +1,1381 @@
-<div class="contact-line">
-  📍 Utku Mah. Çimentepe Cd. No: 4/4,
-  45060 Şehzadeler / Manisa
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tek Seçenek Akademi | Şehzadeler Manisa</title>
+<meta name="description" content="Tek Seçenek Akademi Manisa Şehzadeler. 5, 6, 7, 8, 9, 10, 11 ve 12. sınıflar, LGS, TYT, AYT, YDT ve İngilizce eğitim programları.">
+
+<style>
+
+:root{
+  --lacivert:#292557;
+  --koyu:#1c1848;
+  --turuncu:#f28a00;
+  --acik:#f6f7fb;
+  --yazi:#5f6472;
+  --beyaz:#ffffff;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--lacivert);
+  background:#fff;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+}
+
+.container{
+  width:min(1180px,88%);
+  margin:auto;
+}
+
+/* HEADER */
+
+header{
+  height:86px;
+  background:rgba(255,255,255,.97);
+  display:flex;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 4px 20px rgba(20,20,60,.08);
+}
+
+.header-inner{
+  width:min(1500px,88%);
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo img{
+  width:76px;
+  height:76px;
+  object-fit:contain;
+  display:block;
+}
+
+nav{
+  display:flex;
+  align-items:center;
+  gap:29px;
+}
+
+nav a{
+  color:var(--lacivert);
+  font-weight:700;
+  font-size:15px;
+}
+
+nav a:hover{
+  color:var(--turuncu);
+}
+
+.menu-btn{
+  background:var(--turuncu);
+  color:#fff!important;
+  padding:14px 23px;
+  border-radius:30px;
+}
+
+/* HERO */
+
+.hero{
+  min-height:calc(100vh - 86px);
+  display:flex;
+  align-items:center;
+  position:relative;
+
+  background:
+  linear-gradient(
+    90deg,
+    rgba(25,21,70,.96) 0%,
+    rgba(25,21,70,.83) 37%,
+    rgba(25,21,70,.32) 69%,
+    rgba(25,21,70,.06) 100%
+  ),
+  url("bina.png");
+
+  background-size:cover;
+  background-position:center;
+}
+
+.hero-content{
+  width:min(1500px,84%);
+  margin:auto;
+  color:#fff;
+}
+
+.hero-text{
+  max-width:700px;
+}
+
+.location{
+  display:inline-block;
+  background:var(--turuncu);
+  padding:9px 17px;
+  border-radius:30px;
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:22px;
+}
+
+.hero h1{
+  font-size:clamp(48px,5.2vw,78px);
+  line-height:1.05;
+  letter-spacing:-2px;
+}
+
+.hero h1 span{
+  color:var(--turuncu);
+}
+
+.hero p{
+  font-size:19px;
+  line-height:1.7;
+  margin:25px 0 32px;
+  max-width:630px;
+  color:rgba(255,255,255,.94);
+}
+
+.hero-buttons{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:16px 27px;
+  border-radius:30px;
+  font-weight:800;
+  display:inline-block;
+  transition:.25s;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+}
+
+.btn-orange{
+  background:var(--turuncu);
+  color:#fff;
+}
+
+.btn-white{
+  background:#fff;
+  color:var(--lacivert);
+}
+
+/* KAYIT ŞERİDİ */
+
+.registration{
+  background:var(--turuncu);
+  color:#fff;
+  padding:25px 0;
+}
+
+.registration-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+}
+
+.registration h3{
+  font-size:23px;
+}
+
+.registration p{
+  margin-top:5px;
+  opacity:.95;
+}
+
+.registration a{
+  background:#fff;
+  color:var(--lacivert);
+  padding:13px 22px;
+  border-radius:25px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* GENEL */
+
+section{
+  padding:95px 0;
+}
+
+.section-head{
+  text-align:center;
+  max-width:750px;
+  margin:0 auto 50px;
+}
+
+.section-head small{
+  color:var(--turuncu);
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.section-head h2{
+  font-size:clamp(31px,4vw,43px);
+  margin:10px 0 14px;
+}
+
+.section-head p{
+  color:var(--yazi);
+  line-height:1.7;
+}
+
+/* EĞİTİMLER */
+
+.education{
+  background:var(--acik);
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  padding:34px 27px;
+  border-radius:22px;
+  box-shadow:0 10px 35px rgba(30,25,80,.07);
+  transition:.3s;
+  border-bottom:4px solid transparent;
+}
+
+.card:hover{
+  transform:translateY(-7px);
+  border-bottom-color:var(--turuncu);
+}
+
+.icon{
+  width:58px;
+  height:58px;
+  border-radius:16px;
+  background:var(--lacivert);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:22px;
+}
+
+.card h3{
+  font-size:20px;
+  margin-bottom:12px;
+}
+
+.card p{
+  color:var(--yazi);
+  font-size:15px;
+  line-height:1.65;
+}
+
+/* NEDEN */
+
+.why-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:25px;
+}
+
+.why-item{
+  padding:30px;
+  border:1px solid #e7e7ef;
+  border-radius:20px;
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+}
+
+.why-number{
+  min-width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#fff1df;
+  color:var(--turuncu);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:900;
+}
+
+.why-item h3{
+  margin-bottom:8px;
+}
+
+.why-item p{
+  color:var(--yazi);
+  line-height:1.6;
+}
+
+/* DENEME */
+
+.deneme{
+  background:var(--lacivert);
+  color:#fff;
+}
+
+.deneme-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  align-items:center;
+  gap:70px;
+}
+
+.deneme h2{
+  font-size:45px;
+  line-height:1.1;
+  margin-bottom:20px;
+}
+
+.deneme h2 span{
+  color:var(--turuncu);
+}
+
+.deneme-text{
+  color:#deddeb;
+  line-height:1.8;
+  margin-bottom:25px;
+}
+
+.checks{
+  display:grid;
+  gap:12px;
+}
+
+.checks div{
+  background:rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:14px 17px;
+}
+
+.packages{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.package{
+  background:#fff;
+  color:var(--lacivert);
+  border-radius:24px;
+  text-align:center;
+  padding:42px 15px;
+}
+
+.package strong{
+  display:block;
+  font-size:58px;
+  color:var(--turuncu);
+}
+
+.package span{
+  font-weight:800;
+}
+
+/* BAŞARI */
+
+.success{
+  background:#fff;
+}
+
+.success-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.success-card{
+  border-radius:22px;
+  background:var(--acik);
+  padding:32px;
+  text-align:center;
+}
+
+.success-card strong{
+  color:var(--turuncu);
+  font-size:35px;
+  display:block;
+  margin-bottom:8px;
+}
+
+.success-card p{
+  color:var(--yazi);
+  line-height:1.5;
+}
+
+/* GALERİ */
+
+.gallery{
+  background:var(--acik);
+}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:15px;
+}
+
+.gallery-box{
+  min-height:260px;
+  border-radius:22px;
+  overflow:hidden;
+  position:relative;
+  background:#ddd;
+}
+
+.gallery-box:first-child{
+  background:url("bina.png") center/cover;
+}
+
+.gallery-placeholder{
+  height:100%;
+  min-height:260px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--lacivert),#48417d);
+  color:#fff;
+  text-align:center;
+  padding:30px;
+}
+
+.gallery-placeholder span{
+  opacity:.8;
+}
+
+/* FORM */
+
+.lead{
+  background:#fff;
+}
+
+.lead-box{
+  max-width:900px;
+  margin:auto;
+  background:var(--lacivert);
+  border-radius:30px;
+  padding:55px;
+  color:#fff;
+}
+
+.lead-box h2{
+  text-align:center;
+  font-size:38px;
+  margin-bottom:10px;
+}
+
+.lead-box > p{
+  text-align:center;
+  color:#d9d7e5;
+  margin-bottom:35px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:17px;
+  border:none;
+  outline:none;
+  border-radius:12px;
+  font-size:15px;
+  font-family:inherit;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+  grid-column:1/-1;
+}
+
+.form-submit{
+  grid-column:1/-1;
+  border:none;
+  background:var(--turuncu);
+  color:#fff;
+  padding:17px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.form-note{
+  grid-column:1/-1;
+  font-size:12px;
+  color:#bbb8ce;
+  text-align:center;
+}
+
+/* İLETİŞİM */
+
+.contact{
+  background:var(--acik);
+}
+
+.contact-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.contact-card{
+  background:#fff;
+  border-radius:25px;
+  padding:40px;
+  box-shadow:0 8px 30px rgba(0,0,0,.05);
+}
+
+.contact-card h3{
+  font-size:27px;
+  margin-bottom:20px;
+}
+
+.contact-line{
+  padding:14px 0;
+  border-bottom:1px solid #eee;
+  color:var(--yazi);
+}
+
+.contact-actions{
+  display:flex;
+  gap:10px;
+  margin-top:25px;
+  flex-wrap:wrap;
+}
+
+.small-btn{
+  background:var(--lacivert);
+  color:#fff;
+  padding:13px 18px;
+  border-radius:25px;
+  font-weight:700;
+}
+
+/* HARİTA PLACEHOLDER */
+
+.map-box{
+  background:linear-gradient(135deg,#e9e9f2,#d8d8e7);
+  min-height:330px;
+  border-radius:25px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+}
+
+.map-box h3{
+  margin-bottom:10px;
+}
+
+.map-box p{
+  color:var(--yazi);
+}
+
+/* FOOTER */
+
+footer{
+  background:var(--koyu);
+  color:#bdbbd0;
+  padding:45px 0;
+}
+
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:30px;
+}
+
+.footer-logo{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.footer-logo img{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+}
+
+.footer-logo strong{
+  color:#fff;
+  display:block;
+  margin-bottom:5px;
+}
+
+/* MOBİL ALT MENÜ */
+
+.mobile-bar{
+  display:none;
+}
+
+/* MOBİL */
+
+@media(max-width:900px){
+
+  header{
+    height:75px;
+  }
+
+  .logo img{
+    width:65px;
+    height:65px;
+  }
+
+  nav a:not(.menu-btn){
+    display:none;
+  }
+
+  .menu-btn{
+    padding:11px 17px;
+    font-size:13px;
+  }
+
+  .hero{
+    min-height:78vh;
+    background:
+    linear-gradient(
+      rgba(25,21,70,.72),
+      rgba(25,21,70,.82)
+    ),
+    url("bina.png");
+    background-size:cover;
+    background-position:center;
+  }
+
+  .hero-content{
+    width:88%;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .registration-inner{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .deneme-grid,
+  .contact-grid{
+    grid-template-columns:1fr;
+  }
+
+  .gallery-grid{
+    grid-template-columns:1fr;
+  }
+
+  .why-grid{
+    grid-template-columns:1fr;
+  }
+
+  .success-grid{
+    grid-template-columns:1fr;
+  }
+
+  .mobile-bar{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#fff;
+    z-index:2000;
+    box-shadow:0 -5px 20px rgba(0,0,0,.12);
+  }
+
+  .mobile-bar a{
+    text-align:center;
+    padding:14px 5px;
+    color:var(--lacivert);
+    font-size:13px;
+    font-weight:800;
+    border-right:1px solid #eee;
+  }
+
+  .mobile-bar a:last-child{
+    background:var(--turuncu);
+    color:#fff;
+  }
+
+  footer{
+    padding-bottom:80px;
+  }
+}
+
+@media(max-width:600px){
+
+  section{
+    padding:70px 0;
+  }
+
+  .hero h1{
+    font-size:41px;
+  }
+
+  .hero p{
+    font-size:17px;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .packages{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .package{
+    padding:30px 10px;
+  }
+
+  .package strong{
+    font-size:45px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  textarea,
+  .form-submit,
+  .form-note{
+    grid-column:auto;
+  }
+
+  .lead-box{
+    padding:40px 22px;
+  }
+
+  .lead-box h2{
+    font-size:31px;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+
+    <a class="logo" href="#">
+      <img src="logo.png" alt="Tek Seçenek Akademi">
+    </a>
+
+    <nav>
+      <a href="#egitimler">Eğitimlerimiz</a>
+      <a href="#neden">Neden Biz?</a>
+      <a href="#deneme">Deneme Kulübü</a>
+      <a href="#basari">Başarılarımız</a>
+      <a href="#iletisim">İletişim</a>
+      <a href="#bilgial" class="menu-btn">Bilgi Al</a>
+    </nav>
+
+  </div>
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="hero-text">
+
+      <span class="location">
+        ŞEHZADELER • MANİSA
+      </span>
+
+      <h1>
+        Geleceğin İçin<br>
+        <span>Tek Seçenek.</span>
+      </h1>
+
+      <p>
+        Başarıya giden yolda güçlü eğitim, düzenli takip
+        ve hedef odaklı çalışma sistemiyle öğrencilerimizin
+        yanındayız.
+      </p>
+
+      <div class="hero-buttons">
+
+        <a href="#egitimler" class="btn btn-orange">
+          Eğitimleri İncele
+        </a>
+
+        <a href="#bilgial" class="btn btn-white">
+          Bilgi Al
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- KAYIT -->
+
+<div class="registration">
+
+  <div class="container registration-inner">
+
+    <div>
+      <h3>2026–2027 Kayıtlarımız Devam Ediyor</h3>
+      <p>
+        5 • 6 • 7 • 8 • 9 • 10 • 11 • 12. Sınıflar
+        &nbsp; • &nbsp; YDT &nbsp; • &nbsp; İngilizce
+      </p>
+    </div>
+
+    <a href="#bilgial">Kayıt Bilgisi Al</a>
+
+  </div>
+
 </div>
 
-<div class="contact-line">
-  📱 0552 695 97 57
+
+<!-- EĞİTİMLER -->
+
+<section id="egitimler" class="education">
+
+<div class="container">
+
+  <div class="section-head">
+
+    <small>EĞİTİM PROGRAMLARIMIZ</small>
+
+    <h2>Hedefine Uygun Programı Seç</h2>
+
+    <p>
+      Ortaokuldan üniversite hazırlığa kadar öğrencilerimizin
+      akademik gelişimini destekleyen eğitim programları.
+    </p>
+
+  </div>
+
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="icon">5–7</div>
+      <h3>Ortaokul</h3>
+      <p>
+        5, 6 ve 7. sınıflara yönelik okul destek,
+        konu takibi ve akademik gelişim programları.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="icon">LGS</div>
+      <h3>8. Sınıf</h3>
+      <p>
+        LGS hazırlığında konu çalışmaları, soru çözümü,
+        düzenli denemeler ve öğrenci takibi.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="icon">TYT</div>
+      <h3>9–12. Sınıflar</h3>
+      <p>
+        Lise destek programları ile TYT ve AYT
+        sınavlarına sistemli hazırlık.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="icon">YDT</div>
+      <h3>YDT & İngilizce</h3>
+      <p>
+        YDT Dil sınıfları ve farklı seviyelere yönelik
+        İngilizce eğitim programları.
+      </p>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+
+<!-- NEDEN -->
+
+<section id="neden">
+
+<div class="container">
+
+  <div class="section-head">
+
+    <small>NEDEN TEK SEÇENEK?</small>
+
+    <h2>Başarıyı Birlikte Planlıyoruz</h2>
+
+    <p>
+      Eğitim sürecini yalnızca ders anlatımı olarak değil,
+      düzenli takip ve gelişim süreci olarak ele alıyoruz.
+    </p>
+
+  </div>
+
+
+  <div class="why-grid">
+
+    <div class="why-item">
+      <div class="why-number">01</div>
+      <div>
+        <h3>Düzenli Öğrenci Takibi</h3>
+        <p>
+          Öğrencinin gelişimi ve eksikleri düzenli olarak
+          takip edilir.
+        </p>
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-number">02</div>
+      <div>
+        <h3>Deneme Sınavları</h3>
+        <p>
+          Farklı yayınlardan denemelerle gerçek sınav
+          deneyimine hazırlık sağlanır.
+        </p>
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-number">03</div>
+      <div>
+        <h3>Hedef Odaklı Çalışma</h3>
+        <p>
+          Öğrencinin sınıfına ve hedefine uygun çalışma
+          sistemi oluşturulur.
+        </p>
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-number">04</div>
+      <div>
+        <h3>Güçlü Eğitim Ortamı</h3>
+        <p>
+          Öğrencinin derslerine odaklanabileceği düzenli
+          ve destekleyici eğitim ortamı.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+
+<!-- DENEME -->
+
+<section id="deneme" class="deneme">
+
+<div class="container deneme-grid">
+
+  <div>
+
+    <h2>
+      Sınava Değil,<br>
+      <span>Sınav Gününe Hazırlan.</span>
+    </h2>
+
+    <p class="deneme-text">
+      Deneme Kulübü ile farklı yayınların sınavlarını çöz,
+      seviyeni düzenli olarak gör ve eksiklerini gerçek
+      sınavdan önce belirle.
+    </p>
+
+    <div class="checks">
+
+      <div>✓ Türkiye geneli denemeler</div>
+      <div>✓ Düzenli sonuç ve gelişim takibi</div>
+      <div>✓ Farklı yayınlardan sınav deneyimi</div>
+      <div>✓ Hedef odaklı sınav hazırlığı</div>
+
+    </div>
+
+  </div>
+
+
+  <div class="packages">
+
+    <div class="package">
+      <strong>70</strong>
+      <span>Deneme Paketi</span>
+    </div>
+
+    <div class="package">
+      <strong>120</strong>
+      <span>Deneme Paketi</span>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+
+<!-- BAŞARI -->
+
+<section id="basari" class="success">
+
+<div class="container">
+
+  <div class="section-head">
+
+    <small>BAŞARI YOLCULUĞU</small>
+
+    <h2>Her Öğrencinin Bir Hedefi Var</h2>
+
+    <p>
+      Bizim görevimiz o hedefe giden yolu doğru planlamak,
+      gelişimi takip etmek ve öğrencimizin yanında olmak.
+    </p>
+
+  </div>
+
+
+  <div class="success-grid">
+
+    <div class="success-card">
+      <strong>5–12</strong>
+      <p>Sınıf seviyelerine uygun eğitim programları</p>
+    </div>
+
+    <div class="success-card">
+      <strong>LGS</strong>
+      <p>Ortaöğretime geçiş sınavına planlı hazırlık</p>
+    </div>
+
+    <div class="success-card">
+      <strong>TYT • AYT • YDT</strong>
+      <p>Üniversite hedeflerine yönelik sınav hazırlığı</p>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+
+<!-- GALERİ -->
+
+<section class="gallery">
+
+<div class="container">
+
+  <div class="section-head">
+
+    <small>TEK SEÇENEK AKADEMİ</small>
+
+    <h2>Kurumumuzdan Görüntüler</h2>
+
+    <p>
+      Eğitim ortamımızı ve çalışmalarımızı yakından keşfedin.
+    </p>
+
+  </div>
+
+
+  <div class="gallery-grid">
+
+    <div class="gallery-box"></div>
+
+    <div class="gallery-box">
+      <div class="gallery-placeholder">
+        <span>
+          Sınıf fotoğraflarımız<br>
+          yakında burada.
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-box">
+      <div class="gallery-placeholder">
+        <span>
+          Etkinlik ve eğitim<br>
+          fotoğraflarımız.
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+
+<!-- BİLGİ AL -->
+
+<section id="bilgial" class="lead">
+
+<div class="container">
+
+  <div class="lead-box">
+
+    <h2>Programlarımız Hakkında Bilgi Al</h2>
+
+    <p>
+      Öğrencinin sınıfını ve ilgilendiğiniz programı seçin.
+    </p>
+
+
+    <form class="form-grid" onsubmit="formGonder(event)">
+
+      <input
+        type="text"
+        id="adsoyad"
+        placeholder="Ad Soyad"
+        required
+      >
+
+      <input
+        type="tel"
+        id="telefon"
+        placeholder="Telefon"
+        required
+      >
+
+
+      <select id="sinif" required>
+
+        <option value="">Öğrencinin Sınıfı</option>
+        <option>5. Sınıf</option>
+        <option>6. Sınıf</option>
+        <option>7. Sınıf</option>
+        <option>8. Sınıf</option>
+        <option>9. Sınıf</option>
+        <option>10. Sınıf</option>
+        <option>11. Sınıf</option>
+        <option>12. Sınıf</option>
+        <option>Mezun</option>
+
+      </select>
+
+
+      <select id="program" required>
+
+        <option value="">İlgilendiğiniz Program</option>
+        <option>Ortaokul Programı</option>
+        <option>LGS Hazırlık</option>
+        <option>TYT / AYT</option>
+        <option>YDT Dil</option>
+        <option>İngilizce Kursu</option>
+        <option>Deneme Kulübü</option>
+
+      </select>
+
+
+      <textarea
+        id="mesaj"
+        placeholder="Eklemek istediğiniz bir not varsa yazabilirsiniz."
+      ></textarea>
+
+
+      <button class="form-submit" type="submit">
+        Bilgi Talebi Oluştur
+      </button>
+
+      <div class="form-note">
+        Bu form şu anda tanıtım amaçlıdır. İletişim sistemi
+        sonraki aşamada aktif hale getirilecektir.
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+</section>
+
+
+<!-- İLETİŞİM -->
+
+<section id="iletisim" class="contact">
+
+<div class="container">
+
+  <div class="section-head">
+
+    <small>İLETİŞİM</small>
+
+    <h2>Tek Seçenek Akademi'ye Ulaşın</h2>
+
+  </div>
+
+
+  <div class="contact-grid">
+
+    <div class="contact-card">
+
+      <h3>Tek Seçenek Akademi</h3>
+
+      <div class="contact-line">
+        📍 Şehzadeler / Manisa
+      </div>
+
+      <div class="contact-line">
+        🎓 5–12. Sınıflar
+      </div>
+
+      <div class="contact-line">
+        📚 LGS • TYT • AYT • YDT
+      </div>
+
+      <div class="contact-line">
+        🌐 İngilizce Eğitim Programları
+      </div>
+
+
+      <div class="contact-actions">
+
+        <a href="#bilgial" class="small-btn">
+          Bilgi Al
+        </a>
+
+        <a href="#iletisim" class="small-btn">
+          Telefon
+        </a>
+
+        <a href="#iletisim" class="small-btn">
+          WhatsApp
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div class="map-box">
+
+      <div>
+        <h3>📍 Şehzadeler • Manisa</h3>
+
+        <p>
+          Google Harita bağlantısını sonraki aşamada
+          buraya ekleyeceğiz.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+
+<footer>
+
+<div class="container footer-inner">
+
+  <div class="footer-logo">
+
+    <img src="logo.png" alt="Tek Seçenek Akademi">
+
+    <div>
+      <strong>Tek Seçenek Akademi</strong>
+      Şehzadeler • Manisa
+    </div>
+
+  </div>
+
+  <div>
+    © 2026 Tek Seçenek Akademi
+  </div>
+
 </div>
 
-<div class="contact-line">
-  ☎ 0236 238 00 66
-</div>
+</footer>
 
-<div class="contact-actions">
 
-  <a href="tel:+905526959757" class="small-btn">
-    📞 Hemen Ara
+<!-- MOBİL ALT BAR -->
+
+<div class="mobile-bar">
+
+  <a href="#iletisim">
+    ☎ Ara
   </a>
 
-  <a href="https://wa.me/905526959757"
-     target="_blank"
-     class="small-btn">
+  <a href="#iletisim">
     WhatsApp
   </a>
 
-  <a href="https://www.instagram.com/manisateksecenekakademi/"
-     target="_blank"
-     class="small-btn">
-    Instagram
+  <a href="#bilgial">
+    Bilgi Al
   </a>
 
 </div>
+
+
+<script>
+
+function formGonder(event){
+
+  event.preventDefault();
+
+  alert(
+    "Bilgi talebi formu hazır. Telefon/WhatsApp veya bir veri sistemi bağlandığında bu bilgiler doğrudan kuruma gönderilecek."
+  );
+
+}
+
+</script>
+
+</body>
+</html>
