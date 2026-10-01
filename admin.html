@@ -178,7 +178,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
     <input id="peopleSearch" placeholder="Öğrenci, veli telefonu, başvuru no ara">
   </div>
   <div id="studentsPanel">
-    <div class="table-wrap"><table class="table"><thead><tr><th>Öğrenci</th><th>Sınıf</th><th>Öğrenci No</th><th>Takip No</th><th>Veli Telefonu</th><th>Okul</th><th>Öğrenci Durumu / Yapılan Eylem</th><th>İşlem</th></tr></thead><tbody id="studentsBody"></tbody></table></div>
+    <div class="table-wrap"><table class="table"><thead><tr><th>Öğrenci</th><th>Sınıf</th><th>Öğrenci No</th><th>Takip No</th><th>Öğrenci Cep</th><th>Veli Telefonu</th><th>Okul</th><th>Öğrenci Durumu / Yapılan Eylem</th><th>İşlem</th></tr></thead><tbody id="studentsBody"></tbody></table></div>
   </div>
   <div id="parentsPanel" style="display:none">
     <div class="table-wrap"><table class="table"><thead><tr><th>Veli Ad Soyad</th><th>Veli Telefonu</th><th>Öğrenci</th><th>Sınıf</th><th>Takip No</th><th>Tür</th><th>İlçe / Okul</th><th>Veli Durumu / Yapılan Eylem</th><th>İşlem</th></tr></thead><tbody id="parentsBody"></tbody></table></div>
@@ -331,18 +331,19 @@ function renderPeople(){
  var students=[];
  apps.forEach(function(a){
   var r=results.find(function(x){return String(x.name||'').trim().toLocaleLowerCase('tr-TR')===String(a.ad||'').trim().toLocaleLowerCase('tr-TR')});
-  students.push({appId:a.id,name:a.ad||'-',sinif:a.sinif||'-',studentNo:r?r.studentNo||'-':'-',basvuruNo:a.basvuruNo||'-',telefon:a.telefon||'-',okul:a.okul||'-',action:a.studentAction||'Yeni Öğrenci'});
+  students.push({appId:a.id,name:a.ad||'-',sinif:a.sinif||'-',studentNo:r?r.studentNo||'-':'-',basvuruNo:a.basvuruNo||'-',ogrenciTelefon:a.ogrenciTelefon||'',telefon:a.telefon||'-',okul:a.okul||'-',action:a.studentAction||'Yeni Öğrenci'});
  });
  results.forEach(function(r){
   if(!students.some(function(s){return String(s.name).trim().toLocaleLowerCase('tr-TR')===String(r.name||'').trim().toLocaleLowerCase('tr-TR')})){
-   students.push({appId:'',name:r.name||'-',sinif:r.sinif||'-',studentNo:r.studentNo||'-',basvuruNo:'-',telefon:'-',okul:'-',action:'Sonuç Kaydı'});
+   students.push({appId:'',name:r.name||'-',sinif:r.sinif||'-',studentNo:r.studentNo||'-',basvuruNo:'-',ogrenciTelefon:'',telefon:'-',okul:'-',action:'Sonuç Kaydı'});
   }
  });
- students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.telefon,x.okul,x.action].join(' ').toLowerCase().indexOf(q)>-1});
+ students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.ogrenciTelefon,x.telefon,x.okul,x.action].join(' ').toLowerCase().indexOf(q)>-1});
  el('studentsBody').innerHTML=students.length?students.map(function(x){
   var sel=x.appId?'<select data-studentaction="'+esc(x.appId)+'">'+studentOpts.map(function(s){return '<option'+(s===x.action?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>':'<span class="pill">'+esc(x.action)+'</span>';
   var save=x.appId?'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button><span id="studentSaved-'+esc(x.appId)+'" style="display:none;color:#187f4a;font-weight:900;font-size:12px">✓ Kaydedildi</span></div>':'<span class="pill">Başvuru kaydı yok</span>';
-  return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td>'+sel+'</td><td>'+save+'</td></tr>';
+  var phoneInput=x.appId?'<input data-studentphone="'+esc(x.appId)+'" value="'+esc(x.ogrenciTelefon||'')+'" placeholder="05xx xxx xx xx" style="min-width:130px">':esc(x.ogrenciTelefon||'-');
+  return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+phoneInput+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td>'+sel+'</td><td>'+save+'</td></tr>';
  }).join(''):'<tr><td colspan="8" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
 }
 function categories(){
@@ -390,8 +391,8 @@ document.body.addEventListener('click',function(e){
   return;
  }
  if(saveStudent){
-  var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
-  sa.forEach(function(x){if(String(x.id)===String(sid)){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.studentActionUpdatedAt=new Date().toISOString();studentSaved=true}});
+  var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
+  sa.forEach(function(x){if(String(x.id)===String(sid)){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.ogrenciTelefon=sphone?sphone.value.trim():(x.ogrenciTelefon||'');x.studentActionUpdatedAt=new Date().toISOString();studentSaved=true}});
   if(studentSaved){
    set(APP_KEY,sa);
    var savedText=document.getElementById('studentSaved-'+sid);
