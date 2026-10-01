@@ -49,6 +49,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <button data-page="results">📊 Sonuçlar</button>
 <button data-page="result-categories">🗂 Sonuç Kategorileri</button>
 <button data-page="announcements">◉ Duyuru & Kampanya</button>
+<button data-page="site-content">✎ Web Sayfası İçerikleri</button>
 <button data-page="banner">🖼 Ana Sayfa Banner</button>
 <button data-page="gallery">🎞 Galeri Yönetimi</button>
 <button data-page="teachers">👩‍🏫 Öğretmenler</button>
@@ -280,6 +281,67 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <section id="reviews" class="section"><div class="box"><div class="section-head"><h2>Yorumlar</h2><button class="primary" data-addsimple="review">+ Yorum Ekle</button></div><div id="reviewList" class="list"></div></div></section>
 
 
+
+<section id="site-content" class="section">
+  <div class="box">
+    <div class="section-head">
+      <div><h2>Web Sayfası İçerikleri</h2><small>Ana sayfada şu an görünen temel metinleri buradan düzenleyin.</small></div>
+      <a class="secondary" style="text-decoration:none" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a>
+    </div>
+    <div class="hint">Değişiklikler <b>Kaydet</b> butonuna bastığınızda ana sayfaya yansır. Şimdilik aynı tarayıcıda çalışır; Firebase'e geçtiğimizde tüm cihazlarda ortak olacaktır.</div>
+    <div class="form">
+      <div class="field full"><label>Programlar Bölümü Başlığı</label><input id="scProgramsTitle"></div>
+      <div class="field full"><label>Programlar Bölümü Açıklaması</label><textarea id="scProgramsText"></textarea></div>
+
+      <div class="field"><label>1. Program Başlığı</label><input id="scProgram1Title"></div>
+      <div class="field"><label>1. Program Açıklaması</label><input id="scProgram1Text"></div>
+      <div class="field"><label>2. Program Başlığı</label><input id="scProgram2Title"></div>
+      <div class="field"><label>2. Program Açıklaması</label><input id="scProgram2Text"></div>
+      <div class="field"><label>3. Program Başlığı</label><input id="scProgram3Title"></div>
+      <div class="field"><label>3. Program Açıklaması</label><input id="scProgram3Text"></div>
+      <div class="field"><label>4. Program Başlığı</label><input id="scProgram4Title"></div>
+      <div class="field"><label>4. Program Açıklaması</label><input id="scProgram4Text"></div>
+
+      <div class="field"><label>Hızlı Kart 1 Başlık</label><input id="scQuick1Title"></div>
+      <div class="field"><label>Hızlı Kart 1 Açıklama</label><input id="scQuick1Text"></div>
+      <div class="field"><label>Hızlı Kart 2 Başlık</label><input id="scQuick2Title"></div>
+      <div class="field"><label>Hızlı Kart 2 Açıklama</label><input id="scQuick2Text"></div>
+      <div class="field"><label>Hızlı Kart 3 Başlık</label><input id="scQuick3Title"></div>
+      <div class="field"><label>Hızlı Kart 3 Açıklama</label><input id="scQuick3Text"></div>
+
+      <div class="field full"><label>Program Bul Başlığı</label><input id="scFinderTitle"></div>
+      <div class="field full"><label>Program Bul Açıklaması</label><input id="scFinderText"></div>
+
+      <div class="field full"><label>Başvuru Merkezi Başlığı</label><input id="scApplyTitle"></div>
+      <div class="field full"><label>Başvuru Merkezi Açıklaması</label><textarea id="scApplyText"></textarea></div>
+
+      <div class="field full"><label>Sonuç Bölümü Başlığı</label><input id="scResultTitle"></div>
+      <div class="field full"><label>Duyurular Başlığı</label><input id="scAnnouncementsTitle"></div>
+      <div class="field full"><label>Öğretmenler Başlığı</label><input id="scTeachersTitle"></div>
+      <div class="field full"><label>Öğretmenler Açıklaması</label><textarea id="scTeachersText"></textarea></div>
+      <div class="field full"><label>Başarılar Başlığı</label><input id="scSuccessTitle"></div>
+      <div class="field full"><label>Yorumlar Başlığı</label><input id="scReviewsTitle"></div>
+      <div class="field full"><label>Yorumlar Açıklaması</label><textarea id="scReviewsText"></textarea></div>
+
+      <div class="field full"><label>İletişim Başlığı</label><input id="scContactTitle"></div>
+      <div class="field"><label>Kurum Adı</label><input id="scContactName"></div>
+      <div class="field"><label>Adres</label><input id="scAddress"></div>
+      <div class="field"><label>Cep Telefonu</label><input id="scMobile"></div>
+      <div class="field"><label>Sabit Telefon</label><input id="scLandline"></div>
+      <div class="field full"><label>Harita Açıklaması</label><textarea id="scMapText"></textarea></div>
+
+      <div class="field"><label>Sabit Ön Kayıt Kutusu Başlık</label><input id="scFloatTitle"></div>
+      <div class="field"><label>Sabit Ön Kayıt Kutusu Buton</label><input id="scFloatText"></div>
+      <div class="field full"><label>Footer Telif Yazısı</label><input id="scCopyright"></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px">
+      <button class="primary" id="saveSiteContent" type="button">Değişiklikleri Kaydet</button>
+      <button class="secondary" id="resetSiteContent" type="button">Varsayılan Metinlere Dön</button>
+      <span id="siteContentSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
+    </div>
+  </div>
+</section>
+
 <section id="banner" class="section">
   <div class="box">
     <div class="section-head">
@@ -317,7 +379,7 @@ var RESULT_KEY='tsa_results_v1';
 var CAT_KEY='tsa_result_categories_v1';
 var HERO_KEY='tsa_hero_slides_v1';
 var SIMPLE={announcement:['tsa_announcements_v1','announcementList','Duyuru'],teacher:['tsa_teachers_v1','teacherList','Öğretmen'],success:['tsa_success_v1','successList','Başarı'],review:['tsa_reviews_v1','reviewList','Yorum']};
-var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],banner:['Ana Sayfa Banner','Ana sayfadaki slider bannerlarını yönetin.'],gallery:['Galeri Yönetimi','PNG, JPG/JPEG ve video içeriklerini yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
+var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],'site-content':['Web Sayfası İçerikleri','Ana sayfada görünen metinleri buradan düzenleyin.'],banner:['Ana Sayfa Banner','Ana sayfadaki slider bannerlarını yönetin.'],gallery:['Galeri Yönetimi','PNG, JPG/JPEG ve video içeriklerini yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
 function el(id){return document.getElementById(id)}
 function get(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function set(key,val){localStorage.setItem(key,JSON.stringify(val))}
@@ -335,6 +397,7 @@ function showPage(id){
  if(id==='results')renderResults();
  if(id==='result-categories')renderCategories();
  if(id==='announcements')renderSimple('announcement');
+ if(id==='site-content')renderSiteContentEditor();
  if(id==='banner')renderHeroAdmin();
  if(id==='gallery')renderGalleryAdmin();
  if(id==='teachers')renderSimple('teacher');
@@ -582,6 +645,69 @@ function saveHeroEdit(){
  try{set(HERO_KEY,a)}catch(err){alert('Görsel çok büyük. Daha küçük bir JPG/PNG deneyin.');return}
  renderHeroAdmin();
  var s=el('heroSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+}
+
+
+var SITE_CONTENT_KEY='tsa_site_content_v1';
+function defaultSiteContent(){
+ return {
+  programsTitle:'Her Sınıfa Uygun Eğitim',
+  programsText:'Akademik gelişim, sınav hazırlığı, yabancı dil ve düzenli deneme takibi tek çatı altında.',
+  program1Title:'Ortaokul',program1Text:'5, 6 ve 7. sınıflar için okul destek, konu takibi ve akademik temel güçlendirme.',
+  program2Title:'8. Sınıf LGS',program2Text:'Yoğun LGS hazırlık, deneme analizi, eksik kazanım takibi ve rehberlik.',
+  program3Title:'9–12. Sınıflar',program3Text:'TYT ve AYT odaklı ders programı, soru çözümü, deneme ve performans takibi.',
+  program4Title:'YDT & İngilizce',program4Text:'Dil sınıfları, sınav İngilizcesi ve genel İngilizce programları.',
+  quick1Title:'Bursluluk Sınavı',quick1Text:'Başvuru formunu doldur, kaydını oluştur.',
+  quick2Title:'Deneme Sınavı',quick2Text:'Türkiye geneli ve kurum içi denemelere başvur.',
+  quick3Title:'Ön Kayıt',quick3Text:'Program ve sınıf bilgilerini bırak, kurum seni arasın.',
+  finderTitle:'Sana Uygun Programı Bul',finderText:'Sınıfını seç, sana uygun programı hemen gösterelim.',
+  applyTitle:'Tek Formda Hızlı Başvuru',applyText:'Başvurular yönetim paneline düşecek ve Yeni Başvuru → Arandı → Görüşüldü → Kayıt Oldu / Kayıt Olmadı şeklinde takip edilecek.',
+  resultTitle:'Sonuç Sorgulama ve Seviye Tespit',
+  announcementsTitle:'Güncel Duyuru ve Kampanyalar',
+  teachersTitle:'Öğretmen Kadrosu',teachersText:'Öğretmen bilgileri yönetim panelinden eklenebilecek. Şimdilik bölüm yayına hazır durumda.',
+  successTitle:'Öğrenci Başarıları',
+  reviewsTitle:'Veli ve Öğrenci Yorumları',reviewsText:'Yönetim panelinden onaylanan gerçek yorumlar burada yayınlanacak.',
+  contactTitle:"Tek Seçenek Akademi'ye Ulaşın",
+  contactName:'Tek Seçenek Akademi',
+  address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',
+  mobile:'0552 695 97 57',landline:'0236 238 00 66',
+  mapText:'Tek Seçenek Akademi, Utku Mahallesi Çimentepe Caddesi No: 4/4 adresindedir.',
+  floatTitle:'Henüz başvurunuz yok mu?',floatText:'Ön Kayıt Oluştur →',
+  copyright:'© 2026 Tek Seçenek Akademi. Tüm hakları saklıdır.'
+ };
+}
+var SITE_CONTENT_FIELDS={
+ programsTitle:'scProgramsTitle',programsText:'scProgramsText',
+ program1Title:'scProgram1Title',program1Text:'scProgram1Text',
+ program2Title:'scProgram2Title',program2Text:'scProgram2Text',
+ program3Title:'scProgram3Title',program3Text:'scProgram3Text',
+ program4Title:'scProgram4Title',program4Text:'scProgram4Text',
+ quick1Title:'scQuick1Title',quick1Text:'scQuick1Text',
+ quick2Title:'scQuick2Title',quick2Text:'scQuick2Text',
+ quick3Title:'scQuick3Title',quick3Text:'scQuick3Text',
+ finderTitle:'scFinderTitle',finderText:'scFinderText',
+ applyTitle:'scApplyTitle',applyText:'scApplyText',
+ resultTitle:'scResultTitle',announcementsTitle:'scAnnouncementsTitle',
+ teachersTitle:'scTeachersTitle',teachersText:'scTeachersText',
+ successTitle:'scSuccessTitle',reviewsTitle:'scReviewsTitle',reviewsText:'scReviewsText',
+ contactTitle:'scContactTitle',contactName:'scContactName',address:'scAddress',
+ mobile:'scMobile',landline:'scLandline',mapText:'scMapText',
+ floatTitle:'scFloatTitle',floatText:'scFloatText',copyright:'scCopyright'
+};
+function siteContentData(){return Object.assign(defaultSiteContent(),get(SITE_CONTENT_KEY,{}))}
+function renderSiteContentEditor(){
+ var d=siteContentData();
+ Object.keys(SITE_CONTENT_FIELDS).forEach(function(k){var x=el(SITE_CONTENT_FIELDS[k]);if(x)x.value=d[k]||''});
+}
+function saveSiteContentNow(){
+ var d={};
+ Object.keys(SITE_CONTENT_FIELDS).forEach(function(k){var x=el(SITE_CONTENT_FIELDS[k]);d[k]=x?x.value.trim():''});
+ set(SITE_CONTENT_KEY,d);
+ var s=el('siteContentSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+}
+function resetSiteContentNow(){
+ if(!confirm('Web sayfası metinleri varsayılan değerlere dönsün mü?'))return;
+ set(SITE_CONTENT_KEY,defaultSiteContent());renderSiteContentEditor();
 }
 
 function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
@@ -880,6 +1006,8 @@ el('bulkClearSelect').addEventListener('click',function(){selectAllBulk(false);w
 el('bulkStartQueue').addEventListener('click',function(){var n=buildBulkQueue();if(!n){alert('En az bir alıcı seçin.');return}openNextBulk()});
 el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
+if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
+if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){set(HERO_KEY,defaultHeroSlides());renderHeroAdmin();});
 showPage(location.hash.slice(1)||'dashboard');
 })();
