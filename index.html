@@ -1060,6 +1060,27 @@ YDT Dil sınıfları ve farklı seviyelere yönelik
 
 <!-- BİLGİ AL -->
 
+<section id="bursluluk" style="padding:70px 0;background:#f7f5ff">
+<div class="container">
+<div style="max-width:900px;margin:auto;background:#fff;border-radius:24px;padding:32px;box-shadow:0 12px 40px rgba(41,37,87,.10)">
+<div style="text-align:center;margin-bottom:25px">
+<span style="display:inline-block;background:#fff0dc;color:#c66b00;font-weight:800;padding:8px 14px;border-radius:30px;font-size:13px">DEMO BAŞVURU FORMU</span>
+<h2 style="color:#292557;margin:14px 0 8px">Bursluluk Sınavı Başvurusu</h2>
+<p style="color:#686879;margin:0">Öğrenci bilgilerinizi doldurun, ön başvurunuzu hemen oluşturun.</p>
+</div>
+<form id="burslulukForm" style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+<div><label style="display:block;font-weight:700;margin-bottom:6px">Öğrenci Ad Soyad *</label><input id="bursAd" required style="width:100%;padding:14px;border:1px solid #ddd;border-radius:10px"></div>
+<div><label style="display:block;font-weight:700;margin-bottom:6px">Veli Ad Soyad *</label><input id="bursVeli" required style="width:100%;padding:14px;border:1px solid #ddd;border-radius:10px"></div>
+<div><label style="display:block;font-weight:700;margin-bottom:6px">Veli Telefon *</label><input id="bursTel" required inputmode="tel" placeholder="05xx xxx xx xx" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:10px"></div>
+<div><label style="display:block;font-weight:700;margin-bottom:6px">Öğrencinin Sınıfı *</label><select id="bursSinif" required style="width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;background:#fff"><option value="">Seçiniz</option><option>4. Sınıf</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option></select></div>
+<div style="grid-column:1/-1"><label style="display:block;font-weight:700;margin-bottom:6px">Okul Adı</label><input id="bursOkul" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:10px"></div>
+<div style="grid-column:1/-1"><label style="display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#666"><input id="bursOnay" type="checkbox" required style="margin-top:3px"> Başvuru amacıyla verdiğim iletişim bilgilerinin Tek Seçenek Akademi tarafından başvuru sürecinde kullanılmasını kabul ediyorum.</label></div>
+<div style="grid-column:1/-1"><button type="submit" style="width:100%;border:0;background:#f28a00;color:#fff;padding:16px;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer">Bursluluk Ön Başvurusu Yap</button></div>
+</form>
+<div id="bursSonuc" style="display:none;margin-top:18px;background:#eaf8f0;color:#177645;padding:16px;border-radius:12px;font-weight:700;text-align:center">Demo başvurunuz alındı. Gerçek sistemde bu kayıt yönetim paneline düşecek.</div>
+<p style="font-size:12px;color:#8a8a96;text-align:center;margin:14px 0 0">Bu alan şu anda demo amaçlıdır; bilgiler veritabanına kaydedilmez.</p>
+</div></div></section>
+
 <section id="bilgial" class="lead">
 <div class="container">
 
@@ -1648,6 +1669,8 @@ document.querySelectorAll('.finder-option').forEach(function(btn){
     document.getElementById('finderResult').classList.add('show');
   });
 });
+
+const bursForm=document.getElementById('burslulukForm');if(bursForm){bursForm.addEventListener('submit',function(e){e.preventDefault();document.getElementById('bursSonuc').style.display='block';bursForm.reset();document.getElementById('bursSonuc').scrollIntoView({behavior:'smooth',block:'center'});});}
 </script>
 
 </body>
