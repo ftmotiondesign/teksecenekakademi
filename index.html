@@ -569,6 +569,15 @@ textarea{
   color:var(--yazi);
 }
 
+.contact-line a{
+  color:var(--lacivert);
+  font-weight:700;
+}
+
+.contact-line a:hover{
+  color:var(--turuncu);
+}
+
 .contact-actions{
   display:flex;
   gap:10px;
@@ -584,7 +593,11 @@ textarea{
   font-weight:700;
 }
 
-/* HARİTA PLACEHOLDER */
+.small-btn.orange{
+  background:var(--turuncu);
+}
+
+/* HARİTA */
 
 .map-box{
   background:linear-gradient(135deg,#e9e9f2,#d8d8e7);
@@ -603,6 +616,7 @@ textarea{
 
 .map-box p{
   color:var(--yazi);
+  line-height:1.7;
 }
 
 /* FOOTER */
@@ -904,7 +918,6 @@ footer{
 
   </div>
 
-
   <div class="cards">
 
     <div class="card">
@@ -967,7 +980,6 @@ footer{
     </p>
 
   </div>
-
 
   <div class="why-grid">
 
@@ -1051,7 +1063,6 @@ footer{
 
   </div>
 
-
   <div class="packages">
 
     <div class="package">
@@ -1088,7 +1099,6 @@ footer{
     </p>
 
   </div>
-
 
   <div class="success-grid">
 
@@ -1130,7 +1140,6 @@ footer{
     </p>
 
   </div>
-
 
   <div class="gallery-grid">
 
@@ -1174,7 +1183,6 @@ footer{
       Öğrencinin sınıfını ve ilgilendiğiniz programı seçin.
     </p>
 
-
     <form class="form-grid" onsubmit="formGonder(event)">
 
       <input
@@ -1191,7 +1199,6 @@ footer{
         required
       >
 
-
       <select id="sinif" required>
 
         <option value="">Öğrencinin Sınıfı</option>
@@ -1207,7 +1214,6 @@ footer{
 
       </select>
 
-
       <select id="program" required>
 
         <option value="">İlgilendiğiniz Program</option>
@@ -1220,20 +1226,18 @@ footer{
 
       </select>
 
-
       <textarea
         id="mesaj"
         placeholder="Eklemek istediğiniz bir not varsa yazabilirsiniz."
       ></textarea>
 
-
       <button class="form-submit" type="submit">
-        Bilgi Talebi Oluştur
+        WhatsApp'tan Bilgi Al
       </button>
 
       <div class="form-note">
-        Bu form şu anda tanıtım amaçlıdır. İletişim sistemi
-        sonraki aşamada aktif hale getirilecektir.
+        Formu gönderdiğinizde bilgileriniz WhatsApp mesajı olarak hazırlanır
+        ve Tek Seçenek Akademi ile doğrudan iletişime geçebilirsiniz.
       </div>
 
     </form>
@@ -1258,7 +1262,6 @@ footer{
 
   </div>
 
-
   <div class="contact-grid">
 
     <div class="contact-card">
@@ -1266,34 +1269,54 @@ footer{
       <h3>Tek Seçenek Akademi</h3>
 
       <div class="contact-line">
-        📍 Şehzadeler / Manisa
+        📍 Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa
       </div>
 
       <div class="contact-line">
-        🎓 5–12. Sınıflar
+        📱 <a href="tel:+905526959757">0552 695 97 57</a>
       </div>
 
       <div class="contact-line">
-        📚 LGS • TYT • AYT • YDT
+        ☎ <a href="tel:+902362380066">0236 238 00 66</a>
       </div>
 
       <div class="contact-line">
-        🌐 İngilizce Eğitim Programları
+        📚 5–12. Sınıflar • LGS • TYT • AYT • YDT • İngilizce
       </div>
 
+      <div class="contact-line">
+        📷
+        <a
+          href="https://www.instagram.com/manisateksecenekakademi/"
+          target="_blank"
+          rel="noopener"
+        >
+          @manisateksecenekakademi
+        </a>
+      </div>
 
       <div class="contact-actions">
 
-        <a href="#bilgial" class="small-btn">
-          Bilgi Al
+        <a href="tel:+905526959757" class="small-btn">
+          Hemen Ara
         </a>
 
-        <a href="#iletisim" class="small-btn">
-          Telefon
-        </a>
-
-        <a href="#iletisim" class="small-btn">
+        <a
+          href="https://wa.me/905526959757"
+          target="_blank"
+          rel="noopener"
+          class="small-btn orange"
+        >
           WhatsApp
+        </a>
+
+        <a
+          href="https://www.instagram.com/manisateksecenekakademi/"
+          target="_blank"
+          rel="noopener"
+          class="small-btn"
+        >
+          Instagram
         </a>
 
       </div>
@@ -1304,12 +1327,30 @@ footer{
     <div class="map-box">
 
       <div>
-        <h3>📍 Şehzadeler • Manisa</h3>
+
+        <h3>📍 Tek Seçenek Akademi</h3>
 
         <p>
-          Google Harita bağlantısını sonraki aşamada
-          buraya ekleyeceğiz.
+          Utku Mah. Çimentepe Cd. No: 4/4<br>
+          45060 Şehzadeler / Manisa
         </p>
+
+        <div
+          class="contact-actions"
+          style="justify-content:center;"
+        >
+
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa"
+            target="_blank"
+            rel="noopener"
+            class="small-btn orange"
+          >
+            Yol Tarifi Al
+          </a>
+
+        </div>
+
       </div>
 
     </div>
@@ -1348,11 +1389,15 @@ footer{
 
 <div class="mobile-bar">
 
-  <a href="#iletisim">
+  <a href="tel:+905526959757">
     ☎ Ara
   </a>
 
-  <a href="#iletisim">
+  <a
+    href="https://wa.me/905526959757"
+    target="_blank"
+    rel="noopener"
+  >
     WhatsApp
   </a>
 
@@ -1369,9 +1414,40 @@ function formGonder(event){
 
   event.preventDefault();
 
-  alert(
-    "Bilgi talebi formu hazır. Telefon/WhatsApp veya bir veri sistemi bağlandığında bu bilgiler doğrudan kuruma gönderilecek."
-  );
+  const adsoyad =
+    document.getElementById("adsoyad").value.trim();
+
+  const telefon =
+    document.getElementById("telefon").value.trim();
+
+  const sinif =
+    document.getElementById("sinif").value;
+
+  const program =
+    document.getElementById("program").value;
+
+  const mesaj =
+    document.getElementById("mesaj").value.trim();
+
+  let whatsappMesaji =
+`Merhaba Tek Seçenek Akademi,
+
+Web siteniz üzerinden bilgi almak istiyorum.
+
+Ad Soyad: ${adsoyad}
+Telefon: ${telefon}
+Öğrencinin Sınıfı: ${sinif}
+İlgilendiğim Program: ${program}`;
+
+  if(mesaj){
+    whatsappMesaji += `\nNot: ${mesaj}`;
+  }
+
+  const whatsappURL =
+    "https://wa.me/905526959757?text=" +
+    encodeURIComponent(whatsappMesaji);
+
+  window.open(whatsappURL, "_blank");
 
 }
 
