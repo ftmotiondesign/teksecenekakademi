@@ -482,7 +482,7 @@ function renderDashboard(){
  var schools=topCounts('okul');
  el('dashSchools').innerHTML=schools.length?schools.map(function(x){return '<div class="rank-row"><div><b>'+esc(x.name)+'</b><small>Başvuru sayısı</small></div><span class="rank-num">'+x.count+'</span></div>'}).join(''):'<div class="empty">Henüz okul bilgili başvuru yok.</div>';
 }
-function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">Başvuru bulunamadı.</td></tr>'}
+function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select><button class="primary" data-saveapp="'+esc(x.id)+'">Kaydet</button></div></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">Başvuru bulunamadı.</td></tr>'}
 
 function renderPeople(){
  var q=(el('peopleSearch')?el('peopleSearch').value:'').toLowerCase();
@@ -867,6 +867,7 @@ el('resultSearch').addEventListener('input',renderResults);el('examFilter').addE
 document.body.addEventListener('click',function(e){
  var d=e.target;
  var delApp=d.closest('[data-delapp]');
+ var saveApp=d.closest('[data-saveapp]');
  var delResult=d.closest('[data-delresult]');
  var saveVeli=d.closest('[data-saveveli]');
  var saveStudent=d.closest('[data-savestudent]');
@@ -875,6 +876,28 @@ document.body.addEventListener('click',function(e){
  var delGallery=d.closest('[data-delgallery]');
  var editGallery=d.closest('[data-editgallery]');
  if(delApp){var id=delApp.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats();return}
+ if(saveApp){
+  var appId=saveApp.getAttribute('data-saveapp');
+  var appSelect=document.querySelector('[data-status="'+appId+'"]');
+  var apps=get(APP_KEY,[]);
+  var appSaved=false;
+  apps.forEach(function(x){
+   if(String(x.id)===String(appId)){
+    x.status=appSelect?appSelect.value:(x.status||'Yeni Başvuru');
+    x.statusUpdatedAt=new Date().toISOString();
+    appSaved=true;
+   }
+  });
+  if(appSaved){
+   set(APP_KEY,apps);
+   updateStats();
+   renderDashboard();
+   alert('İşlem kaydedildi.');
+  }else{
+   alert('Başvuru kaydı bulunamadı.');
+  }
+  return;
+ }
  if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
  if(saveVeli){
   var vid=saveVeli.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]),saved=false;
@@ -946,12 +969,8 @@ document.body.addEventListener('click',function(e){
  }
 });
 document.body.addEventListener('change',function(e){
- if(e.target.hasAttribute('data-status')){
-  var id=e.target.getAttribute('data-status'),a=get(APP_KEY,[]);
-  a.forEach(function(x){if(String(x.id)===id)x.status=e.target.value});
-  set(APP_KEY,a);updateStats();
- }
-
+ // Başvuru durumu artık seçim yapınca otomatik kaydedilmez.
+ // Kullanıcı "Kaydet" butonuna bastığında kaydedilir.
 });
 
 if(el('studentModalClose'))el('studentModalClose').addEventListener('click',closeStudentModal);
