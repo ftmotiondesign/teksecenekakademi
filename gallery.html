@@ -8,7 +8,7 @@
 <style>
 :root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f6f7fb;--text:#646978}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy)}a{text-decoration:none;color:inherit}.container{width:min(1180px,92%);margin:auto}
-header{background:#fff;box-shadow:0 4px 18px #1c184812;position:sticky;top:0;z-index:20}.head{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:18px}.back{background:var(--navy);color:#fff;padding:11px 16px;border-radius:22px;font-weight:800}
+header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 4px 18px #1c184812}.login-strip{background:var(--navy);color:#fff}.login-strip-inner{min-height:34px;display:flex;align-items:center;justify-content:flex-end;gap:8px}.login-link{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:16px;font-size:12px;font-weight:800;color:#fff;opacity:.95}.login-link:hover{background:#ffffff14}.login-link.admin{background:var(--orange);color:#fff}.head{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo img{width:68px;height:68px;object-fit:contain}.nav{display:flex;align-items:center;gap:22px;font-weight:800;font-size:14px}.nav a:hover,.nav a.active{color:var(--orange)}.nav .cta{background:var(--orange);color:#fff;padding:12px 18px;border-radius:24px}.nav .cta:hover{color:#fff;filter:brightness(.96)}
 .hero{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;padding:64px 0}.hero h1{font-size:clamp(36px,5vw,56px);margin:0 0 12px}.hero p{max-width:720px;color:#deddea;line-height:1.7}
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0}.filter{border:1px solid #dddfea;background:#fff;color:var(--navy);padding:10px 16px;border-radius:22px;font-weight:800;cursor:pointer}.filter.active{background:var(--orange);border-color:var(--orange);color:#fff}
 .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-bottom:64px}.item{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 28px #1c18480c;border:1px solid #ececf2}.media{aspect-ratio:16/10;background:#e8e9ef;overflow:hidden;position:relative}.media img,.media video{width:100%;height:100%;object-fit:cover;display:block}.media img{cursor:zoom-in}.badge{position:absolute;top:10px;left:10px;background:#171344d9;color:#fff;padding:6px 9px;border-radius:14px;font-size:11px;font-weight:900}.info{padding:16px}.info h3{margin:0 0 6px;font-size:17px}.info p{margin:0;color:var(--text);font-size:13px;line-height:1.5}
@@ -16,11 +16,32 @@ header{background:#fff;box-shadow:0 4px 18px #1c184812;position:sticky;top:0;z-i
 .lightbox{position:fixed;inset:0;background:#000d;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.lightbox.show{display:flex}.lightbox img{max-width:95vw;max-height:88vh;border-radius:14px;box-shadow:0 24px 60px #0008}.close{position:absolute;top:18px;right:20px;width:44px;height:44px;border:0;border-radius:50%;background:#fff;color:#111;font-size:24px;font-weight:900;cursor:pointer}
 .note{margin:28px 0;background:#fff8ee;border-left:4px solid var(--orange);padding:14px 16px;border-radius:12px;color:#6b5a40;font-size:13px}
 footer{background:var(--dark);color:#c9c8d7;text-align:center;padding:22px;font-size:12px}
-@media(max-width:900px){.gallery{grid-template-columns:1fr 1fr}}@media(max-width:600px){.gallery{grid-template-columns:1fr}.head{height:72px}.brand img{width:52px;height:52px}.hero{padding:46px 0}}
+@media(max-width:900px){.login-strip-inner{justify-content:center;gap:4px}.login-link{font-size:11px;padding:7px 8px}.nav a:not(.cta){display:none}.gallery{grid-template-columns:1fr 1fr}}@media(max-width:600px){.gallery{grid-template-columns:1fr}.head{height:72px}.logo img{width:56px;height:56px}.hero{padding:46px 0}.nav .cta{padding:10px 15px;font-size:13px}}
 </style>
 </head>
 <body>
-<header><div class="container head"><a class="brand" href="index.html"><img src="logo.png" alt="Tek Seçenek Akademi"><b>Tek Seçenek Akademi</b></a><a class="back" href="index.html">← Ana Sayfa</a></div></header>
+<header>
+  <div class="login-strip">
+    <div class="container login-strip-inner">
+      <a class="login-link" href="student.html">🎓 Öğrenci Girişi</a>
+      <a class="login-link" href="parent.html">👨‍👩‍👧 Veli Girişi</a>
+      <a class="login-link admin" href="login.html">🔐 Yönetim</a>
+    </div>
+  </div>
+  <div class="container head">
+    <a class="logo" href="index.html"><img src="logo.png" alt="Tek Seçenek Akademi"></a>
+    <nav class="nav">
+      <a href="online.html">Online İşlemler</a>
+      <a class="active" href="gallery.html">Galeri</a>
+      <a href="index.html#programlar">Programlar</a>
+      <a href="index.html#basvurular">Başvurular</a>
+      <a href="index.html#sonuc">Sonuç Sorgula</a>
+      <a href="index.html#basarilar">Başarılar</a>
+      <a href="index.html#iletisim">İletişim</a>
+      <a class="cta" href="index.html#basvurular">Ön Kayıt</a>
+    </nav>
+  </div>
+</header>
 <section class="hero"><div class="container"><h1>Kurum Galerisi</h1><p>Kurumumuzun iç ve dış mekânlarını, sınıflarını, etkinliklerini ve tanıtım videolarını buradan inceleyebilirsiniz.</p></div></section>
 <main class="container">
   <div class="filters">
