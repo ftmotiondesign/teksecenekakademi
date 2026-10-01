@@ -24,13 +24,13 @@ header{height:82px;position:sticky;top:0;z-index:50;background:#fff;box-shadow:0
 .announcement-list{display:grid;gap:10px}.announcement{background:#fff8ee;border-left:4px solid var(--orange);border-radius:12px;padding:15px}.announcement b{display:block;margin-bottom:4px}.announcement span{color:var(--text);font-size:13px}
 .contact{background:var(--bg)}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.contact-card,.map{background:#fff;border-radius:22px;padding:28px}.contact-line{padding:11px 0;border-bottom:1px solid #eee;color:var(--text)}
 footer{background:var(--dark);color:#cbc9dc;padding:32px 0}.foot{display:flex;justify-content:space-between;align-items:center;gap:20px}.foot img{width:52px}
-.mobile{display:none}
+.mobile{display:none}.to-top{position:fixed;right:22px;bottom:92px;width:46px;height:46px;border:0;border-radius:50%;background:var(--navy);color:#fff;font-size:22px;font-weight:900;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 24px #0003;opacity:0;visibility:hidden;transform:translateY(10px);transition:.25s;z-index:95}.to-top.show{opacity:1;visibility:visible;transform:translateY(0)}.to-top:hover{background:var(--orange)}
 @media(max-width:900px){.nav a:not(.cta){display:none}.cards{grid-template-columns:1fr 1fr}.forms{grid-template-columns:1fr}.teacher-grid,.success-grid,.review-grid{grid-template-columns:1fr 1fr}.two,.contact-grid{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}.mobile{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:80;box-shadow:0 -5px 20px #0002}.mobile a{text-align:center;padding:12px 4px;font-weight:800;font-size:13px}.mobile a:nth-child(2){background:var(--green);color:#fff}.mobile a:nth-child(3){background:var(--orange);color:#fff}footer{padding-bottom:78px}}
 @media(max-width:600px){section{padding:58px 0}.hero{min-height:68vh}.hero h1{font-size:40px}.cards,.teacher-grid,.success-grid,.review-grid{grid-template-columns:1fr}.buttons .btn{width:100%;text-align:center}.form-card{padding:21px}}
 </style>
 </head>
 <body>
-<header><div class="container head"><a class="logo" href="#"><img src="logo.png" alt="Tek Seçenek Akademi"></a><nav class="nav"><a href="#programlar">Programlar</a><a href="#basvurular">Başvurular</a><a href="#sonuc">Sonuç Sorgula</a><a href="#basarilar">Başarılar</a><a href="#iletisim">İletişim</a><a class="cta" href="#basvurular">Ön Kayıt</a></nav></div></header>
+<header><div class="container head"><a class="logo" href="index.html" id="siteLogo"><img src="logo.png" alt="Tek Seçenek Akademi"></a><nav class="nav"><a href="#programlar">Programlar</a><a href="#basvurular">Başvurular</a><a href="#sonuc">Sonuç Sorgula</a><a href="#basarilar">Başarılar</a><a href="#iletisim">İletişim</a><a class="cta" href="#basvurular">Ön Kayıt</a></nav></div></header>
 
 <section class="hero"><div class="container"><div style="max-width:730px"><div style="display:inline-block;background:var(--orange);padding:8px 14px;border-radius:22px;font-weight:900">ŞEHZADELER • MANİSA</div><h1>Geleceğin İçin <span>Tek Seçenek</span></h1><p>5, 6, 7, 8, 9, 10, 11 ve 12. sınıflar; LGS, TYT, AYT, YDT, İngilizce ve Deneme Kulübü. Hedefe göre planlanan eğitim, düzenli takip ve güçlü deneme sistemi.</p><div class="buttons"><a href="#basvurular" class="btn orange">Ön Kayıt Oluştur</a><a href="#program-bul" class="btn white">Sana Uygun Programı Bul</a></div></div></div></section>
 
@@ -87,7 +87,7 @@ footer{background:var(--dark);color:#cbc9dc;padding:32px 0}.foot{display:flex;ju
 <section id="iletisim" class="contact"><div class="container"><div class="section-head"><small>İLETİŞİM</small><h2>Tek Seçenek Akademi'ye Ulaşın</h2></div><div class="contact-grid"><div class="contact-card"><h3>Tek Seçenek Akademi</h3><div class="contact-line">📍 Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa</div><div class="contact-line">📱 <a href="tel:+905526959757">0552 695 97 57</a></div><div class="contact-line">☎ <a href="tel:+902362380066">0236 238 00 66</a></div><div class="buttons"><a class="btn navy" href="tel:+905526959757">Hemen Ara</a><a class="btn green" target="_blank" href="https://wa.me/905526959757">WhatsApp</a></div></div><div class="map"><h3>📍 Şehzadeler / Manisa</h3><p style="color:var(--text);line-height:1.6">Tek Seçenek Akademi, Utku Mahallesi Çimentepe Caddesi No: 4/4 adresindedir.</p><a class="btn orange" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa">Yol Tarifi Al</a></div></div></div></section>
 
 <footer><div class="container foot"><div style="display:flex;align-items:center;gap:12px"><img src="logo.png" alt=""><b style="color:#fff">Tek Seçenek Akademi</b></div><span>© 2026 Tek Seçenek Akademi</span></div></footer>
-<div class="mobile"><a href="tel:+905526959757">☎ Ara</a><a href="https://wa.me/905526959757">WhatsApp</a><a href="#basvurular">Ön Kayıt</a></div>
+<div class="mobile"><a href="tel:+905526959757">☎ Ara</a><a href="https://wa.me/905526959757">WhatsApp</a><a href="#basvurular">Ön Kayıt</a></div><button class="to-top" id="toTop" aria-label="Yukarı çık">↑</button>
 
 <script>
 const STORAGE_KEY='tsa_applications_v1';
@@ -130,6 +130,10 @@ function loadManagedContent(){
 }
 function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
 loadManagedContent();
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{if(window.scrollY>500)toTop.classList.add('show');else toTop.classList.remove('show')});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefault();window.location.href='index.html';});
 </script>
 </body>
 </html>
