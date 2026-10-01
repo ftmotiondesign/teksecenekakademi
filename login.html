@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tek Seçenek Akademi | Yönetim Girişi</title>
+<meta name="theme-color" content="#292557">
+<style>
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--white:#fff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,var(--navy),var(--dark));display:grid;place-items:center;padding:24px;color:var(--navy)}
+.login{width:min(440px,100%);background:#fff;border-radius:24px;padding:32px;box-shadow:0 24px 70px #0005}
+.logo{display:flex;align-items:center;gap:14px;margin-bottom:24px}.logo img{width:64px;height:64px;object-fit:contain}.logo b{display:block;font-size:20px}.logo span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+h1{font-size:27px;margin:0 0 8px}p{color:var(--muted);line-height:1.6;margin:0 0 22px}.field{display:grid;gap:7px;margin-bottom:14px}.field label{font-size:12px;font-weight:900}.field input{width:100%;padding:13px 14px;border:1px solid #dfe1ea;border-radius:11px;font:inherit;outline:none}.field input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #f28a0017}
+button{width:100%;border:0;border-radius:24px;padding:14px;background:var(--orange);color:#fff;font-weight:900;font-size:15px;cursor:pointer;margin-top:5px}.msg{display:none;margin-top:14px;padding:11px;border-radius:10px;font-size:13px;font-weight:800}.msg.show{display:block}.msg.error{background:#ffeded;color:#b73737}.back{display:block;text-align:center;margin-top:18px;color:var(--navy);font-size:13px;font-weight:800;text-decoration:none}
+.note{font-size:11px;color:#8a8d99;text-align:center;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<main class="login">
+<div class="logo"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Yönetim Paneli</span></div></div>
+<h1>Yönetim Girişi</h1>
+<p>Başvuruları, sonuçları ve site içeriklerini yönetmek için giriş yapın.</p>
+<form id="loginForm">
+<div class="field"><label>E-posta</label><input id="email" type="email" autocomplete="username" required placeholder="E-posta adresi"></div>
+<div class="field"><label>Şifre</label><input id="password" type="password" autocomplete="current-password" required placeholder="Şifreniz"></div>
+<button type="submit">Giriş Yap</button>
+<div id="msg" class="msg error">E-posta veya şifre hatalı.</div>
+</form>
+<a class="back" href="index.html">← Web Sitesine Dön</a>
+<div class="note">Bu giriş ekranı geçici tarayıcı oturumu korumasıdır. Kalıcı güvenlik için Firebase Authentication bağlantısı yapılacaktır.</div>
+</main>
+<script>
+const ADMIN_EMAIL='admin@teksecenekakademi.com';
+const ADMIN_HASH='9d05d526efdca7cd8c3f1a37627f7992dced68b6b78a87031e1c98db7db9a4c9';
+async function sha256(v){
+ const data=new TextEncoder().encode(v);
+ const hash=await crypto.subtle.digest('SHA-256',data);
+ return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+if(sessionStorage.getItem('tsa_admin_session_v1')==='1')location.replace('admin.html');
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const email=document.getElementById('email').value.trim().toLowerCase();
+ const pass=document.getElementById('password').value;
+ const ok=email===ADMIN_EMAIL && (await sha256(pass))===ADMIN_HASH;
+ if(ok){
+  sessionStorage.setItem('tsa_admin_session_v1','1');
+  sessionStorage.setItem('tsa_admin_email',email);
+  location.href='admin.html';
+ }else{
+  document.getElementById('msg').classList.add('show');
+ }
+});
+</script>
+</body>
+</html>
