@@ -117,6 +117,10 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <option value="trial">Deneme Sınavı</option>
 <option value="level">Seviye Tespit</option>
 <option value="won">Kayıt Olanlar</option>
+<option value="allParents">Tüm Veliler</option>
+<option value="registeredParents">Kayıtlı Veliler</option>
+<option value="allStudents">Tüm Öğrenciler</option>
+<option value="activeStudents">Aktif Öğrenciler</option>
 </select>
 <label><b>Mesaj Şablonu</b></label>
 <select id="bulkTemplate">
@@ -656,6 +660,48 @@ function normalizePhone(v){
 }
 function bulkFiltered(){
  var a=get(APP_KEY,[]),t=el('bulkTarget').value;
+
+ function parentRecipient(x){
+  return {
+   ad:x.veliAd||x.ad||'Veli',
+   telefon:x.telefon||'',
+   sinif:x.sinif||'',
+   type:'Veli',
+   raw:x
+  };
+ }
+
+ function studentRecipient(x){
+  return {
+   ad:x.ad||'Öğrenci',
+   telefon:x.ogrenciTelefon||'',
+   sinif:x.sinif||'',
+   type:'Öğrenci',
+   raw:x
+  };
+ }
+
+ if(t==='allParents'){
+  return a.filter(function(x){return normalizePhone(x.telefon)}).map(parentRecipient);
+ }
+
+ if(t==='registeredParents'){
+  return a.filter(function(x){
+   return normalizePhone(x.telefon) && (x.status==='Kayıt Oldu' || x.veliStatus==='Kayıt Tamamlandı');
+  }).map(parentRecipient);
+ }
+
+ if(t==='allStudents'){
+  return a.filter(function(x){return normalizePhone(x.ogrenciTelefon)}).map(studentRecipient);
+ }
+
+ if(t==='activeStudents'){
+  return a.filter(function(x){
+   var s=x.studentAction||'';
+   return normalizePhone(x.ogrenciTelefon) && ['Derse Başladı','Aktif Öğrenci','Kayıt Tamamlandı'].indexOf(s)>-1;
+  }).map(studentRecipient);
+ }
+
  return a.filter(function(x){
   if(t==='all')return true;
   if(t==='new')return x.status==='Yeni Başvuru';
@@ -665,8 +711,11 @@ function bulkFiltered(){
   if(t==='level')return x.type==='Seviye Tespit';
   if(t==='won')return x.status==='Kayıt Oldu';
   return true;
+ }).map(function(x){
+  return {ad:x.ad||'',telefon:x.telefon||'',sinif:x.sinif||'',type:x.type||'',raw:x};
  });
 }
+
 function renderBulkRecipients(){
  var list=bulkFiltered(),msg=(el('bulkMessage').value||'').trim();
  el('bulkCount').textContent=list.length+' kişi';
