@@ -546,41 +546,55 @@ function closeStudentModal(){
  el('studentEditModal').setAttribute('aria-hidden','true');
  window.__editingStudentId='';
 }
-function saveStudentModal(){
+async function saveStudentModal(){
  var id=window.__editingStudentId||''; if(!id)return;
  var apps=get(APP_KEY,[]),app=apps.find(function(x){return String(x.id)===String(id)}); if(!app)return;
  var oldName=app.ad||'';
- app.ad=el('editStudentName').value.trim();
- app.sinif=el('editStudentClass').value;
- app.studentNo=el('editStudentNo').value.trim();
- app.basvuruNo=el('editTrackNo').value.trim();
- app.ogrenciTelefon=el('editStudentPhone').value.trim();
- app.telefon=el('editParentPhone').value.trim();
- app.veliAd=el('editParentName').value.trim();
- app.okul=el('editSchool').value.trim();
- app.ilce=el('editDistrict').value.trim();
- app.program=el('editProgram').value.trim();
+ var patch={
+  ad:el('editStudentName').value.trim(),
+  sinif:el('editStudentClass').value,
+  studentNo:el('editStudentNo').value.trim(),
+  basvuruNo:el('editTrackNo').value.trim(),
+  ogrenciTelefon:el('editStudentPhone').value.trim(),
+  telefon:el('editParentPhone').value.trim(),
+  veliAd:el('editParentName').value.trim(),
+  okul:el('editSchool').value.trim(),
+  ilce:el('editDistrict').value.trim(),
+  program:el('editProgram').value.trim()
+ };
  var newAction=el('editStudentAction').value;
  if(app.studentAction!==newAction){
-   app.studentAction=newAction;
-   app.studentActionUpdatedAt=new Date().toISOString();
-   if(!Array.isArray(app.studentHistory))app.studentHistory=[];
-   app.studentHistory.unshift({status:newAction,at:app.studentActionUpdatedAt});
+  patch.studentAction=newAction;
+  patch.studentActionUpdatedAt=new Date().toISOString();
+  var hist=Array.isArray(app.studentHistory)?app.studentHistory.slice():[];
+  hist.unshift({status:newAction,at:patch.studentActionUpdatedAt});
+  patch.studentHistory=hist.slice(0,30);
  }
- set(APP_KEY,apps);
- var results=get(RESULT_KEY,[]),changed=false;
- results.forEach(function(r){
-   if(String(r.name||'').trim().toLocaleLowerCase('tr-TR')===String(oldName).trim().toLocaleLowerCase('tr-TR')){
-     r.name=app.ad||r.name;
-     if(app.studentNo)r.studentNo=app.studentNo;
-     if(app.sinif)r.sinif=app.sinif;
-     changed=true;
+ if(!window.TSAFirebaseApplications){alert('Firebase başvuru bağlantısı henüz hazır değil.');return;}
+ var btn=el('studentModalSave'),oldText=btn.textContent;btn.disabled=true;btn.textContent='Kaydediliyor...';
+ try{
+  await window.TSAFirebaseApplications.update(id,patch);
+  var results=get(RESULT_KEY,[]).filter(function(r){
+   return String(r.name||'').trim().toLocaleLowerCase('tr-TR')===String(oldName).trim().toLocaleLowerCase('tr-TR');
+  });
+  if(window.TSAFirebaseResults&&results.length){
+   for(var i=0;i<results.length;i++){
+    var rp={name:patch.ad};
+    if(patch.studentNo)rp.studentNo=patch.studentNo;
+    if(patch.sinif)rp.sinif=patch.sinif;
+    await window.TSAFirebaseResults.update(results[i].id,rp);
    }
- });
- if(changed)set(RESULT_KEY,results);
- renderPeople();renderApps();updateStats();
- el('studentModalSaved').style.display='inline';
- setTimeout(function(){el('studentModalSaved').style.display='none'},2200);
+  }
+  if(window.TSAFirebasePortalAdmin)await window.TSAFirebasePortalAdmin.sync();
+  renderPeople();renderApps();updateStats();
+  el('studentModalSaved').style.display='inline';
+  setTimeout(function(){el('studentModalSaved').style.display='none'},2200);
+  alert('Öğrenci bilgileri Firebase’e kaydedildi.');
+ }catch(err){
+  alert('Öğrenci bilgileri Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err));
+ }finally{
+  btn.disabled=false;btn.textContent=oldText;
+ }
 }
 
 function categories(){
@@ -1139,7 +1153,7 @@ showPage(location.hash.slice(1)||'dashboard');
 </script>
 <script type="module" src="firebase-announcements-admin.js?v=5"></script>
 <script type="module" src="firebase-applications-admin.js?v=2"></script>
-<script type="module" src="firebase-results-admin.js?v=1"></script>
+<script type="module" src="firebase-results-admin.js?v=2"></script>
 <script type="module" src="firebase-portal-admin.js?v=3"></script>
 </body>
 </html>
