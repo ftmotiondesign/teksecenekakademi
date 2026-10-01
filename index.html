@@ -184,6 +184,7 @@ footer{background:var(--dark);color:#fff;padding:52px 0 22px}.footer-grid{displa
 const STORAGE_KEY='tsa_applications_v1';
 const RESULTS_KEY='tsa_results_v1';
 const SETTINGS_KEY='tsa_site_settings_v1';
+const SITE_CONTENT_KEY='tsa_site_content_v1';
 const HERO_KEY='tsa_hero_slides_v1';
 const RESULT_CAT_KEY='tsa_result_categories_v1';
 function getApps(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
@@ -287,6 +288,74 @@ document.getElementById('resultBtn').onclick=()=>{
  box.innerHTML='<strong>'+escapeHtml(name)+'</strong><div style="margin:4px 0 12px;color:#5f6472">'+matches.length+' sınav sonucu bulundu.</div>'+matches.map(r=>'<div style="background:#fff;border:1px solid #dddfea;border-radius:12px;padding:12px;margin-top:9px"><b style="color:#292557">'+escapeHtml(r.examName||r.code||'Sınav Sonucu')+'</b><div style="margin:7px 0">Puan: '+escapeHtml(r.score||'-')+' · Yüzdelik: '+escapeHtml(r.percentile||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="font-size:13px;line-height:1.7">Türkçe: '+escapeHtml(r.turkce||'-')+' · Matematik: '+escapeHtml(r.matematik||'-')+' · Fen: '+escapeHtml(r.fen||'-')+' · İnkılap: '+escapeHtml(r.inkilap||'-')+' · Din: '+escapeHtml(r.din||'-')+' · İngilizce: '+escapeHtml(r.ingilizce||'-')+'</div></div>').join('');
 };
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+
+function defaultSiteContent(){
+ return {
+  programsTitle:'Her Sınıfa Uygun Eğitim',
+  programsText:'Akademik gelişim, sınav hazırlığı, yabancı dil ve düzenli deneme takibi tek çatı altında.',
+  program1Title:'Ortaokul',program1Text:'5, 6 ve 7. sınıflar için okul destek, konu takibi ve akademik temel güçlendirme.',
+  program2Title:'8. Sınıf LGS',program2Text:'Yoğun LGS hazırlık, deneme analizi, eksik kazanım takibi ve rehberlik.',
+  program3Title:'9–12. Sınıflar',program3Text:'TYT ve AYT odaklı ders programı, soru çözümü, deneme ve performans takibi.',
+  program4Title:'YDT & İngilizce',program4Text:'Dil sınıfları, sınav İngilizcesi ve genel İngilizce programları.',
+  quick1Title:'Bursluluk Sınavı',quick1Text:'Başvuru formunu doldur, kaydını oluştur.',
+  quick2Title:'Deneme Sınavı',quick2Text:'Türkiye geneli ve kurum içi denemelere başvur.',
+  quick3Title:'Ön Kayıt',quick3Text:'Program ve sınıf bilgilerini bırak, kurum seni arasın.',
+  finderTitle:'Sana Uygun Programı Bul',finderText:'Sınıfını seç, sana uygun programı hemen gösterelim.',
+  applyTitle:'Tek Formda Hızlı Başvuru',applyText:'Başvurular yönetim paneline düşecek ve Yeni Başvuru → Arandı → Görüşüldü → Kayıt Oldu / Kayıt Olmadı şeklinde takip edilecek.',
+  resultTitle:'Sonuç Sorgulama ve Seviye Tespit',
+  announcementsTitle:'Güncel Duyuru ve Kampanyalar',
+  teachersTitle:'Öğretmen Kadrosu',teachersText:'Öğretmen bilgileri yönetim panelinden eklenebilecek. Şimdilik bölüm yayına hazır durumda.',
+  successTitle:'Öğrenci Başarıları',
+  reviewsTitle:'Veli ve Öğrenci Yorumları',reviewsText:'Yönetim panelinden onaylanan gerçek yorumlar burada yayınlanacak.',
+  contactTitle:"Tek Seçenek Akademi'ye Ulaşın",
+  contactName:'Tek Seçenek Akademi',
+  address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',
+  mobile:'0552 695 97 57',landline:'0236 238 00 66',
+  mapText:'Tek Seçenek Akademi, Utku Mahallesi Çimentepe Caddesi No: 4/4 adresindedir.',
+  floatTitle:'Henüz başvurunuz yok mu?',floatText:'Ön Kayıt Oluştur →',
+  copyright:'© 2026 Tek Seçenek Akademi. Tüm hakları saklıdır.'
+ };
+}
+function loadSiteContent(){
+ let d={};try{d=JSON.parse(localStorage.getItem(SITE_CONTENT_KEY)||'{}')}catch(e){}
+ d=Object.assign(defaultSiteContent(),d||{});
+ const quick=[...document.querySelectorAll('.action-card')];
+ [['quick1Title','quick1Text'],['quick2Title','quick2Text'],['quick3Title','quick3Text']].forEach((keys,i)=>{
+  const q=quick[i];if(!q)return;const b=q.querySelector('b'),s=q.querySelector('span');if(b)b.textContent=d[keys[0]];if(s)s.textContent=d[keys[1]];
+ });
+ const ph=document.querySelector('#programlar .section-head h2'),pp=document.querySelector('#programlar .section-head p');
+ if(ph)ph.textContent=d.programsTitle;if(pp)pp.textContent=d.programsText;
+ const cards=[...document.querySelectorAll('#programlar .card')];
+ [['program1Title','program1Text'],['program2Title','program2Text'],['program3Title','program3Text'],['program4Title','program4Text']].forEach((keys,i)=>{
+  const card=cards[i];if(!card)return;const h=card.querySelector('h3'),p=card.querySelector('p');if(h)h.textContent=d[keys[0]];if(p)p.textContent=d[keys[1]];
+ });
+ const finder=document.querySelector('#program-bul .finder');
+ if(finder){const h=finder.querySelector('h2'),p=finder.querySelector('p');if(h)h.textContent=d.finderTitle;if(p)p.textContent=d.finderText;}
+ const applyH=document.querySelector('#basvurular .section-head h2'),applyP=document.querySelector('#basvurular .section-head p');
+ if(applyH)applyH.textContent=d.applyTitle;if(applyP)applyP.textContent=d.applyText;
+ const resultH=document.querySelector('#sonuc .section-head h2');if(resultH)resultH.textContent=d.resultTitle;
+ const annH=document.querySelector('#duyurular .section-head h2');if(annH)annH.textContent=d.announcementsTitle;
+ const teachSec=document.querySelector('#teacherGrid')?.closest('section');
+ if(teachSec){const h=teachSec.querySelector('.section-head h2'),p=teachSec.querySelector('.section-head p');if(h)h.textContent=d.teachersTitle;if(p)p.textContent=d.teachersText;}
+ const successSec=document.querySelector('#basarilar');if(successSec){const h=successSec.querySelector('.section-head h2');if(h)h.textContent=d.successTitle;}
+ const reviewSec=document.querySelector('#reviewGrid')?.closest('section');
+ if(reviewSec){const h=reviewSec.querySelector('.section-head h2'),p=reviewSec.querySelector('.section-head p');if(h)h.textContent=d.reviewsTitle;if(p)p.textContent=d.reviewsText;}
+ const contact=document.querySelector('#iletisim');
+ if(contact){
+  const h=contact.querySelector('.section-head h2');if(h)h.textContent=d.contactTitle;
+  const cc=contact.querySelector('.contact-card');if(cc){
+   const ch=cc.querySelector('h3');if(ch)ch.textContent=d.contactName;
+   const lines=cc.querySelectorAll('.contact-line');
+   if(lines[0])lines[0].textContent='📍 '+d.address;
+   if(lines[1])lines[1].innerHTML='📱 <a href="tel:+90'+d.mobile.replace(/\D/g,'').replace(/^0/,'')+'">'+escapeHtml(d.mobile)+'</a>';
+   if(lines[2])lines[2].innerHTML='☎ <a href="tel:+90'+d.landline.replace(/\D/g,'').replace(/^0/,'')+'">'+escapeHtml(d.landline)+'</a>';
+  }
+  const mp=contact.querySelector('.map p');if(mp)mp.textContent=d.mapText;
+ }
+ const float=document.querySelector('.new-app-float');if(float){const b=float.querySelector('b'),s=float.querySelector('span');if(b)b.textContent=d.floatTitle;if(s)s.textContent=d.floatText;}
+ const copy=document.querySelector('.footer-bottom > span');if(copy)copy.textContent=d.copyright;
+}
+
 function loadManagedContent(){
  const ann=jgetSite('tsa_announcements_v1'),teachers=jgetSite('tsa_teachers_v1'),success=jgetSite('tsa_success_v1'),reviews=jgetSite('tsa_reviews_v1');
  if(ann.length){document.getElementById('announcementList').innerHTML=ann.map(x=>'<div class="announcement"><b>'+escapeHtml(x.head)+'</b><span>'+escapeHtml(x.text)+'</span></div>').join('')}
@@ -296,6 +365,7 @@ function loadManagedContent(){
 }
 function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
 loadManagedContent();
+loadSiteContent();
 
 function loadManagedHero(){
  let slides=[];try{slides=JSON.parse(localStorage.getItem(HERO_KEY)||'[]')}catch(e){}
