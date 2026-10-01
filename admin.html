@@ -48,7 +48,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <button data-page="people">👨‍👩‍👧 Veli & Öğrenci</button>
 <button data-page="results">📊 Sonuçlar</button>
 <button data-page="result-categories">🗂 Sonuç Kategorileri</button>
-<button data-page="announcements">◉ Duyuru & Kampanya</button>
+<button data-page="announcements" onclick="document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});document.getElementById('announcements').classList.add('active');location.hash='announcements';">◉ Duyuru & Kampanya</button>
 <button data-page="site-content">✎ Web Sayfası İçerikleri</button>
 <button data-page="banner">🖼 Ana Sayfa Banner</button>
 <button data-page="gallery">🎞 Galeri Yönetimi</button>
@@ -962,8 +962,9 @@ document.body.addEventListener('click',function(e){
   var t2=d.getAttribute('data-addsimple'),m2=SIMPLE[t2],h=prompt(m2[2]+' başlığı / adı:');
   if(h){
    var tx=prompt('Açıklama:')||'';
-   if(t2==='announcement'&&window.TSAFirebaseAnnouncements){
-    window.TSAFirebaseAnnouncements.add(h,tx).catch(function(err){alert('Duyuru Firebase\'e kaydedilemedi: '+(err&&err.message?err.message:err))});
+   if(t2==='announcement'){
+    if(!window.TSAFirebaseAnnouncements){alert('Firebase bağlantısı hazırlanıyor. Sayfayı bir kez yenileyip tekrar deneyin.');return;}
+    window.TSAFirebaseAnnouncements.add(h,tx).then(function(){alert('Duyuru yayınlandı.');}).catch(function(err){alert('Duyuru Firebase\'e kaydedilemedi: '+(err&&err.message?err.message:err))});
    }else{var arr=get(m2[0],[]);arr.unshift({id:String(Date.now()),head:h,text:tx});set(m2[0],arr);renderSimple(t2)}
   }
  }
@@ -1131,6 +1132,6 @@ var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('
 showPage(location.hash.slice(1)||'dashboard');
 })();
 </script>
-<script type="module" src="firebase-announcements-admin.js?v=1"></script>
+<script type="module" src="firebase-announcements-admin.js?v=3"></script>
 </body>
 </html>
