@@ -33,8 +33,8 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
   <main class="login-card">
     <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
     <h1>Öğrenci Girişi</h1>
-    <div class="desc">Öğrenci numaranı veya sana verilen sonuç kodunu gir. Tüm yayınlanan sınavlarını tek ekranda görebilirsin.</div>
-    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Öğrenci No / Sonuç Kodu"><button id="studentBtn">Giriş Yap</button></div>
+    <div class="desc">Takip numaranı, öğrenci numaranı veya sana verilen sonuç kodunu gir. Başvuru durumunu ve yayınlanan sınavlarını tek ekranda görebilirsin.</div>
+    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><button id="studentBtn">Giriş Yap</button></div>
     <div id="loginError"></div>
     <a class="back" href="index.html">← Ana Sayfaya Dön</a>
   </main>
@@ -107,18 +107,34 @@ function findStudentApp(latest){
  const name=String(latest.name||'').trim().toLocaleLowerCase('tr-TR');
  return getApps().find(x=>(no&&String(x.studentNo||'').trim()===no)||String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===name)||null;
 }
-function studentResults(query){
- const q=String(query||'').trim().toLowerCase(); if(!q)return [];
- const all=getResults();
- const hit=all.find(x=>String(x.studentNo||'').toLowerCase()===q||String(x.code||'').toLowerCase()===q);
- if(!hit)return [];
- if(hit.studentNo)return all.filter(x=>String(x.studentNo||'')===String(hit.studentNo||''));
- return all.filter(x=>String(x.name||'')===String(hit.name||''));
+function norm(v){return String(v||'').trim().toLocaleLowerCase('tr-TR')}
+function resolveStudent(query){
+ const q=norm(query); if(!q)return null;
+ const apps=getApps(), results=getResults();
+ let app=apps.find(x=>norm(x.basvuruNo)===q||norm(x.studentNo)===q)||null;
+ let hit=results.find(x=>norm(x.studentNo)===q||norm(x.code)===q)||null;
+ if(!app&&hit)app=findStudentApp(hit);
+ if(!hit&&app){
+  hit=results.find(x=>(app.studentNo&&String(x.studentNo||'')===String(app.studentNo||''))||norm(x.name)===norm(app.ad))||null;
+ }
+ let list=[];
+ if(hit){
+  if(hit.studentNo)list=results.filter(x=>String(x.studentNo||'')===String(hit.studentNo||''));
+  else list=results.filter(x=>norm(x.name)===norm(hit.name));
+ }else if(app){
+  list=results.filter(x=>norm(x.name)===norm(app.ad));
+ }
+ if(!app&&!hit)return null;
+ return {app:app,results:list};
 }
 function percentFor(v,max){const n=numberVal(v);if(n===null)return 0;return Math.max(0,Math.min(100,(n/max)*100))}
-function openPanel(list){
- if(!list.length)return;
- const latest=list[0], name=latest.name||'Öğrenci', no=latest.studentNo||'-', sinif=latest.sinif||latest.className||'', app=findStudentApp(latest);
+function openPanel(data){
+ const list=data&&data.results?data.results:[];
+ const app=data&&data.app?data.app:null;
+ const latest=list[0]||{};
+ const name=(app&&app.ad)||latest.name||'Öğrenci';
+ const no=(app&&app.studentNo)||latest.studentNo||(app&&app.basvuruNo)||'-';
+ const sinif=(app&&app.sinif)||latest.sinif||latest.className||'';
  document.getElementById('loginView').classList.add('hidden');
  document.getElementById('panelView').classList.remove('hidden');
  document.getElementById('welcomeName').textContent='Hoş geldin, '+name;
@@ -126,17 +142,25 @@ function openPanel(list){
  document.getElementById('profileNo').textContent=no;
 
  const scores=list.map(x=>numberVal(x.score)).filter(x=>x!==null);
- document.getElementById('statAction').textContent=app?(app.studentAction||'Yeni Öğrenci'):'-';
+ document.getElementById('statAction').textContent=app?(app.studentAction||'Yeni Öğrenci'):'Yeni Öğrenci';
  document.getElementById('statLast').textContent=latest.score||'-';
  document.getElementById('statExam').textContent=list.length;
  document.getElementById('statRank').textContent=latest.rank||'-';
  document.getElementById('studentActionBox').innerHTML=app?('<b>'+esc(app.studentAction||'Yeni Öğrenci')+'</b>'+(app.studentActionUpdatedAt?'<br><small>Son güncelleme: '+new Date(app.studentActionUpdatedAt).toLocaleString('tr-TR')+'</small>':'')):'Henüz öğrenci işlem kaydı bulunmuyor.';
 
+ if(list.length){
  document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
  document.getElementById('lastScore').textContent=latest.score||'-';
  document.getElementById('lastPercentile').textContent=latest.percentile||'-';
  document.getElementById('lastRank').textContent=latest.rank||'-';
  document.getElementById('lastCategory').textContent=latest.category||'-';
+ }else{
+ document.getElementById('lastExamName').textContent='Henüz yayınlanmış sınav sonucu yok';
+ document.getElementById('lastScore').textContent='-';
+ document.getElementById('lastPercentile').textContent='-';
+ document.getElementById('lastRank').textContent='-';
+ document.getElementById('lastCategory').textContent='-';
+ }
 
  const subjects=[
   ['Türkçe',latest.turkce,20],['Matematik',latest.matematik,20],['Fen',latest.fen,20],
@@ -148,18 +172,18 @@ function openPanel(list){
  const maxScore=Math.max(...ordered.map(x=>numberVal(x.score)||0),1);
  document.getElementById('progressList').innerHTML=ordered.length?ordered.map(x=>'<div class="progress-row"><div><span>'+esc(x.examName||x.code||'Sınav')+'</span><div class="line"><i style="width:'+Math.max(3,((numberVal(x.score)||0)/maxScore)*100)+'%"></i></div></div><b>'+esc(x.score||'-')+'</b></div>').join(''):'<div class="info">Gelişim verisi bulunamadı.</div>';
 
- document.getElementById('examList').innerHTML=list.map(x=>'<div class="exam"><div><b>'+esc(x.examName||x.code||'Sınav Sonucu')+'</b><small>'+esc(x.category||'-')+' · Yüzdelik: '+esc(x.percentile||'-')+' · Sıralama: '+esc(x.rank||'-')+'</small></div><span class="badge">'+esc(x.score||'-')+' puan</span></div>').join('');
+ document.getElementById('examList').innerHTML=list.length?list.map(x=>'<div class="exam"><div><b>'+esc(x.examName||x.code||'Sınav Sonucu')+'</b><small>'+esc(x.category||'-')+' · Yüzdelik: '+esc(x.percentile||'-')+' · Sıralama: '+esc(x.rank||'-')+'</small></div><span class="badge">'+esc(x.score||'-')+' puan</span></div>').join(''):'<div class="info">Henüz yayınlanmış sınav sonucu bulunmuyor.</div>';
 }
 function login(){
  const q=document.getElementById('studentCode').value.trim();
- const list=studentResults(q), err=document.getElementById('loginError');
- if(!list.length){err.innerHTML='<div class="empty">Bu öğrenci numarası veya sonuç koduyla eşleşen yayınlanmış sonuç bulunamadı.</div>';return;}
- err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(list);
+ const data=resolveStudent(q), err=document.getElementById('loginError');
+ if(!data){err.innerHTML='<div class="empty">Bu takip numarası, öğrenci numarası veya sonuç koduyla eşleşen öğrenci bulunamadı.</div>';return;}
+ err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(data);
 }
 document.getElementById('studentBtn').addEventListener('click',login);
 document.getElementById('studentCode').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
-const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const list=studentResults(saved);if(list.length)openPanel(list);else sessionStorage.removeItem(SESSION_KEY)}
+const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const data=resolveStudent(saved);if(data)openPanel(data);else sessionStorage.removeItem(SESSION_KEY)}
 </script>
 </body>
 </html>
