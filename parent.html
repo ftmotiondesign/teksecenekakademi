@@ -22,7 +22,8 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 .last-score{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#f8f8fb;border-radius:15px;padding:18px}.score-big{font-size:38px;font-weight:900;color:var(--orange)}.score-meta{line-height:1.8;font-size:14px}.score-meta b{color:var(--navy)}
 .exam-list,.announcement-list{display:grid;gap:10px}.exam,.announcement{border:1px solid #ececf2;border-radius:14px;padding:14px}.exam b,.announcement b{color:var(--navy)}.exam small,.announcement small{display:block;color:var(--muted);margin-top:5px}.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.contact-actions a{text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:900}.call{background:var(--navy);color:#fff}.wa{background:var(--green);color:#fff}.info{padding:14px;background:#fff8ee;border-left:4px solid var(--orange);border-radius:10px;color:#765329;font-size:13px;line-height:1.6}
 @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.welcome{align-items:flex-start;flex-direction:column}}
-@media(max-width:600px){.login-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.last-score{align-items:flex-start;flex-direction:column}.contact-actions{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand img{width:52px;height:52px}}
+.new-app-float{position:fixed;left:22px;bottom:22px;z-index:90;display:flex;align-items:center;gap:12px;background:#fff;color:var(--navy);border:1px solid #ececf2;border-radius:18px;padding:12px 15px;box-shadow:0 12px 35px #0003;text-decoration:none;animation:floatNotice 2.2s ease-in-out infinite;max-width:310px}.new-app-float .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;font-size:20px;flex:none}.new-app-float b{display:block;font-size:13px}.new-app-float span{display:block;margin-top:3px;color:var(--orange);font-size:12px;font-weight:900}.new-app-float:hover{animation-play-state:paused;transform:translateY(-2px)}@keyframes floatNotice{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.025)}}@media(prefers-reduced-motion:reduce){.new-app-float{animation:none}}
+@media(max-width:600px){.login-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.last-score{align-items:flex-start;flex-direction:column}.contact-actions{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand img{width:52px;height:52px}.new-app-float{left:12px;bottom:12px;right:12px;max-width:none;padding:10px 12px}.new-app-float .ico{width:38px;height:38px;font-size:18px}}
 </style>
 </head>
 <body>
@@ -40,6 +41,11 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     <a class="back" href="index.html">← Ana Sayfaya Dön</a>
   </main>
 </section>
+
+<a class="new-app-float" href="index.html#basvurular" aria-label="Ön kayıt oluştur">
+  <div class="ico">✦</div>
+  <div><b>Henüz başvurunuz yok mu?</b><span>Ön Kayıt Oluştur →</span></div>
+</a>
 
 <section id="panelView" class="app hidden">
   <div class="top"><div class="container">
