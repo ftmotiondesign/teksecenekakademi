@@ -166,7 +166,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
 <section id="applications" class="section"><div class="box">
 <div class="section-head"><div><h2>Başvurular</h2><small>Ön kayıt, bursluluk, deneme ve seviye tespit.</small></div><button class="secondary" id="exportApps">CSV Dışa Aktar</button></div>
 <div class="toolbar"><input id="appSearch" placeholder="Ad, telefon, başvuru no ara"><select id="appType"><option value="">Tüm Türler</option><option>Ön Kayıt</option><option>Bursluluk</option><option>Deneme Sınavı</option><option>Seviye Tespit</option></select><select id="appStatus"><option value="">Tüm Durumlar</option><option>Yeni Başvuru</option><option>Arandı</option><option>Görüşüldü</option><option>Kayıt Oldu</option><option>Kayıt Olmadı</option></select></div>
-<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>İlçe / Okul</th><th>Veli Durumu</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
 </div></section>
 
 <section id="people" class="section">
@@ -178,10 +178,10 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
     <input id="peopleSearch" placeholder="Öğrenci, veli telefonu, başvuru no ara">
   </div>
   <div id="studentsPanel">
-    <div class="table-wrap"><table class="table"><thead><tr><th>Öğrenci</th><th>Sınıf</th><th>Öğrenci No</th><th>Takip No</th><th>Veli Telefonu</th><th>Okul</th><th>Durum</th></tr></thead><tbody id="studentsBody"></tbody></table></div>
+    <div class="table-wrap"><table class="table"><thead><tr><th>Öğrenci</th><th>Sınıf</th><th>Öğrenci No</th><th>Takip No</th><th>Veli Telefonu</th><th>Okul</th><th>Öğrenci Durumu / Yapılan Eylem</th><th>İşlem</th></tr></thead><tbody id="studentsBody"></tbody></table></div>
   </div>
   <div id="parentsPanel" style="display:none">
-    <div class="table-wrap"><table class="table"><thead><tr><th>Veli Ad Soyad</th><th>Veli Telefonu</th><th>Öğrenci</th><th>Sınıf</th><th>Takip No</th><th>Tür</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="parentsBody"></tbody></table></div>
+    <div class="table-wrap"><table class="table"><thead><tr><th>Veli Ad Soyad</th><th>Veli Telefonu</th><th>Öğrenci</th><th>Sınıf</th><th>Takip No</th><th>Tür</th><th>İlçe / Okul</th><th>Veli Durumu / Yapılan Eylem</th><th>İşlem</th></tr></thead><tbody id="parentsBody"></tbody></table></div>
   </div>
 </div>
 </section>
@@ -314,35 +314,37 @@ function renderPeople(){
  var apps=get(APP_KEY,[]);
  var results=get(RESULT_KEY,[]);
  var filteredApps=apps.filter(function(x){
-  return !q||[x.veliAd,x.telefon,x.ad,x.basvuruNo,x.sinif,x.type,x.ilce,x.okul,x.status].join(' ').toLowerCase().indexOf(q)>-1;
+  return !q||[x.veliAd,x.telefon,x.ad,x.basvuruNo,x.sinif,x.type,x.ilce,x.okul,x.status,x.veliStatus,x.studentAction].join(' ').toLowerCase().indexOf(q)>-1;
  });
+ var parentOpts=['Yeni Veli','Giriş Bilgisi Gönderildi','Panel Aktif','İletişime Geçildi','Kayıt Sürecinde','Kayıt Tamamlandı','Pasif'];
  el('parentsBody').innerHTML=filteredApps.length?filteredApps.map(function(x){
   var phone=normalizePhone(x.telefon);
   var parentUrl='https://ftmotiondesign.github.io/teksecenekakademi/parent.html';
   var waText='Merhaba '+(x.veliAd||'')+', Tek Seçenek Akademi başvurunuz alınmıştır.\n\nÖğrenci: '+(x.ad||'-')+'\nSınıf: '+(x.sinif||'-')+'\nTakip No: '+(x.basvuruNo||'-')+'\n\nTakip numaranız ve başvuruda kullandığınız veli telefon numarasıyla Veli Girişi bölümünden giriş yaparak öğrencinizin başvuru durumunu, kayıt sürecini, sınav sonuçlarını, puan ve sıralamasını ve kurum duyurularını takip edebilirsiniz.\n\nVeli Paneli: '+parentUrl;
   var waUrl=phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(waText):'#';
   var vs=x.veliStatus||'Yeni Veli';
-  var opts=['Yeni Veli','Giriş Bilgisi Gönderildi','Panel Aktif','İletişime Geçildi','Kayıt Sürecinde','Kayıt Tamamlandı','Pasif'];
-  var statusSelect='<select data-velistatus="'+esc(x.id)+'">'+opts.map(function(s){return '<option'+(s===vs?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>';
-  return '<tr><td><b>'+esc(x.veliAd||'-')+'</b></td><td><b>'+esc(x.telefon||'-')+'</b></td><td>'+esc(x.ad||'-')+'</td><td>'+esc(x.sinif||'-')+'</td><td><b>'+esc(x.basvuruNo||'-')+'</b></td><td>'+esc(x.type||'-')+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td>'+statusSelect+'</td><td>'+(phone?'<a class="wa-send" target="_blank" rel="noopener" href="'+waUrl+'">WhatsApp Gönder</a>':'<span class="pill">Telefon yok</span>')+'</td></tr>';
+  var statusSelect='<select data-velistatus="'+esc(x.id)+'">'+parentOpts.map(function(s){return '<option'+(s===vs?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>';
+  return '<tr><td><b>'+esc(x.veliAd||'-')+'</b></td><td><b>'+esc(x.telefon||'-')+'</b></td><td>'+esc(x.ad||'-')+'</td><td>'+esc(x.sinif||'-')+'</td><td><b>'+esc(x.basvuruNo||'-')+'</b></td><td>'+esc(x.type||'-')+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td>'+statusSelect+'</td><td><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="primary" data-saveveli="'+esc(x.id)+'">Kaydet</button>'+(phone?'<a class="wa-send" target="_blank" rel="noopener" href="'+waUrl+'">WhatsApp</a>':'<span class="pill">Telefon yok</span>')+'</div></td></tr>';
  }).join(''):'<tr><td colspan="9" class="empty">Veli kaydı bulunamadı.</td></tr>';
 
+ var studentOpts=['Yeni Öğrenci','Bilgileri Alındı','Seviye Değerlendirildi','Programı Belirlendi','Rehberlik Görüşmesi Yapıldı','Derse Başladı','Aktif Öğrenci','Kayıt Tamamlandı','Pasif'];
  var students=[];
  apps.forEach(function(a){
-  var r=results.find(function(x){return String(x.name||'').trim().toLowerCase()===String(a.ad||'').trim().toLowerCase()});
-  students.push({name:a.ad||'-',sinif:a.sinif||'-',studentNo:r?r.studentNo||'-':'-',basvuruNo:a.basvuruNo||'-',telefon:a.telefon||'-',okul:a.okul||'-',status:a.status||'Yeni Başvuru'});
+  var r=results.find(function(x){return String(x.name||'').trim().toLocaleLowerCase('tr-TR')===String(a.ad||'').trim().toLocaleLowerCase('tr-TR')});
+  students.push({appId:a.id,name:a.ad||'-',sinif:a.sinif||'-',studentNo:r?r.studentNo||'-':'-',basvuruNo:a.basvuruNo||'-',telefon:a.telefon||'-',okul:a.okul||'-',action:a.studentAction||'Yeni Öğrenci'});
  });
  results.forEach(function(r){
-  if(!students.some(function(s){return String(s.name).trim().toLowerCase()===String(r.name||'').trim().toLowerCase()})){
-   students.push({name:r.name||'-',sinif:r.sinif||'-',studentNo:r.studentNo||'-',basvuruNo:'-',telefon:'-',okul:'-',status:'Sonuç Kaydı'});
+  if(!students.some(function(s){return String(s.name).trim().toLocaleLowerCase('tr-TR')===String(r.name||'').trim().toLocaleLowerCase('tr-TR')})){
+   students.push({appId:'',name:r.name||'-',sinif:r.sinif||'-',studentNo:r.studentNo||'-',basvuruNo:'-',telefon:'-',okul:'-',action:'Sonuç Kaydı'});
   }
  });
- students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.telefon,x.okul,x.status].join(' ').toLowerCase().indexOf(q)>-1});
+ students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.telefon,x.okul,x.action].join(' ').toLowerCase().indexOf(q)>-1});
  el('studentsBody').innerHTML=students.length?students.map(function(x){
-  return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td><span class="pill">'+esc(x.status)+'</span></td></tr>';
- }).join(''):'<tr><td colspan="7" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
+  var sel=x.appId?'<select data-studentaction="'+esc(x.appId)+'">'+studentOpts.map(function(s){return '<option'+(s===x.action?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>':'<span class="pill">'+esc(x.action)+'</span>';
+  var save=x.appId?'<button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button>':'<span class="pill">Başvuru kaydı yok</span>';
+  return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td>'+sel+'</td><td>'+save+'</td></tr>';
+ }).join(''):'<tr><td colspan="8" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
 }
-
 function categories(){
  var a=get(CAT_KEY,[]);
  if(!a.length){a=[{name:'LGS',active:true},{name:'Kurum İçi Deneme',active:true},{name:'Türkiye Geneli Deneme',active:true}];set(CAT_KEY,a)}
@@ -376,6 +378,16 @@ document.body.addEventListener('click',function(e){
  var d=e.target;
  if(d.hasAttribute('data-delapp')){var id=d.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats()}
  if(d.hasAttribute('data-delresult')){var rid=d.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats()}
+ if(d.hasAttribute('data-saveveli')){
+  var vid=d.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]);
+  va.forEach(function(x){if(String(x.id)===vid){x.veliStatus=sel?sel.value:'Yeni Veli';x.veliStatusUpdatedAt=new Date().toISOString()}});
+  set(APP_KEY,va);renderPeople();
+ }
+ if(d.hasAttribute('data-savestudent')){
+  var sid=d.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sa=get(APP_KEY,[]);
+  sa.forEach(function(x){if(String(x.id)===sid){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.studentActionUpdatedAt=new Date().toISOString()}});
+  set(APP_KEY,sa);renderPeople();
+ }
  if(d.hasAttribute('data-editcat')){
   var a=categories(),i=parseInt(d.getAttribute('data-editcat'),10),old=a[i];
   var n=prompt('Kategori adını düzenleyin:',old.name);
@@ -398,11 +410,7 @@ document.body.addEventListener('change',function(e){
   a.forEach(function(x){if(String(x.id)===id)x.status=e.target.value});
   set(APP_KEY,a);updateStats();
  }
- if(e.target.hasAttribute('data-velistatus')){
-  var vid=e.target.getAttribute('data-velistatus'),va=get(APP_KEY,[]);
-  va.forEach(function(x){if(String(x.id)===vid)x.veliStatus=e.target.value});
-  set(APP_KEY,va);renderPeople();
- }
+
 });
 
 function addCategoryNow(){
