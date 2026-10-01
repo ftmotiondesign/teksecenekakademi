@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Galeri | Tek Seçenek Akademi</title>
+<meta name="theme-color" content="#292557">
+<style>
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f6f7fb;--text:#646978}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy)}a{text-decoration:none;color:inherit}.container{width:min(1180px,92%);margin:auto}
+header{background:#fff;box-shadow:0 4px 18px #1c184812;position:sticky;top:0;z-index:20}.head{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:18px}.back{background:var(--navy);color:#fff;padding:11px 16px;border-radius:22px;font-weight:800}
+.hero{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;padding:64px 0}.hero h1{font-size:clamp(36px,5vw,56px);margin:0 0 12px}.hero p{max-width:720px;color:#deddea;line-height:1.7}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0}.filter{border:1px solid #dddfea;background:#fff;color:var(--navy);padding:10px 16px;border-radius:22px;font-weight:800;cursor:pointer}.filter.active{background:var(--orange);border-color:var(--orange);color:#fff}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-bottom:64px}.item{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 28px #1c18480c;border:1px solid #ececf2}.media{aspect-ratio:16/10;background:#e8e9ef;overflow:hidden;position:relative}.media img,.media video{width:100%;height:100%;object-fit:cover;display:block}.media img{cursor:zoom-in}.badge{position:absolute;top:10px;left:10px;background:#171344d9;color:#fff;padding:6px 9px;border-radius:14px;font-size:11px;font-weight:900}.info{padding:16px}.info h3{margin:0 0 6px;font-size:17px}.info p{margin:0;color:var(--text);font-size:13px;line-height:1.5}
+.empty{grid-column:1/-1;background:#fff;padding:36px;border-radius:18px;text-align:center;color:var(--text)}
+.lightbox{position:fixed;inset:0;background:#000d;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.lightbox.show{display:flex}.lightbox img{max-width:95vw;max-height:88vh;border-radius:14px;box-shadow:0 24px 60px #0008}.close{position:absolute;top:18px;right:20px;width:44px;height:44px;border:0;border-radius:50%;background:#fff;color:#111;font-size:24px;font-weight:900;cursor:pointer}
+.note{margin:28px 0;background:#fff8ee;border-left:4px solid var(--orange);padding:14px 16px;border-radius:12px;color:#6b5a40;font-size:13px}
+footer{background:var(--dark);color:#c9c8d7;text-align:center;padding:22px;font-size:12px}
+@media(max-width:900px){.gallery{grid-template-columns:1fr 1fr}}@media(max-width:600px){.gallery{grid-template-columns:1fr}.head{height:72px}.brand img{width:52px;height:52px}.hero{padding:46px 0}}
+</style>
+</head>
+<body>
+<header><div class="container head"><a class="brand" href="index.html"><img src="logo.png" alt="Tek Seçenek Akademi"><b>Tek Seçenek Akademi</b></a><a class="back" href="index.html">← Ana Sayfa</a></div></header>
+<section class="hero"><div class="container"><h1>Kurum Galerisi</h1><p>Kurumumuzun iç ve dış mekânlarını, sınıflarını, etkinliklerini ve tanıtım videolarını buradan inceleyebilirsiniz.</p></div></section>
+<main class="container">
+  <div class="filters">
+    <button class="filter active" data-filter="all">Tümü</button>
+    <button class="filter" data-filter="image">Fotoğraflar</button>
+    <button class="filter" data-filter="video">Videolar</button>
+  </div>
+  <div class="note">Galeri PNG, JPG/JPEG ve MP4/WebM video içeriklerini destekler. Yönetim panelinden eklenen içerikler burada yayınlanacaktır.</div>
+  <div class="gallery" id="galleryGrid"></div>
+</main>
+<div class="lightbox" id="lightbox"><button class="close" id="closeLightbox">×</button><img id="lightboxImg" alt=""></div>
+<footer>© 2026 Tek Seçenek Akademi · Şehzadeler / Manisa</footer>
+<script>
+const GALLERY_KEY='tsa_gallery_v1';
+const fallback=[
+ {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız'},
+ {id:'g2',type:'image',src:'Başlıksız-1.png',title:'Kurum Galerisi',text:'Kurum görseli'},
+ {id:'g3',type:'image',src:'Başlıksız-2.png',title:'Eğitim Ortamımız',text:'Kurum görseli'}
+];
+function getGallery(){try{const x=JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]');return x.length?x:fallback}catch(e){return fallback}}
+const grid=document.getElementById('galleryGrid'),lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
+let currentFilter='all';
+function esc(v){return String(v||'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function render(){
+ const items=getGallery().filter(x=>currentFilter==='all'||x.type===currentFilter);
+ if(!items.length){grid.innerHTML='<div class="empty">Bu kategoride henüz içerik yok.</div>';return}
+ grid.innerHTML=items.map((x,i)=>{
+  const media=x.type==='video'
+   ? '<div class="media"><span class="badge">VİDEO</span><video controls preload="metadata" playsinline src="'+esc(x.src)+'"></video></div>'
+   : '<div class="media"><span class="badge">FOTOĞRAF</span><img data-full="'+esc(x.src)+'" src="'+esc(x.src)+'" alt="'+esc(x.title||'Galeri görseli')+'"></div>';
+  return '<article class="item">'+media+'<div class="info"><h3>'+esc(x.title||'Galeri')+'</h3><p>'+esc(x.text||'')+'</p></div></article>'
+ }).join('');
+ grid.querySelectorAll('img[data-full]').forEach(img=>img.addEventListener('click',()=>{lbImg.src=img.dataset.full;lb.classList.add('show')}));
+}
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentFilter=b.dataset.filter;render()}));
+document.getElementById('closeLightbox').onclick=()=>lb.classList.remove('show');
+lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('show')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('show')});
+render();
+</script>
+</body>
+</html>
