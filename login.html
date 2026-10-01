@@ -25,43 +25,106 @@ button{width:100%;border:0;border-radius:24px;padding:14px;background:var(--oran
 <div class="field"><label>E-posta</label><input id="email" type="email" autocomplete="username" required placeholder="E-posta adresi"></div>
 <div class="field"><label>Şifre</label><input id="password" type="password" autocomplete="current-password" required placeholder="Şifreniz"></div>
 <label class="remember"><input id="rememberMe" type="checkbox"> Beni Hatırla</label>
-<button type="submit">Giriş Yap</button>
+<button id="loginBtn" type="submit">Giriş Yap</button>
 <div id="msg" class="msg error">E-posta veya şifre hatalı.</div>
 </form>
 <a class="back" href="index.html">← Web Sitesine Dön</a>
 <div class="note">“Beni Hatırla” seçiliyse bu tarayıcıda yönetim oturumu korunur. Ortak bilgisayarlarda kullanmayın.</div>
 </main>
-<script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyDtca9HSSLoNXdL_jbaCNpI_9GjhYqh0aDo',
+  authDomain: 'teksecenekakademi-1f2b6.firebaseapp.com',
+  projectId: 'teksecenekakademi-1f2b6',
+  storageBucket: 'teksecenekakademi-1f2b6.firebasestorage.app',
+  messagingSenderId: '908097319502',
+  appId: '1:908097319502:web:bfbcfaa843d60a88d3491f',
+  measurementId: 'G-QJRJHJRM5V'
+};
+
 const ADMIN_EMAIL='admin@teksecenekakademi.com';
-const ADMIN_HASH='9d05d526efdca7cd8c3f1a37627f7992dced68b6b78a87031e1c98db7db9a4c9';
-async function sha256(v){
- const data=new TextEncoder().encode(v);
- const hash=await crypto.subtle.digest('SHA-256',data);
- return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+
+const form=document.getElementById('loginForm');
+const emailInput=document.getElementById('email');
+const passwordInput=document.getElementById('password');
+const rememberInput=document.getElementById('rememberMe');
+const msg=document.getElementById('msg');
+const loginBtn=document.getElementById('loginBtn');
+
+function showError(text){
+  msg.textContent=text;
+  msg.classList.add('show');
 }
-if(sessionStorage.getItem('tsa_admin_session_v1')==='1'||localStorage.getItem('tsa_admin_remember_v1')==='1')location.replace('admin.html');
-document.getElementById('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();
- const email=document.getElementById('email').value.trim().toLowerCase();
- const pass=document.getElementById('password').value;
- const ok=email===ADMIN_EMAIL && (await sha256(pass))===ADMIN_HASH;
- if(ok){
-  const remember=document.getElementById('rememberMe').checked;
+function hideError(){
+  msg.classList.remove('show');
+}
+function saveLegacySession(email,remember){
   if(remember){
-   localStorage.setItem('tsa_admin_remember_v1','1');
-   localStorage.setItem('tsa_admin_email',email);
-   sessionStorage.removeItem('tsa_admin_session_v1');
-   sessionStorage.removeItem('tsa_admin_email');
+    localStorage.setItem('tsa_admin_remember_v1','1');
+    localStorage.setItem('tsa_admin_email',email);
+    sessionStorage.removeItem('tsa_admin_session_v1');
+    sessionStorage.removeItem('tsa_admin_email');
   }else{
-   sessionStorage.setItem('tsa_admin_session_v1','1');
-   sessionStorage.setItem('tsa_admin_email',email);
-   localStorage.removeItem('tsa_admin_remember_v1');
-   localStorage.removeItem('tsa_admin_email');
+    sessionStorage.setItem('tsa_admin_session_v1','1');
+    sessionStorage.setItem('tsa_admin_email',email);
+    localStorage.removeItem('tsa_admin_remember_v1');
+    localStorage.removeItem('tsa_admin_email');
   }
-  location.href='admin.html';
- }else{
-  document.getElementById('msg').classList.add('show');
- }
+}
+
+if(sessionStorage.getItem('tsa_admin_session_v1')==='1'||localStorage.getItem('tsa_admin_remember_v1')==='1'){
+  location.replace('admin.html');
+}
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  hideError();
+
+  const email=emailInput.value.trim().toLowerCase();
+  const password=passwordInput.value;
+  const remember=rememberInput.checked;
+
+  if(email!==ADMIN_EMAIL){
+    showError('Bu hesap yönetici olarak yetkili değil.');
+    return;
+  }
+
+  loginBtn.disabled=true;
+  loginBtn.textContent='Giriş yapılıyor...';
+
+  try{
+    await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);
+    const credential=await signInWithEmailAndPassword(auth,email,password);
+
+    if(!credential.user || String(credential.user.email||'').toLowerCase()!==ADMIN_EMAIL){
+      showError('Bu hesap yönetici olarak yetkili değil.');
+      return;
+    }
+
+    saveLegacySession(email,remember);
+    location.href='admin.html';
+  }catch(err){
+    console.error('Firebase giriş hatası:',err);
+    let text='E-posta veya şifre hatalı.';
+    if(err && err.code==='auth/too-many-requests') text='Çok fazla giriş denemesi yapıldı. Bir süre sonra tekrar deneyin.';
+    if(err && err.code==='auth/network-request-failed') text='Firebase bağlantısı kurulamadı. İnternet bağlantısını kontrol edin.';
+    if(err && err.code==='auth/unauthorized-domain') text='Bu web adresi Firebase Authentication için yetkilendirilmemiş.';
+    showError(text);
+  }finally{
+    loginBtn.disabled=false;
+    loginBtn.textContent='Giriş Yap';
+  }
 });
 </script>
 </body>
