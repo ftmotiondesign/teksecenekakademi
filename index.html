@@ -256,13 +256,28 @@ if(bursIlce&&bursOkul){
  bursOkul.addEventListener('change',()=>showOtherSchool(bursOkul.value==='__other'));
 }
 document.querySelectorAll('.app-form').forEach(form=>{
- form.addEventListener('submit',e=>{
+ form.addEventListener('submit',async e=>{
   e.preventDefault();
-  const fd=new FormData(form), data=Object.fromEntries(fd.entries());
-  const okulValue=data.okul==='__other'?(data.okulDiger||'Diğer'):(data.okul||'');
-  const app={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),basvuruNo:makeNo(),type:form.dataset.type,ad:data.ad||'',veliAd:data.veliAd||'',ogrenciTelefon:data.ogrenciTelefon||'',telefon:data.telefon||'',sinif:data.sinif||'',program:data.program||'',ilce:data.ilce||'',okul:okulValue,not:data.not||'',status:'Yeni Başvuru',createdAt:new Date().toISOString()};
-  const list=getApps();list.unshift(app);saveApps(list);
-  const msg=form.querySelector('.form-message');msg.textContent='Başvurunuz alındı. Takip No: '+app.basvuruNo+' — Bu numarayı saklayın; veli paneline girişte kullanacaksınız.';msg.classList.add('show');form.reset();
+  const submitBtn=form.querySelector('button[type="submit"]');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.dataset.oldText=submitBtn.innerHTML;submitBtn.innerHTML='Gönderiliyor...';}
+  const msg=form.querySelector('.form-message');
+  try{
+   const fd=new FormData(form), data=Object.fromEntries(fd.entries());
+   const okulValue=data.okul==='__other'?(data.okulDiger||'Diğer'):(data.okul||'');
+   const app={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),basvuruNo:makeNo(),type:form.dataset.type,ad:data.ad||'',veliAd:data.veliAd||'',ogrenciTelefon:data.ogrenciTelefon||'',telefon:data.telefon||'',sinif:data.sinif||'',program:data.program||'',ilce:data.ilce||'',okul:okulValue,not:data.not||'',status:'Yeni Başvuru',createdAt:new Date().toISOString()};
+   if(!window.TSAFirebaseApplicationsPublic)throw new Error('Başvuru sistemi henüz hazır değil. Sayfayı yenileyip tekrar deneyin.');
+   await window.TSAFirebaseApplicationsPublic.submit(app);
+   const list=getApps();list.unshift(app);saveApps(list);
+   msg.textContent='Başvurunuz alındı. Takip No: '+app.basvuruNo+' — Bu numarayı saklayın; veli paneline girişte kullanacaksınız.';
+   msg.classList.add('show');
+   form.reset();
+  }catch(err){
+   console.error('Başvuru gönderme hatası:',err);
+   msg.textContent='Başvuru gönderilemedi. Lütfen tekrar deneyin.';
+   msg.classList.add('show');
+  }finally{
+   if(submitBtn){submitBtn.disabled=false;submitBtn.innerHTML=submitBtn.dataset.oldText||'Gönder';}
+  }
  });
 });
 document.querySelectorAll('#finderOptions button').forEach(btn=>btn.addEventListener('click',()=>{
@@ -407,5 +422,6 @@ toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefault();window.location.href='index.html';});
 </script>
 <script type="module" src="firebase-announcements-public.js?v=1"></script>
+<script type="module" src="firebase-applications-public.js?v=1"></script>
 </body>
 </html>
