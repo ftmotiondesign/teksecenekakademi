@@ -385,14 +385,30 @@ document.body.addEventListener('click',function(e){
  if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
  if(saveVeli){
   var vid=saveVeli.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]),saved=false;
-  va.forEach(function(x){if(String(x.id)===String(vid)){x.veliStatus=sel?sel.value:'Yeni Veli';x.veliStatusUpdatedAt=new Date().toISOString();saved=true}});
+  va.forEach(function(x){if(String(x.id)===String(vid)){
+   var next=sel?sel.value:'Yeni Veli',now=new Date().toISOString();
+   x.veliStatus=next;x.veliStatusUpdatedAt=now;
+   if(!Array.isArray(x.veliHistory))x.veliHistory=[];
+   x.veliHistory.unshift({status:next,at:now});
+   x.veliHistory=x.veliHistory.slice(0,30);
+   saved=true;
+  }});
   if(saved){set(APP_KEY,va);renderPeople();alert('Veli durumu kaydedildi.');}
   else alert('Veli kaydı bulunamadı.');
   return;
  }
  if(saveStudent){
   var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
-  sa.forEach(function(x){if(String(x.id)===String(sid)){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.ogrenciTelefon=sphone?sphone.value.trim():(x.ogrenciTelefon||'');x.studentActionUpdatedAt=new Date().toISOString();studentSaved=true}});
+  sa.forEach(function(x){if(String(x.id)===String(sid)){
+   var next=ssel?ssel.value:'Yeni Öğrenci',now=new Date().toISOString();
+   x.studentAction=next;
+   x.ogrenciTelefon=sphone?sphone.value.trim():(x.ogrenciTelefon||'');
+   x.studentActionUpdatedAt=now;
+   if(!Array.isArray(x.studentHistory))x.studentHistory=[];
+   x.studentHistory.unshift({status:next,at:now});
+   x.studentHistory=x.studentHistory.slice(0,30);
+   studentSaved=true;
+  }});
   if(studentSaved){
    set(APP_KEY,sa);
    var savedText=document.getElementById('studentSaved-'+sid);
