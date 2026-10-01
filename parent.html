@@ -3,42 +3,162 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tek Seçenek Akademi | Veli Girişi</title>
+<title>Tek Seçenek Akademi | Veli Paneli</title>
+<meta name="theme-color" content="#292557">
 <style>
-:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--green:#25b96b}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy)}
-.wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#292557,#1c1848)}
-.card{width:min(760px,100%);background:#fff;border-radius:24px;padding:30px;box-shadow:0 20px 60px #0004}
-.brand{display:flex;align-items:center;gap:14px;margin-bottom:24px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:20px}.brand span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
-h1{margin:0 0 8px}.desc{color:var(--muted);line-height:1.6;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:1fr auto;gap:10px}.grid input{padding:13px;border:1px solid #dddfea;border-radius:10px;font:inherit}.grid button{border:0;border-radius:10px;background:var(--orange);color:#fff;font-weight:900;padding:0 18px;cursor:pointer}
-.box{border:1px solid #ececf2;border-radius:14px;padding:15px;margin-top:12px}.status{display:inline-block;margin-top:8px;background:#eef0f7;border-radius:18px;padding:6px 10px;font-size:12px;font-weight:900}.empty{padding:18px;background:#f7f7fa;border-radius:12px;color:var(--muted);margin-top:15px}
-.back{display:inline-block;margin-top:18px;font-weight:800;text-decoration:none;color:var(--navy)}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.grid button{padding:13px}}
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--green:#25b96b;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#25243b}button,input{font:inherit}.hidden{display:none!important}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,var(--navy),var(--dark))}
+.login-card{width:min(560px,100%);background:#fff;border-radius:24px;padding:30px;box-shadow:0 20px 60px #0004}
+.brand{display:flex;align-items:center;gap:14px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:20px;color:var(--navy)}.brand span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;margin-bottom:20px}
+.login-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.login-grid input{padding:13px;border:1px solid #dddfea;border-radius:10px;outline:none}.login-grid input:focus{border-color:var(--orange)}.login-btn{width:100%;margin-top:10px;border:0;border-radius:12px;background:var(--orange);color:#fff;font-weight:900;padding:14px;cursor:pointer}
+.empty{padding:15px;background:#fff1f1;color:#b73737;border-radius:11px;margin-top:14px;font-size:13px;font-weight:700}.back{display:inline-block;margin-top:18px;font-weight:800;text-decoration:none;color:var(--navy);font-size:13px}
+.app{min-height:100vh}.top{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;padding:20px 0 34px}.container{width:min(1180px,92%);margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.topbar .brand b{color:#fff}.topbar .brand span{color:#d7d5e4}.logout{border:1px solid #ffffff44;background:#ffffff12;color:#fff;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+.welcome{margin-top:28px;display:flex;justify-content:space-between;align-items:end;gap:20px}.welcome h2{font-size:clamp(27px,4vw,42px);margin:0 0 7px}.welcome p{margin:0;color:#d7d5e4}.student-tag{background:#ffffff12;border:1px solid #ffffff25;border-radius:14px;padding:12px 15px;font-size:13px}.student-tag b{display:block;font-size:17px;margin-top:3px}
+.content{margin-top:-18px;padding-bottom:50px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{background:#fff;border-radius:17px;padding:19px;box-shadow:0 7px 28px #24204d12}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:24px;color:var(--navy);margin-top:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.box{background:#fff;border-radius:18px;padding:20px;box-shadow:0 7px 28px #24204d0e}.box h3{margin:0 0 5px;color:var(--navy)}.sub{color:var(--muted);font-size:13px;margin-bottom:15px}
+.status-flow{display:flex;gap:8px;flex-wrap:wrap}.step{padding:8px 10px;border-radius:18px;background:#eef0f7;font-size:12px;font-weight:800;color:#7b7d88}.step.active{background:var(--orange);color:#fff}.step.done{background:#e9f8f0;color:#187f4a}
+.last-score{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#f8f8fb;border-radius:15px;padding:18px}.score-big{font-size:38px;font-weight:900;color:var(--orange)}.score-meta{line-height:1.8;font-size:14px}.score-meta b{color:var(--navy)}
+.exam-list,.announcement-list{display:grid;gap:10px}.exam,.announcement{border:1px solid #ececf2;border-radius:14px;padding:14px}.exam b,.announcement b{color:var(--navy)}.exam small,.announcement small{display:block;color:var(--muted);margin-top:5px}.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.contact-actions a{text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:900}.call{background:var(--navy);color:#fff}.wa{background:var(--green);color:#fff}.info{padding:14px;background:#fff8ee;border-left:4px solid var(--orange);border-radius:10px;color:#765329;font-size:13px;line-height:1.6}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.welcome{align-items:flex-start;flex-direction:column}}
+@media(max-width:600px){.login-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.last-score{align-items:flex-start;flex-direction:column}.contact-actions{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand img{width:52px;height:52px}}
 </style>
 </head>
 <body>
-<div class="wrap"><main class="card">
-<div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Veli Girişi</span></div></div>
-<h1>Başvuru Durumunu Gör</h1>
-<div class="desc">Başvuru numarası veya kayıt sırasında kullanılan telefon numarasıyla başvuru durumunu görüntüleyebilirsiniz.</div>
-<div class="grid"><input id="parentQuery" placeholder="Başvuru No / Telefon"><button id="parentBtn">Sorgula</button></div>
-<div id="parentResult"></div>
-<a class="back" href="index.html">← Ana Sayfaya Dön</a>
-</main></div>
+<section id="loginView" class="login-wrap">
+  <main class="login-card">
+    <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Veli Paneli</span></div></div>
+    <h1>Veli Girişi</h1>
+    <div class="desc">Başvuru numarası ve kayıt sırasında kullanılan veli telefon numarasıyla giriş yapın.</div>
+    <div class="login-grid">
+      <input id="applicationNo" placeholder="Başvuru No">
+      <input id="parentPhone" placeholder="Veli Telefonu">
+    </div>
+    <button id="parentBtn" class="login-btn">Giriş Yap</button>
+    <div id="loginError"></div>
+    <a class="back" href="index.html">← Ana Sayfaya Dön</a>
+  </main>
+</section>
+
+<section id="panelView" class="app hidden">
+  <div class="top"><div class="container">
+    <div class="topbar">
+      <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Veli Paneli</span></div></div>
+      <button id="logoutBtn" class="logout">Çıkış Yap</button>
+    </div>
+    <div class="welcome">
+      <div><h2 id="welcomeTitle">Veli Paneli</h2><p id="welcomeText">Öğrencinizin başvuru ve sınav bilgileri burada.</p></div>
+      <div class="student-tag"><span>Başvuru No</span><b id="profileApplication">-</b></div>
+    </div>
+  </div></div>
+
+  <div class="container content">
+    <div class="stats">
+      <div class="stat"><span>Başvuru Durumu</span><strong id="statStatus">-</strong></div>
+      <div class="stat"><span>Sınıf</span><strong id="statClass">-</strong></div>
+      <div class="stat"><span>Son Puan</span><strong id="statScore">-</strong></div>
+      <div class="stat"><span>Toplam Sınav</span><strong id="statExamCount">0</strong></div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
+        <h3>Başvuru Süreci</h3><div class="sub">Kurumdaki mevcut başvuru durumu</div>
+        <div id="statusFlow" class="status-flow"></div>
+      </div>
+      <div class="box">
+        <h3>Son Sınav</h3><div class="sub" id="lastExamName">Yayınlanan son sonuç</div>
+        <div class="last-score">
+          <div><div class="score-big" id="lastScore">-</div><div style="font-size:12px;color:var(--muted)">Puan</div></div>
+          <div class="score-meta">Yüzdelik: <b id="lastPercentile">-</b><br>Sıralama: <b id="lastRank">-</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
+        <h3>Sınav Geçmişi</h3><div class="sub">Öğrenciniz için yayınlanan sonuçlar</div>
+        <div id="examList" class="exam-list"></div>
+      </div>
+      <div class="box">
+        <h3>Duyurular</h3><div class="sub">Kurumun güncel bilgilendirmeleri</div>
+        <div id="announcementList" class="announcement-list"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
+        <h3>Kurumla İletişim</h3><div class="sub">Sorularınız için bize ulaşın</div>
+        <div class="contact-actions">
+          <a class="call" href="tel:+905526959757">☎ Kurumu Ara</a>
+          <a class="wa" target="_blank" rel="noopener" href="https://wa.me/905526959757">WhatsApp</a>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Bilgilendirme</h3><div class="sub">Veli paneli</div>
+        <div class="info">Bu panelde yalnızca kurum tarafından yayınlanan bilgiler gösterilir. Gerçek kullanımda veriler site tamamlandıktan sonra Firebase üzerinden ortak sisteme bağlanacaktır.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <script>
-const APP_KEY='tsa_applications_v1';
+const APP_KEY='tsa_applications_v1',RESULT_KEY='tsa_results_v1',ANN_KEY='tsa_announcements_v1',SESSION_KEY='tsa_parent_session_v1';
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
-function normPhone(v){return String(v||'').replace(/\D/g,'')}
-document.getElementById('parentBtn').onclick=()=>{
- const q=document.getElementById('parentQuery').value.trim();
- let apps=[];try{apps=JSON.parse(localStorage.getItem(APP_KEY)||'[]')}catch(e){}
- const nq=normPhone(q);
- const list=apps.filter(x=>String(x.basvuruNo||'').toLowerCase()===q.toLowerCase() || (nq && normPhone(x.telefon)===nq));
- const out=document.getElementById('parentResult');
- if(!list.length){out.innerHTML='<div class="empty">Bu bilgiyle eşleşen başvuru bulunamadı.</div>';return;}
- out.innerHTML=list.map(x=>'<div class="box"><b>'+esc(x.ad||'-')+'</b><div style="margin-top:5px">'+esc(x.type||'-')+' · '+esc(x.sinif||'-')+'</div><div style="margin-top:6px;color:#707487">'+esc(x.ilce||'')+(x.okul?' · '+esc(x.okul):'')+'</div><span class="status">'+esc(x.status||'Yeni Başvuru')+'</span></div>').join('');
-};
+function normPhone(v){return String(v||'').replace(/\D/g,'').replace(/^90(?=5\d{9}$)/,'0')}
+function get(key){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}}
+function findApplication(no,phone){
+ const n=String(no||'').trim().toLowerCase(),p=normPhone(phone);
+ return get(APP_KEY).find(x=>String(x.basvuruNo||'').trim().toLowerCase()===n && normPhone(x.telefon)===p);
+}
+function studentResults(app){
+ const all=get(RESULT_KEY);
+ const no=String(app.studentNo||'').trim();
+ if(no)return all.filter(x=>String(x.studentNo||'').trim()===no);
+ return all.filter(x=>String(x.name||'').trim().toLocaleLowerCase('tr-TR')===String(app.ad||'').trim().toLocaleLowerCase('tr-TR'));
+}
+function renderStatus(status){
+ const steps=['Yeni Başvuru','Arandı','Görüşüldü','Kayıt Oldu'];
+ const alt=status==='Kayıt Olmadı';
+ const current=steps.indexOf(status);
+ document.getElementById('statusFlow').innerHTML=steps.map((s,i)=>{
+   let cls='step'; if(!alt&&i<current)cls+=' done'; if(!alt&&i===current)cls+=' active';
+   return '<span class="'+cls+'">'+esc(s)+'</span>';
+ }).join('')+(alt?'<span class="step active">Kayıt Olmadı</span>':'');
+}
+function openPanel(app){
+ const results=studentResults(app),latest=results[0]||null;
+ document.getElementById('loginView').classList.add('hidden');document.getElementById('panelView').classList.remove('hidden');
+ document.getElementById('welcomeTitle').textContent=(app.ad||'Öğrenci')+' · Veli Paneli';
+ document.getElementById('welcomeText').textContent=(app.sinif||'-')+' · '+(app.type||'Başvuru');
+ document.getElementById('profileApplication').textContent=app.basvuruNo||'-';
+ document.getElementById('statStatus').textContent=app.status||'Yeni Başvuru';
+ document.getElementById('statClass').textContent=app.sinif||'-';
+ document.getElementById('statScore').textContent=latest?(latest.score||'-'):'-';
+ document.getElementById('statExamCount').textContent=results.length;
+ renderStatus(app.status||'Yeni Başvuru');
+ if(latest){
+   document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
+   document.getElementById('lastScore').textContent=latest.score||'-';
+   document.getElementById('lastPercentile').textContent=latest.percentile||'-';
+   document.getElementById('lastRank').textContent=latest.rank||'-';
+ }else{
+   document.getElementById('lastExamName').textContent='Henüz yayınlanmış sonuç yok';
+ }
+ document.getElementById('examList').innerHTML=results.length?results.map(x=>'<div class="exam"><b>'+esc(x.examName||x.code||'Sınav')+'</b><small>'+esc(x.category||'-')+' · Puan: '+esc(x.score||'-')+' · Sıralama: '+esc(x.rank||'-')+'</small></div>').join(''):'<div class="info">Henüz yayınlanmış sınav sonucu bulunmuyor.</div>';
+ const anns=get(ANN_KEY);
+ document.getElementById('announcementList').innerHTML=anns.length?anns.slice(0,5).map(x=>'<div class="announcement"><b>'+esc(x.head||'Duyuru')+'</b><small>'+esc(x.text||'')+'</small></div>').join(''):'<div class="announcement"><b>2026–2027 Kayıtlarımız Devam Ediyor</b><small>Programlarımız ve kayıt süreci hakkında kurumumuzdan bilgi alabilirsiniz.</small></div>';
+}
+function login(){
+ const no=document.getElementById('applicationNo').value.trim(),phone=document.getElementById('parentPhone').value.trim(),err=document.getElementById('loginError');
+ const app=findApplication(no,phone);
+ if(!app){err.innerHTML='<div class="empty">Başvuru numarası ve veli telefonu eşleşmedi.</div>';return;}
+ err.innerHTML='';sessionStorage.setItem(SESSION_KEY,JSON.stringify({no:no,phone:phone}));openPanel(app);
+}
+document.getElementById('parentBtn').addEventListener('click',login);
+['applicationNo','parentPhone'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')login()}));
+document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
+try{const saved=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');if(saved){const app=findApplication(saved.no,saved.phone);if(app)openPanel(app);else sessionStorage.removeItem(SESSION_KEY)}}catch(e){}
 </script>
 </body>
 </html>
