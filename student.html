@@ -114,8 +114,10 @@ function resolveStudent(query){
  const apps=getApps(), results=getResults();
  const digits=onlyDigits(query);
  const phoneMatches=digits.length>=10?apps.filter(x=>{
-  const p=onlyDigits(x.telefon);
-  return p.endsWith(digits.slice(-10));
+  const studentPhone=onlyDigits(x.ogrenciTelefon);
+  const parentPhone=onlyDigits(x.telefon);
+  const last10=digits.slice(-10);
+  return (studentPhone&&studentPhone.endsWith(last10)) || (parentPhone&&parentPhone.endsWith(last10));
  }):[];
  if(phoneMatches.length>1)return {multiple:true};
  let app=apps.find(x=>norm(x.basvuruNo)===q||norm(x.studentNo)===q)||phoneMatches[0]||null;
