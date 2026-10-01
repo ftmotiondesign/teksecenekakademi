@@ -376,17 +376,25 @@ el('resultSearch').addEventListener('input',renderResults);el('examFilter').addE
 
 document.body.addEventListener('click',function(e){
  var d=e.target;
- if(d.hasAttribute('data-delapp')){var id=d.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats()}
- if(d.hasAttribute('data-delresult')){var rid=d.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats()}
- if(d.hasAttribute('data-saveveli')){
-  var vid=d.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]);
-  va.forEach(function(x){if(String(x.id)===vid){x.veliStatus=sel?sel.value:'Yeni Veli';x.veliStatusUpdatedAt=new Date().toISOString()}});
-  set(APP_KEY,va);renderPeople();
+ var delApp=d.closest('[data-delapp]');
+ var delResult=d.closest('[data-delresult]');
+ var saveVeli=d.closest('[data-saveveli]');
+ var saveStudent=d.closest('[data-savestudent]');
+ if(delApp){var id=delApp.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats();return}
+ if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
+ if(saveVeli){
+  var vid=saveVeli.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]),saved=false;
+  va.forEach(function(x){if(String(x.id)===String(vid)){x.veliStatus=sel?sel.value:'Yeni Veli';x.veliStatusUpdatedAt=new Date().toISOString();saved=true}});
+  if(saved){set(APP_KEY,va);renderPeople();alert('Veli durumu kaydedildi.');}
+  else alert('Veli kaydı bulunamadı.');
+  return;
  }
- if(d.hasAttribute('data-savestudent')){
-  var sid=d.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sa=get(APP_KEY,[]);
-  sa.forEach(function(x){if(String(x.id)===sid){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.studentActionUpdatedAt=new Date().toISOString()}});
-  set(APP_KEY,sa);renderPeople();
+ if(saveStudent){
+  var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
+  sa.forEach(function(x){if(String(x.id)===String(sid)){x.studentAction=ssel?ssel.value:'Yeni Öğrenci';x.studentActionUpdatedAt=new Date().toISOString();studentSaved=true}});
+  if(studentSaved){set(APP_KEY,sa);renderPeople();alert('Öğrenci durumu kaydedildi.');}
+  else alert('Öğrenci kaydı bulunamadı.');
+  return;
  }
  if(d.hasAttribute('data-editcat')){
   var a=categories(),i=parseInt(d.getAttribute('data-editcat'),10),old=a[i];
