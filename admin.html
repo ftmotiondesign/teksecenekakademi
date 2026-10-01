@@ -128,8 +128,19 @@ function showPage(id){
 }
 function updateStats(){var a=get(APP_KEY,[]),r=get(RESULT_KEY,[]);el('statNew').textContent=a.filter(function(x){return x.status==='Yeni Başvuru'}).length;el('statTotal').textContent=a.length;el('statWon').textContent=a.filter(function(x){return x.status==='Kayıt Oldu'}).length;el('statResults').textContent=r.length}
 function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="7" class="empty">Başvuru bulunamadı.</td></tr>'}
-function categories(){var a=get(CAT_KEY,[]);if(!a.length){a=['LGS','Kurum İçi Deneme','Türkiye Geneli Deneme'];set(CAT_KEY,a)}return a}
-function renderCategories(){var a=categories();el('categoryList').innerHTML=a.map(function(c,i){return '<div class="item"><b>'+esc(c)+'</b><button class="danger" data-delcat="'+i+'">Sil</button></div>'}).join('')}
+function categories(){
+ var a=get(CAT_KEY,[]);
+ if(!a.length){a=[{name:'LGS',active:true},{name:'Kurum İçi Deneme',active:true},{name:'Türkiye Geneli Deneme',active:true}];set(CAT_KEY,a)}
+ a=a.map(function(x){return typeof x==='string'?{name:x,active:true}:x});
+ set(CAT_KEY,a);
+ return a
+}
+function renderCategories(){
+ var a=categories();
+ el('categoryList').innerHTML=a.map(function(c,i){
+  return '<div class="item"><div><b>'+esc(c.name)+'</b><br><small>'+(c.active===false?'Pasif':'Aktif')+'</small></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="secondary" data-editcat="'+i+'">Düzenle</button><button class="secondary" data-togglecat="'+i+'">'+(c.active===false?'Aktif Yap':'Pasif Yap')+'</button><button class="danger" data-delcat="'+i+'">Sil</button></div></div>'
+ }).join('')
+}
 function renderResults(){var q=el('resultSearch').value.toLowerCase(),exam=el('examFilter').value;var all=get(RESULT_KEY,[]);var exams=[];all.forEach(function(x){var n=x.examName||x.code||'Sınav';if(exams.indexOf(n)<0)exams.push(n)});exams.sort();var old=exam;el('examFilter').innerHTML='<option value="">Tüm Sınavlar</option>'+exams.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');el('examFilter').value=old;var list=all.filter(function(x){var n=x.examName||x.code||'Sınav';return(!q||[x.category,x.examName,x.code,x.studentNo,x.name].join(' ').toLowerCase().indexOf(q)>-1)&&(!old||n===old)});el('resultsBody').innerHTML=list.length?list.map(function(x){return '<tr><td>'+esc(x.category||'-')+'</td><td><b>'+esc(x.examName||x.code||'Sınav')+'</b></td><td>'+esc(x.code)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.score)+'</td><td>'+esc(x.percentile||'-')+'</td><td>'+esc(x.rank||'-')+'</td><td><button class="danger" data-delresult="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="9" class="empty">Henüz sonuç eklenmedi.</td></tr>'}
 function csvDownload(name,rows){var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}).join(';')}).join('\n');var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
 function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
@@ -143,7 +154,19 @@ document.body.addEventListener('click',function(e){
  var d=e.target;
  if(d.hasAttribute('data-delapp')){var id=d.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats()}
  if(d.hasAttribute('data-delresult')){var rid=d.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats()}
- if(d.hasAttribute('data-delcat')){var a=categories(),i=parseInt(d.getAttribute('data-delcat'),10);a.splice(i,1);set(CAT_KEY,a);renderCategories()}
+ if(d.hasAttribute('data-editcat')){
+  var a=categories(),i=parseInt(d.getAttribute('data-editcat'),10),old=a[i];
+  var n=prompt('Kategori adını düzenleyin:',old.name);
+  if(n&&n.trim()){a[i].name=n.trim();set(CAT_KEY,a);renderCategories()}
+ }
+ if(d.hasAttribute('data-togglecat')){
+  var a2=categories(),i2=parseInt(d.getAttribute('data-togglecat'),10);
+  a2[i2].active=a2[i2].active===false?true:false;set(CAT_KEY,a2);renderCategories()
+ }
+ if(d.hasAttribute('data-delcat')){
+  var a3=categories(),i3=parseInt(d.getAttribute('data-delcat'),10);
+  if(confirm('Bu kategori silinsin mi?')){a3.splice(i3,1);set(CAT_KEY,a3);renderCategories()}
+ }
  if(d.hasAttribute('data-delsimple')){var t=d.getAttribute('data-delsimple'),m=SIMPLE[t],sid=d.getAttribute('data-id');set(m[0],get(m[0],[]).filter(function(x){return String(x.id)!==sid}));renderSimple(t)}
  if(d.hasAttribute('data-addsimple')){var t2=d.getAttribute('data-addsimple'),m2=SIMPLE[t2],h=prompt(m2[2]+' başlığı / adı:');if(h){var tx=prompt('Açıklama:')||'';var arr=get(m2[0],[]);arr.unshift({id:String(Date.now()),head:h,text:tx});set(m2[0],arr);renderSimple(t2)}}
 });
@@ -153,14 +176,14 @@ function addCategoryNow(){
  var input=el('newCategory'); if(!input)return;
  var v=(input.value||'').trim(); if(!v){alert('Kategori adı yazın.');return;}
  var a=categories();
- if(a.some(function(x){return String(x).toLowerCase()===v.toLowerCase()})){alert('Bu kategori zaten var.');return;}
- a.push(v); set(CAT_KEY,a); input.value=''; renderCategories(); alert('Kategori eklendi.');
+ if(a.some(function(x){return String(x.name).toLowerCase()===v.toLowerCase()})){alert('Bu kategori zaten var.');return;}
+ a.push({name:v,active:true}); set(CAT_KEY,a); input.value=''; renderCategories(); alert('Kategori eklendi.');
 }
 var addCategoryBtn=el('addCategory');
 if(addCategoryBtn)addCategoryBtn.addEventListener('click',addCategoryNow);
 var newCategoryInput=el('newCategory');
 if(newCategoryInput)newCategoryInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addCategoryNow();}});
-el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var category=prompt('Kategori:',categories()[0]||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var a=get(RESULT_KEY,[]);a.unshift({id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank});set(RESULT_KEY,a);renderResults();updateStats()});
+el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var cats=categories().filter(function(x){return x.active!==false});var category=prompt('Kategori:',(cats[0]&&cats[0].name)||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var a=get(RESULT_KEY,[]);a.unshift({id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank});set(RESULT_KEY,a);renderResults();updateStats()});
 el('downloadTemplate').addEventListener('click',function(){csvDownload('tek-secenek-sonuc-sablonu.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],['LGS','LGS 2026','LGS-2026','1001','Örnek Öğrenci','450,125','2,15','1250','18,75','17,50','19,25','9,50','9,00','8,75']])});
 el('exportResults').addEventListener('click',function(){var a=get(RESULT_KEY,[]);csvDownload('tek-secenek-sinav-sonuclari.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama'],].concat(a.map(function(x){return[x.category,x.examName,x.code,x.studentNo,x.name,x.score,x.percentile,x.rank]})))});
 el('exportApps').addEventListener('click',function(){var a=get(APP_KEY,[]);csvDownload('tek-secenek-basvurular.csv',[['Başvuru No','Tür','Tarih','Ad Soyad','Telefon','Sınıf','Durum']].concat(a.map(function(x){return[x.basvuruNo,x.type,x.createdAt,x.ad,x.telefon,x.sinif,x.status]})))});
