@@ -11,6 +11,16 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /applications/{applicationId} {
+      allow create: if request.resource.data.keys().hasAll([
+        'id','basvuruNo','type','ad','telefon','status','createdAt'
+      ])
+      && request.resource.data.id == applicationId
+      && request.resource.data.status == 'Yeni Başvuru'
+      && request.resource.data.type in ['Ön Kayıt','Bursluluk','Deneme Sınavı','Seviye Tespit'];
+      allow read, update, delete: if isAdmin();
+    }
+
     match /{document=**} {
       allow read, write: if isAdmin();
     }
