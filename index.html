@@ -117,6 +117,15 @@ document.getElementById('resultBtn').onclick=()=>{
  box.classList.add('show');box.innerHTML=r?'<strong>'+escapeHtml(r.name||'Öğrenci')+'</strong><div>Puan: '+escapeHtml(r.score||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="margin-top:6px">'+escapeHtml(r.detail||'')+'</div>':'Bu kodla yayınlanmış bir sonuç bulunamadı.';
 };
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function loadManagedContent(){
+ const ann=jgetSite('tsa_announcements_v1'),teachers=jgetSite('tsa_teachers_v1'),success=jgetSite('tsa_success_v1'),reviews=jgetSite('tsa_reviews_v1');
+ if(ann.length){document.getElementById('announcementList').innerHTML=ann.map(x=>'<div class="announcement"><b>'+escapeHtml(x.head)+'</b><span>'+escapeHtml(x.text)+'</span></div>').join('')}
+ if(teachers.length){document.getElementById('teacherGrid').innerHTML=teachers.map(x=>'<div class="teacher"><div class="avatar">TSA</div><h3>'+escapeHtml(x.head)+'</h3><p>'+escapeHtml(x.text)+'</p></div>').join('')}
+ if(success.length){document.getElementById('successGrid').innerHTML=success.map(x=>'<div class="success"><strong>★</strong><h3>'+escapeHtml(x.head)+'</h3><p>'+escapeHtml(x.text)+'</p></div>').join('')}
+ if(reviews.length){document.getElementById('reviewGrid').innerHTML=reviews.map(x=>'<div class="review"><h3>'+escapeHtml(x.head)+'</h3><p>'+escapeHtml(x.text)+'</p></div>').join('')}
+}
+function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+loadManagedContent();
 </script>
 </body>
 </html>
