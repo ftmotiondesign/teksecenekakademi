@@ -112,7 +112,13 @@ document.querySelectorAll('#finderOptions button').forEach(btn=>btn.addEventList
  document.getElementById('finderWa').href='https://wa.me/905526959757?text='+encodeURIComponent('Merhaba Tek Seçenek Akademi, '+btn.dataset.title+' hakkında bilgi almak istiyorum.');
  document.getElementById('finderResult').classList.add('show');
 }));
-function loadResultCategories(){let cats=[];try{cats=JSON.parse(localStorage.getItem(RESULT_CAT_KEY)||'[]')}catch(e){}if(!cats.length)cats=['LGS','Kurum İçi Deneme','Türkiye Geneli Deneme'];const s=document.getElementById('resultType');s.innerHTML='<option value="all">Hepsi</option>'+cats.map(c=>'<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>').join('');}
+function loadResultCategories(){
+ let cats=[];try{cats=JSON.parse(localStorage.getItem(RESULT_CAT_KEY)||'[]')}catch(e){}
+ if(!cats.length)cats=[{name:'LGS',active:true},{name:'Kurum İçi Deneme',active:true},{name:'Türkiye Geneli Deneme',active:true}];
+ cats=cats.map(c=>typeof c==='string'?{name:c,active:true}:c).filter(c=>c.active!==false);
+ const s=document.getElementById('resultType');
+ s.innerHTML='<option value="all">Hepsi</option>'+cats.map(c=>'<option value="'+escapeHtml(c.name)+'">'+escapeHtml(c.name)+'</option>').join('');
+}
 loadResultCategories();
 document.getElementById('resultBtn').onclick=()=>{
  const code=document.getElementById('resultCode').value.trim().toLowerCase(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
