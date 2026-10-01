@@ -16,7 +16,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 .login-grid{display:grid;grid-template-columns:1fr auto;gap:10px}.login-grid input{padding:13px;border:1px solid #dddfea;border-radius:10px;outline:none}.login-grid input:focus{border-color:var(--orange)}.login-grid button{border:0;border-radius:10px;background:var(--orange);color:#fff;font-weight:900;padding:0 20px;cursor:pointer}
 .empty{padding:15px;background:#fff1f1;color:#b73737;border-radius:11px;margin-top:14px;font-size:13px;font-weight:700}.back{display:inline-block;margin-top:18px;font-weight:800;text-decoration:none;color:var(--navy);font-size:13px}
 
-.app{min-height:100vh}.top{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;padding:20px 0 34px}.container{width:min(1180px,92%);margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.topbar .brand b{color:#fff}.topbar .brand span{color:#d7d5e4}.logout{border:1px solid #ffffff44;background:#ffffff12;color:#fff;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+.app{min-height:100vh}.top{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;padding:20px 0 34px}.container{width:min(1180px,92%);margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.topbar .brand b{color:#fff}.topbar .brand span{color:#d7d5e4}.logout{border:1px solid #ffffff44;background:#ffffff12;color:#fff;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.announcement-top-btn{position:relative;border:0;border-radius:16px;background:var(--orange);color:#fff;padding:13px 20px;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 8px 24px #0002;display:inline-flex;align-items:center;gap:9px}.announcement-top-btn:hover{filter:brightness(.97);transform:translateY(-1px)}.announcement-count{position:absolute;right:-8px;top:-9px;min-width:25px;height:25px;padding:0 7px;border-radius:20px;background:#e53935;color:#fff;display:none;align-items:center;justify-content:center;font-size:12px;font-weight:900;border:3px solid var(--navy)}.announcement-count.show{display:flex}.top-actions-panel{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .welcome{margin-top:28px;display:flex;justify-content:space-between;align-items:end;gap:20px}.welcome h2{font-size:clamp(27px,4vw,42px);margin:0 0 7px}.welcome p{margin:0;color:#d7d5e4}.student-no{background:#ffffff12;border:1px solid #ffffff25;border-radius:14px;padding:12px 15px;font-size:13px}.student-no b{display:block;font-size:17px;margin-top:3px}
 .content{margin-top:-18px;padding-bottom:50px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{background:#fff;border-radius:17px;padding:19px;box-shadow:0 7px 28px #24204d12}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:27px;color:var(--navy);margin-top:8px}
 .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}.box{background:#fff;border-radius:18px;padding:20px;box-shadow:0 7px 28px #24204d0e}.box h3{margin:0 0 5px;color:var(--navy)}.sub{color:var(--muted);font-size:13px;margin-bottom:15px}
@@ -46,7 +46,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     <div class="container">
       <div class="topbar">
         <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
-        <button id="logoutBtn" class="logout">Çıkış Yap</button>
+        <div class="top-actions-panel"><button id="announcementTopBtn" class="announcement-top-btn" type="button">🔔 Duyurular <span id="announcementCount" class="announcement-count">0</span></button><button id="logoutBtn" class="logout">Çıkış Yap</button></div>
       </div>
       <div class="welcome">
         <div><h2 id="welcomeName">Hoş geldin</h2><p id="welcomeClass">Sınav sonuçların ve gelişimin burada.</p></div>
@@ -76,7 +76,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
           <span id="profileSaved" style="display:none;color:#187f4a;font-weight:900;align-self:center">✓ Kaydedildi</span>
         </div>
       </div>
-      <div class="box">
+      <div class="box" id="announcementsBox">
         <h3>Duyurular</h3><div class="sub">Kurumun güncel bilgilendirmeleri</div>
         <div id="announcementList" class="announcement-list"></div>
       </div>
@@ -119,7 +119,21 @@ const RESULTS_KEY='tsa_results_v1';
 const APP_KEY='tsa_applications_v1';
 const ANN_KEY='tsa_announcements_v1';
 const SESSION_KEY='tsa_student_session_v1';
+const ANN_READ_KEY='tsa_student_ann_read_v1';
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function announcementId(a,i){return String(a&&a.id||((a&&a.head)||'duyuru')+'-'+((a&&a.text)||'')+'-'+i)}
+function annReadMap(){try{return JSON.parse(localStorage.getItem(ANN_READ_KEY)||'{}')}catch(e){return {}}}
+function studentReaderKey(){return 's:'+String(window.__studentProfileAppId||'guest')}
+function updateAnnouncementBadge(){
+ const anns=getAnnouncements(),map=annReadMap(),read=map[studentReaderKey()]||[];
+ const unread=anns.filter((a,i)=>!read.includes(announcementId(a,i))).length;
+ const badge=document.getElementById('announcementCount');if(!badge)return;
+ badge.textContent=unread;badge.classList.toggle('show',unread>0);
+}
+function markAnnouncementsRead(){
+ const anns=getAnnouncements(),map=annReadMap();map[studentReaderKey()]=anns.map((a,i)=>announcementId(a,i));
+ localStorage.setItem(ANN_READ_KEY,JSON.stringify(map));updateAnnouncementBadge();
+}
 function numberVal(v){const n=parseFloat(String(v??'').replace(',','.'));return Number.isFinite(n)?n:null}
 function getResults(){try{return JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){return[]}}
 function getApps(){try{return JSON.parse(localStorage.getItem(APP_KEY)||'[]')}catch(e){return[]}}
@@ -187,7 +201,7 @@ function openPanel(data){
  const history=app&&Array.isArray(app.studentHistory)&&app.studentHistory.length?app.studentHistory:(app&&app.studentAction?[{status:app.studentAction,at:app.studentActionUpdatedAt||app.createdAt}]:[]);
  document.getElementById('studentHistory').innerHTML=history.length?history.map(h=>'<div class="timeline-item"><b>'+esc(h.status||'-')+'</b><small>'+esc(h.at?new Date(h.at).toLocaleString('tr-TR'):'')+'</small></div>').join(''):'<div class="info">Henüz işlem geçmişi bulunmuyor.</div>';
  const anns=getAnnouncements();
- document.getElementById('announcementList').innerHTML=anns.length?anns.slice(0,6).map(a=>'<div class="announcement"><b>'+esc(a.head||'Duyuru')+'</b><small>'+esc(a.text||'')+'</small></div>').join(''):'<div class="announcement"><b>Tek Seçenek Akademi</b><small>Yeni duyurular burada yayınlanacaktır.</small></div>';
+ document.getElementById('announcementList').innerHTML=anns.length?anns.slice(0,6).map(a=>'<div class="announcement"><b>'+esc(a.head||'Duyuru')+'</b><small>'+esc(a.text||'')+'</small></div>').join(''):'<div class="announcement"><b>Tek Seçenek Akademi</b><small>Yeni duyurular burada yayınlanacaktır.</small></div>';updateAnnouncementBadge();
 
  if(list.length){
  document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
@@ -231,6 +245,7 @@ function login(){
  err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(data);
 }
 document.getElementById('studentBtn').addEventListener('click',login);
+document.getElementById('announcementTopBtn').addEventListener('click',()=>{markAnnouncementsRead();document.getElementById('announcementsBox').scrollIntoView({behavior:'smooth',block:'start'});});
 
 function setProfileEditMode(editing){
  const appId=window.__studentProfileAppId||'';
