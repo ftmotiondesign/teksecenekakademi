@@ -114,7 +114,7 @@ document.querySelectorAll('#finderOptions button').forEach(btn=>btn.addEventList
 document.getElementById('resultBtn').onclick=()=>{
  const code=document.getElementById('resultCode').value.trim().toLowerCase(),box=document.getElementById('resultBox');let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
  const r=results.find(x=>String(x.code||'').toLowerCase()===code||String(x.studentNo||'').toLowerCase()===code);
- box.classList.add('show');box.innerHTML=r?'<strong>'+escapeHtml(r.name||'Öğrenci')+'</strong><div>Puan: '+escapeHtml(r.score||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="margin-top:6px">'+escapeHtml(r.detail||'')+'</div>':'Bu kodla yayınlanmış bir sonuç bulunamadı.';
+ box.classList.add('show');box.innerHTML=r?'<strong>'+escapeHtml(r.name||'Öğrenci')+'</strong><div style="margin-bottom:8px">Puan: '+escapeHtml(r.score||'-')+' · Yüzdelik: '+escapeHtml(r.percentile||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="font-size:13px;line-height:1.7">Türkçe: '+escapeHtml(r.turkce||'-')+' · Matematik: '+escapeHtml(r.matematik||'-')+' · Fen: '+escapeHtml(r.fen||'-')+' · İnkılap: '+escapeHtml(r.inkilap||'-')+' · Din: '+escapeHtml(r.din||'-')+' · İngilizce: '+escapeHtml(r.ingilizce||'-')+'</div>':'Bu kodla yayınlanmış bir sonuç bulunamadı.';
 };
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
 function loadManagedContent(){
