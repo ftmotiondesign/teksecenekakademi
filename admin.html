@@ -734,6 +734,7 @@ function resetSiteContentNow(){
 
 function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
 window.addEventListener('tsa:announcements-updated',function(){renderSimple('announcement')});
+window.addEventListener('tsa:applications-updated',function(){renderApps();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
@@ -875,27 +876,23 @@ document.body.addEventListener('click',function(e){
  var editHero=d.closest('[data-edithero]');
  var delGallery=d.closest('[data-delgallery]');
  var editGallery=d.closest('[data-editgallery]');
- if(delApp){var id=delApp.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats();return}
+ if(delApp){
+  var id=delApp.getAttribute('data-delapp');
+  if(!confirm('Bu başvuru silinsin mi?'))return;
+  if(window.TSAFirebaseApplications){
+   window.TSAFirebaseApplications.remove(id).catch(function(err){alert('Başvuru Firebase\'den silinemedi: '+(err&&err.message?err.message:err))});
+  }else alert('Firebase başvuru bağlantısı henüz hazır değil.');
+  return
+ }
  if(saveApp){
   var appId=saveApp.getAttribute('data-saveapp');
   var appSelect=document.querySelector('[data-status="'+appId+'"]');
-  var apps=get(APP_KEY,[]);
-  var appSaved=false;
-  apps.forEach(function(x){
-   if(String(x.id)===String(appId)){
-    x.status=appSelect?appSelect.value:(x.status||'Yeni Başvuru');
-    x.statusUpdatedAt=new Date().toISOString();
-    appSaved=true;
-   }
-  });
-  if(appSaved){
-   set(APP_KEY,apps);
-   updateStats();
-   renderDashboard();
-   alert('İşlem kaydedildi.');
-  }else{
-   alert('Başvuru kaydı bulunamadı.');
-  }
+  var nextStatus=appSelect?appSelect.value:'Yeni Başvuru';
+  if(window.TSAFirebaseApplications){
+   window.TSAFirebaseApplications.update(appId,{status:nextStatus,statusUpdatedAt:new Date().toISOString()})
+    .then(function(){updateStats();renderDashboard();alert('İşlem kaydedildi.');})
+    .catch(function(err){alert('Başvuru Firebase\'e kaydedilemedi: '+(err&&err.message?err.message:err))});
+  }else alert('Firebase başvuru bağlantısı henüz hazır değil.');
   return;
  }
  if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
@@ -1133,5 +1130,6 @@ showPage(location.hash.slice(1)||'dashboard');
 })();
 </script>
 <script type="module" src="firebase-announcements-admin.js?v=5"></script>
+<script type="module" src="firebase-applications-admin.js?v=1"></script>
 </body>
 </html>
