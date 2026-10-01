@@ -29,6 +29,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 .list{display:grid;gap:10px}.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #ececf2;border-radius:12px;padding:13px}.item small{color:var(--muted)}
 .hint{padding:12px 14px;border-left:4px solid var(--orange);background:#fff5e7;border-radius:9px;color:#765329;font-size:12px;line-height:1.5;margin-bottom:14px}
 .pill{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:800;background:#eef0f7;color:#555b70}
+.student-modal{position:fixed;inset:0;background:#15122f99;z-index:999;display:none;align-items:center;justify-content:center;padding:20px}.student-modal.show{display:flex}.student-modal-card{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:22px;box-shadow:0 24px 70px #0005}.student-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.student-modal-head h3{margin:0;color:var(--navy)}.student-modal-close{border:0;background:#eef0f7;color:var(--navy);width:38px;height:38px;border-radius:50%;font-size:20px;font-weight:900;cursor:pointer}.student-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.student-modal-field{display:grid;gap:6px}.student-modal-field.full{grid-column:1/-1}.student-modal-field label{font-size:11px;font-weight:900;color:var(--muted)}.student-modal-field input,.student-modal-field select{width:100%}.student-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}.student-modal-saved{display:none;color:#187f4a;font-weight:900;align-self:center}@media(max-width:650px){.student-modal-grid{grid-template-columns:1fr}.student-modal-field.full{grid-column:auto}}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.mini-stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}.mini-stats{grid-template-columns:1fr 1fr}.dashboard-grid,.dashboard-grid.two,.bulk-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}.topbar{align-items:flex-start;flex-direction:column}.top-actions{justify-content:flex-start}}
 </style>
@@ -186,6 +187,33 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 </div>
 </section>
 
+<div id="studentEditModal" class="student-modal" aria-hidden="true">
+  <div class="student-modal-card">
+    <div class="student-modal-head">
+      <h3>Öğrenci Kaydını Düzenle</h3>
+      <button type="button" class="student-modal-close" id="studentModalClose">×</button>
+    </div>
+    <div class="student-modal-grid">
+      <div class="student-modal-field"><label>Öğrenci Ad Soyad</label><input id="editStudentName"></div>
+      <div class="student-modal-field"><label>Sınıf</label><select id="editStudentClass"><option value="">Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select></div>
+      <div class="student-modal-field"><label>Öğrenci No</label><input id="editStudentNo"></div>
+      <div class="student-modal-field"><label>Takip No</label><input id="editTrackNo"></div>
+      <div class="student-modal-field"><label>Öğrenci Cep</label><input id="editStudentPhone"></div>
+      <div class="student-modal-field"><label>Veli Telefonu</label><input id="editParentPhone"></div>
+      <div class="student-modal-field"><label>Veli Ad Soyad</label><input id="editParentName"></div>
+      <div class="student-modal-field"><label>Okul</label><input id="editSchool"></div>
+      <div class="student-modal-field"><label>İlçe</label><input id="editDistrict"></div>
+      <div class="student-modal-field"><label>Program</label><input id="editProgram"></div>
+      <div class="student-modal-field full"><label>Öğrenci Durumu / Yapılan Eylem</label><select id="editStudentAction"><option>Yeni Öğrenci</option><option>Bilgileri Alındı</option><option>Seviye Değerlendirildi</option><option>Programı Belirlendi</option><option>Rehberlik Görüşmesi Yapıldı</option><option>Derse Başladı</option><option>Aktif Öğrenci</option><option>Kayıt Tamamlandı</option><option>Pasif</option></select></div>
+    </div>
+    <div class="student-modal-actions">
+      <span id="studentModalSaved" class="student-modal-saved">✓ Kaydedildi</span>
+      <button type="button" class="secondary" id="studentModalCancel">Vazgeç</button>
+      <button type="button" class="primary" id="studentModalSave">Değişiklikleri Kaydet</button>
+    </div>
+  </div>
+</div>
+
 <section id="results" class="section"><div class="box">
 <div class="section-head"><div><h2>Sınav Sonuçları</h2><small>Tek sonuç veya CSV toplu yükleme.</small></div></div>
 <div class="toolbar"><button class="primary" id="addResult">+ Tek Sonuç Ekle</button><button class="secondary" id="downloadTemplate">⬇ CSV Şablonu</button><button class="secondary" id="importBtn">⬆ CSV Toplu Yükle</button><input type="file" id="resultFile" accept=".csv" hidden><button class="secondary" id="exportResults">⇩ Sonuçları Dışa Aktar</button></div>
@@ -341,11 +369,73 @@ function renderPeople(){
  students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.ogrenciTelefon,x.telefon,x.okul,x.action].join(' ').toLowerCase().indexOf(q)>-1});
  el('studentsBody').innerHTML=students.length?students.map(function(x){
   var sel=x.appId?'<select data-studentaction="'+esc(x.appId)+'">'+studentOpts.map(function(s){return '<option'+(s===x.action?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>':'<span class="pill">'+esc(x.action)+'</span>';
-  var save=x.appId?'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button><span id="studentSaved-'+esc(x.appId)+'" style="display:none;color:#187f4a;font-weight:900;font-size:12px">✓ Kaydedildi</span></div>':'<span class="pill">Başvuru kaydı yok</span>';
+  var save=x.appId?'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button><button class="secondary" data-editstudent="'+esc(x.appId)+'">Düzenle</button><span id="studentSaved-'+esc(x.appId)+'" style="display:none;color:#187f4a;font-weight:900;font-size:12px">✓ Kaydedildi</span></div>':'<span class="pill">Başvuru kaydı yok</span>';
   var phoneInput=x.appId?'<input type="tel" inputmode="numeric" data-studentphone="'+esc(x.appId)+'" value="'+esc(x.ogrenciTelefon||'0')+'" placeholder="05xx xxx xx xx" style="min-width:130px">':esc(x.ogrenciTelefon||'-');
   return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+phoneInput+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td>'+sel+'</td><td>'+save+'</td></tr>';
  }).join(''):'<tr><td colspan="8" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
 }
+function openStudentModal(id){
+ var apps=get(APP_KEY,[]),app=apps.find(function(x){return String(x.id)===String(id)});
+ if(!app)return;
+ window.__editingStudentId=String(id);
+ var result=get(RESULT_KEY,[]).find(function(r){return String(r.name||'').trim().toLocaleLowerCase('tr-TR')===String(app.ad||'').trim().toLocaleLowerCase('tr-TR')});
+ el('editStudentName').value=app.ad||'';
+ el('editStudentClass').value=app.sinif||'';
+ el('editStudentNo').value=app.studentNo||(result&&result.studentNo)||'';
+ el('editTrackNo').value=app.basvuruNo||'';
+ el('editStudentPhone').value=app.ogrenciTelefon||'';
+ el('editParentPhone').value=app.telefon||'';
+ el('editParentName').value=app.veliAd||'';
+ el('editSchool').value=app.okul||'';
+ el('editDistrict').value=app.ilce||'';
+ el('editProgram').value=app.program||'';
+ el('editStudentAction').value=app.studentAction||'Yeni Öğrenci';
+ el('studentModalSaved').style.display='none';
+ el('studentEditModal').classList.add('show');
+ el('studentEditModal').setAttribute('aria-hidden','false');
+}
+function closeStudentModal(){
+ el('studentEditModal').classList.remove('show');
+ el('studentEditModal').setAttribute('aria-hidden','true');
+ window.__editingStudentId='';
+}
+function saveStudentModal(){
+ var id=window.__editingStudentId||''; if(!id)return;
+ var apps=get(APP_KEY,[]),app=apps.find(function(x){return String(x.id)===String(id)}); if(!app)return;
+ var oldName=app.ad||'';
+ app.ad=el('editStudentName').value.trim();
+ app.sinif=el('editStudentClass').value;
+ app.studentNo=el('editStudentNo').value.trim();
+ app.basvuruNo=el('editTrackNo').value.trim();
+ app.ogrenciTelefon=el('editStudentPhone').value.trim();
+ app.telefon=el('editParentPhone').value.trim();
+ app.veliAd=el('editParentName').value.trim();
+ app.okul=el('editSchool').value.trim();
+ app.ilce=el('editDistrict').value.trim();
+ app.program=el('editProgram').value.trim();
+ var newAction=el('editStudentAction').value;
+ if(app.studentAction!==newAction){
+   app.studentAction=newAction;
+   app.studentActionUpdatedAt=new Date().toISOString();
+   if(!Array.isArray(app.studentHistory))app.studentHistory=[];
+   app.studentHistory.unshift({status:newAction,at:app.studentActionUpdatedAt});
+ }
+ set(APP_KEY,apps);
+ var results=get(RESULT_KEY,[]),changed=false;
+ results.forEach(function(r){
+   if(String(r.name||'').trim().toLocaleLowerCase('tr-TR')===String(oldName).trim().toLocaleLowerCase('tr-TR')){
+     r.name=app.ad||r.name;
+     if(app.studentNo)r.studentNo=app.studentNo;
+     if(app.sinif)r.sinif=app.sinif;
+     changed=true;
+   }
+ });
+ if(changed)set(RESULT_KEY,results);
+ renderPeople();renderApps();updateStats();
+ el('studentModalSaved').style.display='inline';
+ setTimeout(function(){el('studentModalSaved').style.display='none'},2200);
+}
+
 function categories(){
  var a=get(CAT_KEY,[]);
  if(!a.length){a=[{name:'LGS',active:true},{name:'Kurum İçi Deneme',active:true},{name:'Türkiye Geneli Deneme',active:true}];set(CAT_KEY,a)}
@@ -381,6 +471,7 @@ document.body.addEventListener('click',function(e){
  var delResult=d.closest('[data-delresult]');
  var saveVeli=d.closest('[data-saveveli]');
  var saveStudent=d.closest('[data-savestudent]');
+ var editStudent=d.closest('[data-editstudent]');
  if(delApp){var id=delApp.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats();return}
  if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
  if(saveVeli){
@@ -397,6 +488,7 @@ document.body.addEventListener('click',function(e){
   else alert('Veli kaydı bulunamadı.');
   return;
  }
+ if(editStudent){openStudentModal(editStudent.getAttribute('data-editstudent'));return;}
  if(saveStudent){
   var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
   sa.forEach(function(x){if(String(x.id)===String(sid)){
@@ -443,6 +535,11 @@ document.body.addEventListener('change',function(e){
  }
 
 });
+
+if(el('studentModalClose'))el('studentModalClose').addEventListener('click',closeStudentModal);
+if(el('studentModalCancel'))el('studentModalCancel').addEventListener('click',closeStudentModal);
+if(el('studentModalSave'))el('studentModalSave').addEventListener('click',saveStudentModal);
+if(el('studentEditModal'))el('studentEditModal').addEventListener('click',function(e){if(e.target===this)closeStudentModal()});
 
 function addCategoryNow(){
  var input=el('newCategory'); if(!input)return;
