@@ -890,7 +890,7 @@ document.body.addEventListener('click',function(e){
   var nextStatus=appSelect?appSelect.value:'Yeni Başvuru';
   if(window.TSAFirebaseApplications){
    window.TSAFirebaseApplications.update(appId,{status:nextStatus,statusUpdatedAt:new Date().toISOString()})
-    .then(function(){updateStats();renderDashboard();alert('İşlem kaydedildi.');})
+    .then(function(){updateStats();renderDashboard();renderApps();alert('Durum Firebase’e kaydedildi: '+nextStatus);})
     .catch(function(err){alert('Başvuru Firebase\'e kaydedilemedi: '+(err&&err.message?err.message:err))});
   }else alert('Firebase başvuru bağlantısı henüz hazır değil.');
   return;
@@ -1130,6 +1130,6 @@ showPage(location.hash.slice(1)||'dashboard');
 })();
 </script>
 <script type="module" src="firebase-announcements-admin.js?v=5"></script>
-<script type="module" src="firebase-applications-admin.js?v=1"></script>
+<script type="module" src="firebase-applications-admin.js?v=2"></script>
 </body>
 </html>
