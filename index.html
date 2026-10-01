@@ -912,6 +912,8 @@ footer{
 
 @media(max-width:900px){.system-grid{grid-template-columns:1fr 1fr}.program-finder{padding-top:50px}}
 @media(max-width:600px){.system-grid{grid-template-columns:1fr}.finder-box{padding:27px 20px}.finder-option{flex:1 1 calc(50% - 10px);text-align:center}.program-finder{padding:45px 0 10px}}
+
+@media(max-width:650px){.exam-tabs{grid-template-columns:1fr!important}.exam-tab{width:100%}#burslulukForm{grid-template-columns:1fr!important}#burslulukForm>div{grid-column:1!important}}
 </style>
 </head>
 
@@ -935,7 +937,15 @@ footer{
 
 </div>
 </header>
-<section id="bursluluk" style="padding:70px 0;background:#f7f5ff">
+<section id="sinav-basvuru" style="padding:24px 0 70px;background:#f7f5ff">
+<div class="container">
+<div style="max-width:900px;margin:0 auto 18px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" class="exam-tabs">
+<button type="button" class="exam-tab active" data-exam="bursluluk" onclick="selectExamTab(this,'bursluluk')" style="border:0;border-radius:14px;padding:15px 10px;background:#f28a00;color:#fff;font-weight:900;cursor:pointer">🏆 Bursluluk Sınavı</button>
+<button type="button" class="exam-tab" data-exam="deneme" onclick="selectExamTab(this,'deneme')" style="border:1px solid #e1e1ea;border-radius:14px;padding:15px 10px;background:#fff;color:#292557;font-weight:900;cursor:pointer">🏆 Deneme Sınavı</button>
+<button type="button" class="exam-tab" data-exam="turkiye" onclick="selectExamTab(this,'turkiye')" style="border:1px solid #e1e1ea;border-radius:14px;padding:15px 10px;background:#fff;color:#292557;font-weight:900;cursor:pointer">🏆 Türkiye Geneli</button>
+</div></div>
+<div id="exam-bursluluk" class="exam-panel">
 <div class="container">
 <div style="max-width:900px;margin:auto;background:#fff;border-radius:24px;padding:32px;box-shadow:0 12px 40px rgba(41,37,87,.10)">
 <div style="text-align:center;margin-bottom:25px">
@@ -954,7 +964,10 @@ footer{
 </form>
 <div id="bursSonuc" style="display:none;margin-top:18px;background:#eaf8f0;color:#177645;padding:16px;border-radius:12px;font-weight:700;text-align:center">Demo başvurunuz alındı. Gerçek sistemde bu kayıt yönetim paneline düşecek.</div>
 <p style="font-size:12px;color:#8a8a96;text-align:center;margin:14px 0 0">Bu alan şu anda demo amaçlıdır; bilgiler veritabanına kaydedilmez.</p>
-</div></div></section>
+</div></div></div>
+<div id="exam-deneme" class="exam-panel" style="display:none"><div class="container"><div style="max-width:900px;margin:auto;background:#fff;border-radius:24px;padding:32px;box-shadow:0 12px 40px rgba(41,37,87,.10);text-align:center"><span style="font-size:42px">🏆</span><h2 style="color:#292557">Deneme Sınavı Başvurusu</h2><p style="color:#686879">Kurum içi deneme sınavı başvuruları için kullanılacak bölüm.</p><button type="button" onclick="copyExamToForm('Deneme Sınavı')" style="border:0;background:#292557;color:#fff;padding:14px 20px;border-radius:11px;font-weight:800;cursor:pointer">Deneme Sınavına Başvur</button></div></div></div>
+<div id="exam-turkiye" class="exam-panel" style="display:none"><div class="container"><div style="max-width:900px;margin:auto;background:#fff;border-radius:24px;padding:32px;box-shadow:0 12px 40px rgba(41,37,87,.10);text-align:center"><span style="font-size:42px">🏆</span><h2 style="color:#292557">Türkiye Geneli Deneme</h2><p style="color:#686879">Türkiye geneli uygulanacak deneme sınavları ve başvuruları bu bölümde yayınlanacak.</p><button type="button" onclick="copyExamToForm('Türkiye Geneli Deneme')" style="border:0;background:#292557;color:#fff;padding:14px 20px;border-radius:11px;font-weight:800;cursor:pointer">Türkiye Geneli Sınava Başvur</button></div></div></div>
+</div></section>
 
 
 
@@ -1673,6 +1686,9 @@ document.querySelectorAll('.finder-option').forEach(function(btn){
 });
 
 const bursForm=document.getElementById('burslulukForm');if(bursForm){bursForm.addEventListener('submit',function(e){e.preventDefault();document.getElementById('bursSonuc').style.display='block';bursForm.reset();document.getElementById('bursSonuc').scrollIntoView({behavior:'smooth',block:'center'});});}
+
+function selectExamTab(btn,id){document.querySelectorAll('.exam-panel').forEach(x=>x.style.display='none');document.querySelectorAll('.exam-tab').forEach(x=>{x.classList.remove('active');x.style.background='#fff';x.style.color='#292557';x.style.border='1px solid #e1e1ea'});document.getElementById('exam-'+id).style.display='block';btn.classList.add('active');btn.style.background='#f28a00';btn.style.color='#fff';btn.style.border='0';}
+function copyExamToForm(type){selectExamTab(document.querySelector('[data-exam="bursluluk"]'),'bursluluk');setTimeout(()=>{const el=document.getElementById('bursAd');if(el)el.focus();},100);}
 </script>
 
 </body>
