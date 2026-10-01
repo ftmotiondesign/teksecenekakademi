@@ -346,6 +346,104 @@ section{padding:95px 0}
   padding:30px;
 }
 
+.instagram-feed{
+  background:#fff;
+}
+
+.instagram-feed-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+  margin-bottom:30px;
+}
+
+.instagram-profile{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.instagram-profile-logo{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);
+}
+
+.instagram-profile-logo .instagram-icon{
+  width:30px;
+  height:30px;
+}
+
+.instagram-profile h3{
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.instagram-profile p{
+  color:var(--yazi);
+  font-size:14px;
+}
+
+.instagram-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.instagram-post{
+  position:relative;
+  min-height:285px;
+  border-radius:22px;
+  overflow:hidden;
+  background:url("bina.png") center/cover;
+  display:flex;
+  align-items:flex-end;
+  color:#fff;
+}
+
+.instagram-post:nth-child(2){
+  background-position:center 35%;
+}
+
+.instagram-post:nth-child(3){
+  background-position:center 65%;
+}
+
+.instagram-post::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(20,15,60,.04),rgba(20,15,60,.82));
+}
+
+.instagram-post-content{
+  position:relative;
+  z-index:1;
+  padding:22px;
+  width:100%;
+}
+
+.instagram-post-content strong{
+  display:block;
+  font-size:18px;
+  margin-bottom:6px;
+}
+
+.instagram-post-content span{
+  font-size:14px;
+  opacity:.9;
+}
+
+.instagram-follow{
+  background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);
+}
+
 /* BİLGİ FORMU */
 
 .lead{background:#fff}
@@ -639,6 +737,8 @@ footer{
   .cards{grid-template-columns:1fr 1fr}
   .deneme-grid,.contact-grid{grid-template-columns:1fr}
   .gallery-grid{grid-template-columns:1fr}
+  .instagram-grid{grid-template-columns:1fr 1fr}
+  .instagram-feed-head{align-items:flex-start;flex-direction:column}
   .why-grid{grid-template-columns:1fr}
   .success-grid{grid-template-columns:1fr}
 
@@ -689,6 +789,7 @@ footer{
   section{padding:70px 0}
   .hero h1{font-size:41px}
   .cards{grid-template-columns:1fr}
+  .instagram-grid{grid-template-columns:1fr}
   .packages{grid-template-columns:1fr 1fr}
   .form-grid{grid-template-columns:1fr}
 
@@ -1016,6 +1117,55 @@ fotoğraflarımız.
 </span>
 </div>
 </div>
+
+</div>
+</div>
+</section>
+
+
+<section class="instagram-feed">
+<div class="container">
+
+<div class="instagram-feed-head">
+<div class="instagram-profile">
+<div class="instagram-profile-logo">
+<svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm10.5 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+</svg>
+</div>
+<div>
+<h3>Instagram'da Bizi Takip Edin</h3>
+<p>@manisateksecenekakademi</p>
+</div>
+</div>
+
+<a href="https://www.instagram.com/manisateksecenekakademi/" target="_blank" rel="noopener" class="small-btn instagram-follow">
+Instagram'a Git
+</a>
+</div>
+
+<div class="instagram-grid">
+
+<a class="instagram-post" href="https://www.instagram.com/manisateksecenekakademi/" target="_blank" rel="noopener">
+<div class="instagram-post-content">
+<strong>Eğitimlerimizi Keşfedin</strong>
+<span>Güncel paylaşımlarımız için Instagram profilimizi ziyaret edin.</span>
+</div>
+</a>
+
+<a class="instagram-post" href="https://www.instagram.com/manisateksecenekakademi/" target="_blank" rel="noopener">
+<div class="instagram-post-content">
+<strong>Tek Seçenek Akademi</strong>
+<span>Kurumumuzdan duyuru, etkinlik ve eğitim içerikleri.</span>
+</div>
+</a>
+
+<a class="instagram-post" href="https://www.instagram.com/manisateksecenekakademi/" target="_blank" rel="noopener">
+<div class="instagram-post-content">
+<strong>Güncel Duyurular</strong>
+<span>Kayıt ve program duyurularımızı Instagram'dan takip edin.</span>
+</div>
+</a>
 
 </div>
 </div>
