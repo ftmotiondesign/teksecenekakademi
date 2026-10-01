@@ -735,6 +735,7 @@ function resetSiteContentNow(){
 function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
 window.addEventListener('tsa:announcements-updated',function(){renderSimple('announcement')});
 window.addEventListener('tsa:applications-updated',function(){renderApps();renderPeople();renderDashboard();updateStats();});
+window.addEventListener('tsa:results-updated',function(){renderResults();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
@@ -895,7 +896,14 @@ document.body.addEventListener('click',function(e){
   }else alert('Firebase başvuru bağlantısı henüz hazır değil.');
   return;
  }
- if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
+ if(delResult){
+  var rid=delResult.getAttribute('data-delresult');
+  if(!confirm('Bu sonuç silinsin mi?'))return;
+  if(window.TSAFirebaseResults){
+   window.TSAFirebaseResults.remove(rid).catch(function(err){alert('Sonuç Firebase\'den silinemedi: '+(err&&err.message?err.message:err))});
+  }else alert('Firebase sonuç bağlantısı henüz hazır değil.');
+  return
+ }
  if(saveVeli){
   var vid=saveVeli.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]),saved=false;
   va.forEach(function(x){if(String(x.id)===String(vid)){
@@ -987,12 +995,12 @@ var addCategoryBtn=el('addCategory');
 if(addCategoryBtn)addCategoryBtn.addEventListener('click',addCategoryNow);
 var newCategoryInput=el('newCategory');
 if(newCategoryInput)newCategoryInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addCategoryNow();}});
-el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var cats=categories().filter(function(x){return x.active!==false});var category=prompt('Kategori:',(cats[0]&&cats[0].name)||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var a=get(RESULT_KEY,[]);a.unshift({id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank});set(RESULT_KEY,a);renderResults();updateStats()});
+el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var cats=categories().filter(function(x){return x.active!==false});var category=prompt('Kategori:',(cats[0]&&cats[0].name)||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var row={id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank,createdAt:new Date().toISOString()};if(!window.TSAFirebaseResults){alert('Firebase sonuç bağlantısı henüz hazır değil.');return}window.TSAFirebaseResults.add(row).then(function(){alert('Sonuç Firebase’e kaydedildi.');}).catch(function(err){alert('Sonuç Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err))})});
 el('downloadTemplate').addEventListener('click',function(){csvDownload('tek-secenek-sonuc-sablonu.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],['LGS','LGS 2026','LGS-2026','1001','Örnek Öğrenci','450,125','2,15','1250','18,75','17,50','19,25','9,50','9,00','8,75']])});
 el('exportResults').addEventListener('click',function(){var a=get(RESULT_KEY,[]);csvDownload('tek-secenek-sinav-sonuclari.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama'],].concat(a.map(function(x){return[x.category,x.examName,x.code,x.studentNo,x.name,x.score,x.percentile,x.rank]})))});
 el('exportApps').addEventListener('click',function(){var a=get(APP_KEY,[]);csvDownload('tek-secenek-basvurular.csv',[['Takip No','Tür','Tarih','Öğrenci Ad Soyad','Veli Ad Soyad','Veli Telefon','Sınıf','İlçe','Okul','Durum']].concat(a.map(function(x){return[x.basvuruNo,x.type,x.createdAt,x.ad,x.veliAd||'',x.telefon,x.sinif,x.ilce||'',x.okul||'',x.status]})))});
 el('importBtn').addEventListener('click',function(){el('resultFile').click()});
-el('resultFile').addEventListener('change',async function(e){var file=e.target.files[0];if(!file)return;try{var text=await file.text();var lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(function(x){return x.trim()});if(lines.length<2)throw new Error('Dosyada öğrenci satırı yok.');var sep=((lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length)?';':',';function parse(line){var out=[],cur='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===sep&&!q){out.push(cur);cur=''}else cur+=ch}out.push(cur);return out}var rows=lines.map(parse),h=rows[0].map(function(x){return x.trim().toLowerCase()});function col(){for(var i=0;i<arguments.length;i++){var z=h.indexOf(arguments[i]);if(z>-1)return z}return-1}var ix={category:col('kategori'),examName:col('sınav adı','sinav adi'),code:col('sınav kodu','sinav kodu','kod'),studentNo:col('öğrenci no','ogrenci no'),name:col('ad soyad'),score:col('puan'),percentile:col('yüzdelik dilim','yuzdelik dilim'),rank:col('sıralama','siralama'),turkce:col('türkçe','turkce'),matematik:col('matematik'),fen:col('fen'),inkilap:col('inkılap','inkilap'),din:col('din'),ingilizce:col('ingilizce')};if(ix.name<0||ix.code<0)throw new Error('Sınav Kodu ve Ad Soyad sütunları gerekli.');var a=get(RESULT_KEY,[]);for(var r=1;r<rows.length;r++){if(!rows[r][ix.name])continue;var o={id:String(Date.now())+'-'+r};Object.keys(ix).forEach(function(k){var p=ix[k];o[k]=p>=0?String(rows[r][p]||'').trim():''});a.unshift(o)}set(RESULT_KEY,a);renderResults();updateStats();alert((rows.length-1)+' sonuç yüklendi.')}catch(err){alert('Dosya yüklenemedi: '+err.message)}e.target.value=''});
+el('resultFile').addEventListener('change',async function(e){var file=e.target.files[0];if(!file)return;try{var text=await file.text();var lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(function(x){return x.trim()});if(lines.length<2)throw new Error('Dosyada öğrenci satırı yok.');var sep=((lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length)?';':',';function parse(line){var out=[],cur='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===sep&&!q){out.push(cur);cur=''}else cur+=ch}out.push(cur);return out}var rows=lines.map(parse),h=rows[0].map(function(x){return x.trim().toLowerCase()});function col(){for(var i=0;i<arguments.length;i++){var z=h.indexOf(arguments[i]);if(z>-1)return z}return-1}var ix={category:col('kategori'),examName:col('sınav adı','sinav adi'),code:col('sınav kodu','sinav kodu','kod'),studentNo:col('öğrenci no','ogrenci no'),name:col('ad soyad'),score:col('puan'),percentile:col('yüzdelik dilim','yuzdelik dilim'),rank:col('sıralama','siralama'),turkce:col('türkçe','turkce'),matematik:col('matematik'),fen:col('fen'),inkilap:col('inkılap','inkilap'),din:col('din'),ingilizce:col('ingilizce')};if(ix.name<0||ix.code<0)throw new Error('Sınav Kodu ve Ad Soyad sütunları gerekli.');var a=get(RESULT_KEY,[]);var yeni=[];for(var r=1;r<rows.length;r++){if(!rows[r][ix.name])continue;var o={id:String(Date.now())+'-'+r,createdAt:new Date().toISOString()};Object.keys(ix).forEach(function(k){var p=ix[k];o[k]=p>=0?String(rows[r][p]||'').trim():''});yeni.push(o)}if(!window.TSAFirebaseResults)throw new Error('Firebase sonuç bağlantısı henüz hazır değil.');await window.TSAFirebaseResults.addMany(yeni);alert(yeni.length+' sonuç Firebase’e yüklendi.')}catch(err){alert('Dosya yüklenemedi: '+err.message)}e.target.value=''});
 
 function normalizePhone(v){
  var p=String(v||'').replace(/\D/g,'');
@@ -1131,5 +1139,6 @@ showPage(location.hash.slice(1)||'dashboard');
 </script>
 <script type="module" src="firebase-announcements-admin.js?v=5"></script>
 <script type="module" src="firebase-applications-admin.js?v=2"></script>
+<script type="module" src="firebase-results-admin.js?v=1"></script>
 </body>
 </html>
