@@ -3,7 +3,7 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-aut
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyDtca9HS5LONXdLjbaCNpI_9GjhYqh0aDo',
+  apiKey: 'AIzaSyDtca9HS5LONXdLjbaCNpI_9GjhYqhOaDo',
   authDomain: 'teksecenekakademi-1f2b6.firebaseapp.com',
   projectId: 'teksecenekakademi-1f2b6',
   storageBucket: 'teksecenekakademi-1f2b6.firebasestorage.app',
