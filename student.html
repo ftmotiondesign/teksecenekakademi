@@ -65,8 +65,16 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 
     <div class="grid2">
       <div class="box">
-        <h3>Öğrenci Profilim</h3><div class="sub">Kayıtlı öğrenci bilgilerim</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px">
+          <div><h3 style="margin:0">Öğrenci Profilim</h3><div class="sub" style="margin:4px 0 0">Kayıtlı öğrenci bilgilerim</div></div>
+          <button id="editProfileBtn" type="button" class="badge" style="border:0;cursor:pointer">✎ Profili Düzenle</button>
+        </div>
         <div id="profileGrid" class="profile-grid"></div>
+        <div id="profileActions" style="display:none;margin-top:12px;gap:8px">
+          <button id="saveProfileBtn" type="button" style="border:0;border-radius:10px;padding:10px 14px;background:var(--orange);color:#fff;font-weight:900;cursor:pointer">Kaydet</button>
+          <button id="cancelProfileBtn" type="button" style="border:0;border-radius:10px;padding:10px 14px;background:#eef0f7;color:var(--navy);font-weight:900;cursor:pointer">Vazgeç</button>
+          <span id="profileSaved" style="display:none;color:#187f4a;font-weight:900;align-self:center">✓ Kaydedildi</span>
+        </div>
       </div>
       <div class="box">
         <h3>Duyurular</h3><div class="sub">Kurumun güncel bilgilendirmeleri</div>
@@ -170,11 +178,12 @@ function openPanel(data){
  document.getElementById('statExam').textContent=list.length;
  document.getElementById('statRank').textContent=latest.rank||'-';
  const profile=[
-  ['Ad Soyad',name],['Sınıf',sinif||'-'],['Takip No',app&&app.basvuruNo||'-'],
-  ['Öğrenci No',(app&&app.studentNo)||latest.studentNo||'-'],['Okul',app&&app.okul||'-'],
-  ['Öğrenci Cep',app&&app.ogrenciTelefon||'-'],['Kayıt Türü',app&&app.type||'-'],['Program',app&&app.program||'-']
+  ['Ad Soyad',name,'ad',true],['Sınıf',sinif||'-','sinif',true],['Takip No',app&&app.basvuruNo||'-','basvuruNo',false],
+  ['Öğrenci No',(app&&app.studentNo)||latest.studentNo||'-','studentNo',false],['Okul',app&&app.okul||'-','okul',true],
+  ['Öğrenci Cep',app&&app.ogrenciTelefon||'-','ogrenciTelefon',true],['Kayıt Türü',app&&app.type||'-','type',false],['Program',app&&app.program||'-','program',true]
  ];
- document.getElementById('profileGrid').innerHTML=profile.map(x=>'<div class="profile-item"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');
+ document.getElementById('profileGrid').innerHTML=profile.map(x=>'<div class="profile-item" data-profile-key="'+esc(x[2])+'" data-editable="'+(x[3]?'1':'0')+'"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');
+ window.__studentProfileAppId=app&&app.id?String(app.id):'';
  const history=app&&Array.isArray(app.studentHistory)&&app.studentHistory.length?app.studentHistory:(app&&app.studentAction?[{status:app.studentAction,at:app.studentActionUpdatedAt||app.createdAt}]:[]);
  document.getElementById('studentHistory').innerHTML=history.length?history.map(h=>'<div class="timeline-item"><b>'+esc(h.status||'-')+'</b><small>'+esc(h.at?new Date(h.at).toLocaleString('tr-TR'):'')+'</small></div>').join(''):'<div class="info">Henüz işlem geçmişi bulunmuyor.</div>';
  const anns=getAnnouncements();
@@ -222,6 +231,44 @@ function login(){
  err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(data);
 }
 document.getElementById('studentBtn').addEventListener('click',login);
+
+function setProfileEditMode(editing){
+ const appId=window.__studentProfileAppId||'';
+ const app=getApps().find(x=>String(x.id)===String(appId));
+ if(!app)return;
+ document.querySelectorAll('#profileGrid .profile-item').forEach(box=>{
+  const editable=box.getAttribute('data-editable')==='1';
+  const key=box.getAttribute('data-profile-key');
+  const b=box.querySelector('b');
+  if(editing&&editable){
+   const val=app[key]||'';
+   if(key==='sinif'){
+    const opts=['5. Sınıf','6. Sınıf','7. Sınıf','8. Sınıf','9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf','Mezun'];
+    b.innerHTML='<select data-profile-input="'+key+'" style="width:100%;padding:8px;border:1px solid #dddfea;border-radius:8px"><option value="">Seçin</option>'+opts.map(o=>'<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>';
+   }else{
+    b.innerHTML='<input data-profile-input="'+key+'" value="'+esc(val)+'" style="width:100%;padding:8px;border:1px solid #dddfea;border-radius:8px">';
+   }
+  }else if(!editing&&editable){
+   b.textContent=app[key]||'-';
+  }
+ });
+ document.getElementById('editProfileBtn').style.display=editing?'none':'inline-block';
+ document.getElementById('profileActions').style.display=editing?'flex':'none';
+}
+
+document.getElementById('editProfileBtn').addEventListener('click',()=>setProfileEditMode(true));
+document.getElementById('cancelProfileBtn').addEventListener('click',()=>setProfileEditMode(false));
+document.getElementById('saveProfileBtn').addEventListener('click',()=>{
+ const id=window.__studentProfileAppId||'';
+ const apps=getApps(); const app=apps.find(x=>String(x.id)===String(id)); if(!app)return;
+ document.querySelectorAll('[data-profile-input]').forEach(inp=>{app[inp.getAttribute('data-profile-input')]=inp.value.trim()});
+ localStorage.setItem(APP_KEY,JSON.stringify(apps));
+ setProfileEditMode(false);
+ const saved=document.getElementById('profileSaved');saved.style.display='inline';
+ setTimeout(()=>saved.style.display='none',2200);
+ const session=sessionStorage.getItem(SESSION_KEY);
+ if(session){const data=resolveStudent(session);if(data&&!data.multiple)openPanel(data)}
+});
 document.getElementById('studentChoices').addEventListener('click',e=>{
  const btn=e.target.closest('[data-pickapp]'); if(!btn)return;
  const id=btn.getAttribute('data-pickapp');
