@@ -118,6 +118,7 @@ async function syncNow(){
     await setDoc(doc(db,'portal',id),data);
   }
   console.log('Firebase portal senkronize edildi:',desired.size);
+  return desired.size;
 }
 function schedule(){
   clearTimeout(timer);
@@ -129,3 +130,26 @@ window.TSAFirebasePortalAdmin={sync:syncNow};
 if(typeof auth.authStateReady==='function'){
   auth.authStateReady().then(()=>{if(auth.currentUser)syncNow().catch(err=>console.error('Portal ilk senkronizasyon hatası:',err))});
 }
+
+
+function bindManualSync(){
+  const btn=document.getElementById('syncPortal');
+  if(!btn)return;
+  btn.addEventListener('click',async()=>{
+    const old=btn.textContent;
+    btn.disabled=true;
+    btn.textContent='Senkronize ediliyor...';
+    try{
+      const count=await syncNow();
+      alert('Veli / öğrenci portalı Firebase ile senkronize edildi. '+count+' giriş anahtarı hazırlandı.');
+    }catch(err){
+      console.error(err);
+      alert('Portal senkronizasyonu başarısız: '+(err&&err.message?err.message:err));
+    }finally{
+      btn.disabled=false;
+      btn.textContent=old;
+    }
+  });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindManualSync);
+else bindManualSync();
