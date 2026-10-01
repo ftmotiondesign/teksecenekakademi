@@ -20,10 +20,10 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.box{background:#fff;border-radius:18px;padding:20px;box-shadow:0 7px 28px #24204d0e}.box h3{margin:0 0 5px;color:var(--navy)}.sub{color:var(--muted);font-size:13px;margin-bottom:15px}
 .status-flow{display:flex;gap:8px;flex-wrap:wrap}.step{padding:8px 10px;border-radius:18px;background:#eef0f7;font-size:12px;font-weight:800;color:#7b7d88}.step.active{background:var(--orange);color:#fff}.step.done{background:#e9f8f0;color:#187f4a}
 .last-score{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#f8f8fb;border-radius:15px;padding:18px}.score-big{font-size:38px;font-weight:900;color:var(--orange)}.score-meta{line-height:1.8;font-size:14px}.score-meta b{color:var(--navy)}
-.exam-list,.announcement-list{display:grid;gap:10px}.exam,.announcement{border:1px solid #ececf2;border-radius:14px;padding:14px}.exam b,.announcement b{color:var(--navy)}.exam small,.announcement small{display:block;color:var(--muted);margin-top:5px}.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.contact-actions a{text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:900}.call{background:var(--navy);color:#fff}.wa{background:var(--green);color:#fff}.info{padding:14px;background:#fff8ee;border-left:4px solid var(--orange);border-radius:10px;color:#765329;font-size:13px;line-height:1.6}
+.exam-list,.announcement-list,.timeline{display:grid;gap:10px}.exam,.announcement,.timeline-item{border:1px solid #ececf2;border-radius:14px;padding:14px}.exam b,.announcement b,.timeline-item b{color:var(--navy)}.exam small,.announcement small,.timeline-item small{display:block;color:var(--muted);margin-top:5px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.profile-item{background:#f8f8fb;border-radius:12px;padding:12px}.profile-item span{display:block;color:var(--muted);font-size:11px;font-weight:800}.profile-item b{display:block;margin-top:5px;color:var(--navy);font-size:14px}.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.contact-actions a{text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:900}.call{background:var(--navy);color:#fff}.wa{background:var(--green);color:#fff}.info{padding:14px;background:#fff8ee;border-left:4px solid var(--orange);border-radius:10px;color:#765329;font-size:13px;line-height:1.6}
 @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.welcome{align-items:flex-start;flex-direction:column}}
 .new-app-float{position:fixed;left:22px;bottom:22px;z-index:90;display:flex;align-items:center;gap:12px;background:#fff;color:var(--navy);border:1px solid #ececf2;border-radius:18px;padding:12px 15px;box-shadow:0 12px 35px #0003;text-decoration:none;animation:floatNotice 2.2s ease-in-out infinite;max-width:310px}.new-app-float .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;font-size:20px;flex:none}.new-app-float b{display:block;font-size:13px}.new-app-float span{display:block;margin-top:3px;color:var(--orange);font-size:12px;font-weight:900}.new-app-float:hover{animation-play-state:paused;transform:translateY(-2px)}@keyframes floatNotice{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.025)}}@media(prefers-reduced-motion:reduce){.new-app-float{animation:none}}
-@media(max-width:600px){.login-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.last-score{align-items:flex-start;flex-direction:column}.contact-actions{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand img{width:52px;height:52px}.new-app-float{left:12px;bottom:12px;right:12px;max-width:none;padding:10px 12px}.new-app-float .ico{width:38px;height:38px;font-size:18px}}
+@media(max-width:600px){.login-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.last-score{align-items:flex-start;flex-direction:column}.contact-actions{grid-template-columns:1fr}.profile-grid{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand img{width:52px;height:52px}.new-app-float{left:12px;bottom:12px;right:12px;max-width:none;padding:10px 12px}.new-app-float .ico{width:38px;height:38px;font-size:18px}}
 </style>
 </head>
 <body>
@@ -37,6 +37,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     </div>
     <button id="parentBtn" class="login-btn">Giriş Yap</button>
     <div id="loginError"></div>
+    <div id="parentChoices" style="display:none;margin-top:14px"></div>
     <a class="back" href="index.html">← Ana Sayfaya Dön</a>
   </main>
 </section>
@@ -68,8 +69,20 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 
     <div class="grid2">
       <div class="box">
+        <h3>Öğrenci Bilgileri</h3><div class="sub">Kayıtlı öğrenci ve başvuru bilgileri</div>
+        <div id="profileGrid" class="profile-grid"></div>
+      </div>
+      <div class="box">
+        <h3>Veli İşlem Geçmişi</h3><div class="sub">Kurum tarafından kaydedilen veli hareketleri</div>
+        <div id="parentHistory" class="timeline"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
         <h3>Öğrenci Takip Durumu</h3><div class="sub">Kurum tarafından kaydedilen son işlem</div>
         <div id="studentActionBox" class="info">Henüz işlem kaydı yok.</div>
+        <div id="studentHistory" class="timeline" style="margin-top:10px"></div>
       </div>
       <div class="box">
         <h3>Son Sınav</h3><div class="sub" id="lastExamName">Yayınlanan son sonuç</div>
@@ -119,12 +132,15 @@ function normPhone(v){
 }
 function normTrack(v){return String(v||'').trim().replace(/\s+/g,'').toUpperCase()}
 function get(key){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}}
-function findApplication(value){
+function findApplications(value){
  const raw=String(value||'').trim();
- if(!raw)return null;
- const track=normTrack(raw), phone=normPhone(raw);
- return get(APP_KEY).find(x=>normTrack(x.basvuruNo)===track || normPhone(x.telefon)===phone);
+ if(!raw)return [];
+ const track=normTrack(raw), phone=normPhone(raw), apps=get(APP_KEY);
+ const exact=apps.filter(x=>normTrack(x.basvuruNo)===track);
+ if(exact.length)return exact;
+ return apps.filter(x=>phone&&normPhone(x.telefon)===phone);
 }
+function findApplication(value){return findApplications(value)[0]||null}
 function studentResults(app){
  const all=get(RESULT_KEY);
  const no=String(app.studentNo||'').trim();
@@ -151,6 +167,16 @@ function openPanel(app){
  document.getElementById('statScore').textContent=latest?(latest.score||'-'):'-';
  document.getElementById('statExamCount').textContent=results.length;
  document.getElementById('studentActionBox').innerHTML='<b>'+esc(app.studentAction||'Yeni Öğrenci')+'</b>'+(app.studentActionUpdatedAt?'<br><small>Son güncelleme: '+new Date(app.studentActionUpdatedAt).toLocaleString('tr-TR')+'</small>':'');
+ const profile=[
+  ['Öğrenci',app.ad||'-'],['Sınıf',app.sinif||'-'],['Takip No',app.basvuruNo||'-'],
+  ['Okul',app.okul||'-'],['Öğrenci Cep',app.ogrenciTelefon||'-'],['Veli',app.veliAd||'-'],
+  ['Veli Telefon',app.telefon||'-'],['Kayıt Türü',app.type||'-']
+ ];
+ document.getElementById('profileGrid').innerHTML=profile.map(x=>'<div class="profile-item"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');
+ const sh=Array.isArray(app.studentHistory)&&app.studentHistory.length?app.studentHistory:(app.studentAction?[{status:app.studentAction,at:app.studentActionUpdatedAt||app.createdAt}]:[]);
+ document.getElementById('studentHistory').innerHTML=sh.length?sh.map(h=>'<div class="timeline-item"><b>'+esc(h.status||'-')+'</b><small>'+esc(h.at?new Date(h.at).toLocaleString('tr-TR'):'')+'</small></div>').join(''):'<div class="info">Henüz öğrenci işlem geçmişi yok.</div>';
+ const ph=Array.isArray(app.veliHistory)&&app.veliHistory.length?app.veliHistory:(app.veliStatus?[{status:app.veliStatus,at:app.veliStatusUpdatedAt||app.createdAt}]:[]);
+ document.getElementById('parentHistory').innerHTML=ph.length?ph.map(h=>'<div class="timeline-item"><b>'+esc(h.status||'-')+'</b><small>'+esc(h.at?new Date(h.at).toLocaleString('tr-TR'):'')+'</small></div>').join(''):'<div class="info">Henüz veli işlem geçmişi yok.</div>';
  if(latest){
    document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
    document.getElementById('lastScore').textContent=latest.score||'-';
@@ -164,13 +190,27 @@ function openPanel(app){
  document.getElementById('announcementList').innerHTML=anns.length?anns.slice(0,5).map(x=>'<div class="announcement"><b>'+esc(x.head||'Duyuru')+'</b><small>'+esc(x.text||'')+'</small></div>').join(''):'<div class="announcement"><b>2026–2027 Kayıtlarımız Devam Ediyor</b><small>Programlarımız ve kayıt süreci hakkında kurumumuzdan bilgi alabilirsiniz.</small></div>';
 }
 function login(){
- const value=document.getElementById('parentLogin').value.trim(),err=document.getElementById('loginError');
+ const value=document.getElementById('parentLogin').value.trim(),err=document.getElementById('loginError'),choices=document.getElementById('parentChoices');
+ choices.style.display='none';choices.innerHTML='';
  if(!value){err.innerHTML='<div class="empty">Takip numarası veya veli telefonunuzu yazın.</div>';return;}
- const app=findApplication(value);
- if(!app){err.innerHTML='<div class="empty">Bu bilgiyle eşleşen veli / öğrenci kaydı bulunamadı.</div>';return;}
- err.innerHTML='';sessionStorage.setItem(SESSION_KEY,value);openPanel(app);
+ const apps=findApplications(value);
+ if(!apps.length){err.innerHTML='<div class="empty">Bu bilgiyle eşleşen veli / öğrenci kaydı bulunamadı.</div>';return;}
+ if(apps.length>1){
+  err.innerHTML='';
+  choices.style.display='grid';choices.style.gap='8px';
+  choices.innerHTML='<div class="info"><b>Bu veli telefonuna birden fazla öğrenci bağlı.</b><br>Görüntülemek istediğiniz öğrenciyi seçin.</div>'+
+   apps.map(app=>'<button type="button" data-parentpick="'+esc(app.id)+'" style="border:1px solid #dddfea;background:#fff;border-radius:12px;padding:12px;text-align:left;cursor:pointer"><b>'+esc(app.ad||'Öğrenci')+'</b><br><small>'+esc(app.sinif||'-')+' · '+esc(app.basvuruNo||'-')+'</small></button>').join('');
+  return;
+ }
+ err.innerHTML='';sessionStorage.setItem(SESSION_KEY,apps[0].basvuruNo||value);openPanel(apps[0]);
 }
 document.getElementById('parentBtn').addEventListener('click',login);
+document.getElementById('parentChoices').addEventListener('click',e=>{
+ const btn=e.target.closest('[data-parentpick]');if(!btn)return;
+ const app=get(APP_KEY).find(x=>String(x.id)===String(btn.getAttribute('data-parentpick')));if(!app)return;
+ sessionStorage.setItem(SESSION_KEY,app.basvuruNo||'');
+ openPanel(app);
+});
 document.getElementById('parentLogin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
 const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const app=findApplication(saved);if(app)openPanel(app);else sessionStorage.removeItem(SESSION_KEY)}
