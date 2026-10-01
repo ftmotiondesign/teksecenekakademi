@@ -149,7 +149,17 @@ document.body.addEventListener('click',function(e){
 });
 document.body.addEventListener('change',function(e){if(e.target.hasAttribute('data-status')){var id=e.target.getAttribute('data-status'),a=get(APP_KEY,[]);a.forEach(function(x){if(String(x.id)===id)x.status=e.target.value});set(APP_KEY,a);updateStats()}});
 
-el('addCategory').addEventListener('click',function(){var v=el('newCategory').value.trim();if(!v)return;var a=categories();if(!a.some(function(x){return x.toLowerCase()===v.toLowerCase()})){a.push(v);set(CAT_KEY,a)}el('newCategory').value='';renderCategories()});
+function addCategoryNow(){
+ var input=el('newCategory'); if(!input)return;
+ var v=(input.value||'').trim(); if(!v){alert('Kategori adı yazın.');return;}
+ var a=categories();
+ if(a.some(function(x){return String(x).toLowerCase()===v.toLowerCase()})){alert('Bu kategori zaten var.');return;}
+ a.push(v); set(CAT_KEY,a); input.value=''; renderCategories(); alert('Kategori eklendi.');
+}
+var addCategoryBtn=el('addCategory');
+if(addCategoryBtn)addCategoryBtn.addEventListener('click',addCategoryNow);
+var newCategoryInput=el('newCategory');
+if(newCategoryInput)newCategoryInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addCategoryNow();}});
 el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var category=prompt('Kategori:',categories()[0]||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var a=get(RESULT_KEY,[]);a.unshift({id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank});set(RESULT_KEY,a);renderResults();updateStats()});
 el('downloadTemplate').addEventListener('click',function(){csvDownload('tek-secenek-sonuc-sablonu.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],['LGS','LGS 2026','LGS-2026','1001','Örnek Öğrenci','450,125','2,15','1250','18,75','17,50','19,25','9,50','9,00','8,75']])});
 el('exportResults').addEventListener('click',function(){var a=get(RESULT_KEY,[]);csvDownload('tek-secenek-sinav-sonuclari.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama'],].concat(a.map(function(x){return[x.category,x.examName,x.code,x.studentNo,x.name,x.score,x.percentile,x.rank]})))});
