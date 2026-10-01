@@ -21,6 +21,12 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
+    match /portal/{portalId} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update, delete: if isAdmin();
+    }
+
     match /{document=**} {
       allow read, write: if isAdmin();
     }
