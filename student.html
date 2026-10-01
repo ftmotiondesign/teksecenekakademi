@@ -33,8 +33,8 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
   <main class="login-card">
     <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
     <h1>Öğrenci Girişi</h1>
-    <div class="desc">Takip numaranı, öğrenci numaranı, sonuç kodunu veya başvuruda kullanılan veli telefonunu gir. Başvuru durumunu ve yayınlanan sınavlarını tek ekranda görebilirsin.</div>
-    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu / Telefon"><button id="studentBtn">Giriş Yap</button></div>
+    <div class="desc">Takip numaranı, öğrenci numaranı veya sonuç kodunu; başvuruda kullanılan veli telefonuyla birlikte gir.</div>
+    <div class="login-grid" style="grid-template-columns:1fr 1fr auto"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><input id="studentPhone" type="tel" inputmode="numeric" autocomplete="off" placeholder="Veli Telefonu"><button id="studentBtn">Giriş Yap</button></div>
     <div id="loginError"></div>
     <div id="studentChoices" style="display:none;margin-top:14px"></div>
     <a class="back" href="index.html">← Ana Sayfaya Dön</a>
@@ -67,7 +67,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
       <div class="box">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px">
           <div><h3 style="margin:0">Öğrenci Profilim</h3><div class="sub" style="margin:4px 0 0">Kayıtlı öğrenci bilgilerim</div></div>
-          <button id="editProfileBtn" type="button" class="badge" style="border:0;cursor:pointer">✎ Profili Düzenle</button>
+          <button id="editProfileBtn" type="button" class="badge" style="display:none;border:0;cursor:pointer">✎ Profili Düzenle</button>
         </div>
         <div id="profileGrid" class="profile-grid"></div>
         <div id="profileActions" style="display:none;margin-top:12px;gap:8px">
@@ -229,20 +229,23 @@ function openPanel(data){
 
  document.getElementById('examList').innerHTML=list.length?list.map(x=>'<div class="exam"><div><b>'+esc(x.examName||x.code||'Sınav Sonucu')+'</b><small>'+esc(x.category||'-')+' · Yüzdelik: '+esc(x.percentile||'-')+' · Sıralama: '+esc(x.rank||'-')+'</small></div><span class="badge">'+esc(x.score||'-')+' puan</span></div>').join(''):'<div class="info">Henüz yayınlanmış sınav sonucu bulunmuyor.</div>';
 }
-function login(){
- const q=document.getElementById('studentCode').value.trim();
- const data=resolveStudent(q), err=document.getElementById('loginError'), choices=document.getElementById('studentChoices');
+async function login(){
+ const q=document.getElementById('studentCode').value.trim(),phone=document.getElementById('studentPhone').value.trim();
+ const err=document.getElementById('loginError'),choices=document.getElementById('studentChoices');
  choices.style.display='none';choices.innerHTML='';
- if(data&&data.multiple){
+ if(!q||!phone){err.innerHTML='<div class="empty">Takip/öğrenci/sonuç kodu ve veli telefonu birlikte girilmelidir.</div>';return;}
+ if(!window.TSAFirebasePortal){err.innerHTML='<div class="empty">Öğrenci sistemi hazırlanıyor. Sayfayı yenileyip tekrar deneyin.</div>';return;}
+ err.innerHTML='<div class="info">Bilgiler kontrol ediliyor...</div>';
+ try{
+  const remote=await window.TSAFirebasePortal.lookup(q,phone);
+  if(!remote||!remote.app){err.innerHTML='<div class="empty">Bu bilgilerle eşleşen öğrenci bulunamadı.</div>';return;}
+  window.TSAFirebasePortal.hydrate(remote);
   err.innerHTML='';
-  choices.style.display='grid';
-  choices.style.gap='8px';
-  choices.innerHTML='<div class="info"><b>Bu telefon numarasına birden fazla öğrenci bağlı.</b><br>Giriş yapmak istediğiniz öğrenciyi seçin.</div>'+
-   data.apps.map(app=>'<button type="button" data-pickapp="'+esc(app.id)+'" style="border:1px solid #dddfea;background:#fff;border-radius:12px;padding:12px;text-align:left;cursor:pointer"><b>'+esc(app.ad||'Öğrenci')+'</b><br><small>'+esc(app.sinif||'-')+' · '+esc(app.basvuruNo||'-')+'</small></button>').join('');
-  return;
+  sessionStorage.setItem(SESSION_KEY,JSON.stringify({identifier:q,phone:phone}));
+  openPanel({app:remote.app,results:remote.results||[]});
+ }catch(e){
+  console.error(e);err.innerHTML='<div class="empty">Öğrenci bilgileri alınamadı. Lütfen tekrar deneyin.</div>';
  }
- if(!data){err.innerHTML='<div class="empty">Bu takip numarası, öğrenci numarası, sonuç kodu veya telefonla eşleşen öğrenci bulunamadı.</div>';return;}
- err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(data);
 }
 document.getElementById('studentBtn').addEventListener('click',login);
 document.getElementById('announcementTopBtn').addEventListener('click',()=>{markAnnouncementsRead();document.getElementById('announcementsBox').scrollIntoView({behavior:'smooth',block:'start'});});
@@ -292,9 +295,10 @@ document.getElementById('studentChoices').addEventListener('click',e=>{
  sessionStorage.setItem(SESSION_KEY,app.basvuruNo||app.studentNo||app.ogrenciTelefon||'');
  openPanel({app:app,results:results});
 });
-document.getElementById('studentCode').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+document.getElementById('studentCode').addEventListener('keydown',e=>{if(e.key==='Enter')login()});document.getElementById('studentPhone').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
-const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const data=resolveStudent(saved);if(data)openPanel(data);else sessionStorage.removeItem(SESSION_KEY)}
+const saved=sessionStorage.getItem(SESSION_KEY);if(saved){try{const ss=JSON.parse(saved);if(ss.identifier&&ss.phone){window.addEventListener('load',async()=>{try{const d=await window.TSAFirebasePortal.lookup(ss.identifier,ss.phone);if(d&&d.app){window.TSAFirebasePortal.hydrate(d);openPanel({app:d.app,results:d.results||[]})}else sessionStorage.removeItem(SESSION_KEY)}catch(e){sessionStorage.removeItem(SESSION_KEY)}})}}catch(e){sessionStorage.removeItem(SESSION_KEY)}}
 </script>
+<script type="module" src="firebase-portal-public.js?v=1"></script>
 </body>
 </html>
