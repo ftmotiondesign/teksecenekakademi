@@ -31,9 +31,22 @@ async function load(){
   mirror(rows);
   return rows;
 }
-async function add(head,text){
+async function requireAdmin(){
+  if(typeof auth.authStateReady==='function'){
+    await auth.authStateReady();
+  }else if(!auth.currentUser){
+    await new Promise(resolve=>{
+      const stop=onAuthStateChanged(auth,()=>{ stop(); resolve(); });
+    });
+  }
   const user=auth.currentUser;
-  if(!user || String(user.email||'').toLowerCase()!==ADMIN_EMAIL) throw new Error('Yönetici Firebase oturumu bulunamadı.');
+  if(!user) throw new Error('Yönetici Firebase oturumu bulunamadı. Lütfen yönetim girişinden tekrar giriş yapın.');
+  if(String(user.email||'').trim().toLowerCase()!==ADMIN_EMAIL) throw new Error('Bu Firebase hesabının yönetici yetkisi yok.');
+  return user;
+}
+
+async function add(head,text){
+  await requireAdmin();
   await addDoc(collection(db,'announcements'),{
     head:String(head||'').trim(),
     text:String(text||'').trim(),
@@ -42,8 +55,7 @@ async function add(head,text){
   return load();
 }
 async function remove(id){
-  const user=auth.currentUser;
-  if(!user || String(user.email||'').toLowerCase()!==ADMIN_EMAIL) throw new Error('Yönetici Firebase oturumu bulunamadı.');
+  await requireAdmin();
   await deleteDoc(doc(db,'announcements',String(id)));
   return load();
 }
