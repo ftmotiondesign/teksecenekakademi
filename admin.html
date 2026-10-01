@@ -750,6 +750,7 @@ function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML
 window.addEventListener('tsa:announcements-updated',function(){renderSimple('announcement')});
 window.addEventListener('tsa:applications-updated',function(){renderApps();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:results-updated',function(){renderResults();renderPeople();renderDashboard();updateStats();});
+window.addEventListener('tsa:result-categories-updated',function(){renderCategories();renderResults();renderDashboard();updateStats();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
@@ -969,15 +970,28 @@ document.body.addEventListener('click',function(e){
  if(d.hasAttribute('data-editcat')){
   var a=categories(),i=parseInt(d.getAttribute('data-editcat'),10),old=a[i];
   var n=prompt('Kategori adını düzenleyin:',old.name);
-  if(n&&n.trim()){a[i].name=n.trim();set(CAT_KEY,a);renderCategories()}
+  if(n&&n.trim()){
+   if(!window.TSAFirebaseResultCategories){alert('Firebase kategori bağlantısı henüz hazır değil.');return;}
+   window.TSAFirebaseResultCategories.update(old.id,{name:n.trim()})
+    .then(function(){alert('Kategori Firebase’e kaydedildi.');})
+    .catch(function(err){alert('Kategori kaydedilemedi: '+(err&&err.message?err.message:err))});
+  }
  }
  if(d.hasAttribute('data-togglecat')){
-  var a2=categories(),i2=parseInt(d.getAttribute('data-togglecat'),10);
-  a2[i2].active=a2[i2].active===false?true:false;set(CAT_KEY,a2);renderCategories()
+  var a2=categories(),i2=parseInt(d.getAttribute('data-togglecat'),10),cat=a2[i2];
+  if(!window.TSAFirebaseResultCategories){alert('Firebase kategori bağlantısı henüz hazır değil.');return;}
+  window.TSAFirebaseResultCategories.update(cat.id,{active:cat.active===false?true:false})
+   .then(function(){alert('Kategori durumu Firebase’e kaydedildi.');})
+   .catch(function(err){alert('Kategori durumu kaydedilemedi: '+(err&&err.message?err.message:err))});
  }
  if(d.hasAttribute('data-delcat')){
-  var a3=categories(),i3=parseInt(d.getAttribute('data-delcat'),10);
-  if(confirm('Bu kategori silinsin mi?')){a3.splice(i3,1);set(CAT_KEY,a3);renderCategories()}
+  var a3=categories(),i3=parseInt(d.getAttribute('data-delcat'),10),cat3=a3[i3];
+  if(confirm('Bu kategori silinsin mi?')){
+   if(!window.TSAFirebaseResultCategories){alert('Firebase kategori bağlantısı henüz hazır değil.');return;}
+   window.TSAFirebaseResultCategories.remove(cat3.id)
+    .then(function(){alert('Kategori Firebase’den silindi.');})
+    .catch(function(err){alert('Kategori silinemedi: '+(err&&err.message?err.message:err))});
+  }
  }
  if(d.hasAttribute('data-delsimple')){
   var t=d.getAttribute('data-delsimple'),m=SIMPLE[t],sid=d.getAttribute('data-id');
@@ -1011,7 +1025,10 @@ function addCategoryNow(){
  var v=(input.value||'').trim(); if(!v){alert('Kategori adı yazın.');return;}
  var a=categories();
  if(a.some(function(x){return String(x.name).toLowerCase()===v.toLowerCase()})){alert('Bu kategori zaten var.');return;}
- a.push({name:v,active:true}); set(CAT_KEY,a); input.value=''; renderCategories(); alert('Kategori eklendi.');
+ if(!window.TSAFirebaseResultCategories){alert('Firebase kategori bağlantısı henüz hazır değil.');return;}
+ window.TSAFirebaseResultCategories.add(v)
+  .then(function(){input.value='';alert('Kategori Firebase’e eklendi.');})
+  .catch(function(err){alert('Kategori eklenemedi: '+(err&&err.message?err.message:err))});
 }
 var addCategoryBtn=el('addCategory');
 if(addCategoryBtn)addCategoryBtn.addEventListener('click',addCategoryNow);
@@ -1163,5 +1180,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-applications-admin.js?v=2"></script>
 <script type="module" src="firebase-results-admin.js?v=2"></script>
 <script type="module" src="firebase-portal-admin.js?v=3"></script>
+<script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 </body>
 </html>
