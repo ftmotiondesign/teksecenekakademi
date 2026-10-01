@@ -61,7 +61,7 @@ footer{background:var(--dark);color:#cbc9dc;padding:32px 0}.foot{display:flex;ju
 </div></div></section>
 
 <section id="sonuc" class="bg"><div class="container"><div class="section-head"><small>ÖĞRENCİ İŞLEMLERİ</small><h2>Sonuç Sorgulama ve Seviye Tespit</h2></div><div class="two">
-<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Öğrenci numaranızı girin; size ait LGS, Türkiye geneli deneme ve kurum içi sınav sonuçlarını birlikte görüntüleyin.</p><div class="form-grid"><input id="resultCode" placeholder="Öğrenci No / Sonuç Kodu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
+<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Öğrenci numaranızı girin; size ait LGS, Türkiye geneli deneme ve kurum içi sınav sonuçlarını birlikte görüntüleyin.</p><div class="form-grid"><select id="resultType"><option value="all">Hepsi</option><option value="lgs">LGS</option><option value="kurum">Kurum İçi Deneme</option><option value="turkiye">Türkiye Geneli Deneme</option></select><input id="resultCode" placeholder="Öğrenci No / Sonuç Kodu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
 <div class="panel"><h3>🎯 Ücretsiz Seviye Tespit Talebi</h3><p>Seviyenizi değerlendirelim, size uygun programı birlikte belirleyelim.</p><form class="form-grid app-form" data-type="Seviye Tespit"><input name="ad" required placeholder="Ad Soyad"><input name="telefon" required placeholder="Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><textarea name="not" placeholder="Hangi derslerde destek istiyorsunuz?"></textarea><button class="btn orange" type="submit">Talep Oluştur</button><div class="form-message"></div></form></div>
 </div></div></section>
 
@@ -112,10 +112,11 @@ document.querySelectorAll('#finderOptions button').forEach(btn=>btn.addEventList
  document.getElementById('finderResult').classList.add('show');
 }));
 document.getElementById('resultBtn').onclick=()=>{
- const code=document.getElementById('resultCode').value.trim().toLowerCase(),box=document.getElementById('resultBox');let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
- const matches=results.filter(x=>String(x.code||'').toLowerCase()===code||String(x.studentNo||'').toLowerCase()===code);
+ const code=document.getElementById('resultCode').value.trim().toLowerCase(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
+ const classify=x=>{const n=String(x.examName||x.code||'').toLowerCase();if(n.includes('lgs'))return'lgs';if(n.includes('türkiye geneli')||n.includes('turkiye geneli')||n.includes('tgd'))return'turkiye';if(n.includes('kurum içi')||n.includes('kurum ici')||n.includes('kurum'))return'kurum';return'other'};
+ const matches=results.filter(x=>(String(x.code||'').toLowerCase()===code||String(x.studentNo||'').toLowerCase()===code)&&(type==='all'||classify(x)===type));
  box.classList.add('show');
- if(!matches.length){box.innerHTML='Bu bilgiyle yayınlanmış bir sonuç bulunamadı.';return;}
+ if(!matches.length){box.innerHTML='Seçtiğiniz kategoride bu öğrenciye ait yayınlanmış bir sonuç bulunamadı.';return;}
  const name=matches[0].name||'Öğrenci';
  box.innerHTML='<strong>'+escapeHtml(name)+'</strong><div style="margin:4px 0 12px;color:#5f6472">'+matches.length+' sınav sonucu bulundu.</div>'+matches.map(r=>'<div style="background:#fff;border:1px solid #dddfea;border-radius:12px;padding:12px;margin-top:9px"><b style="color:#292557">'+escapeHtml(r.examName||r.code||'Sınav Sonucu')+'</b><div style="margin:7px 0">Puan: '+escapeHtml(r.score||'-')+' · Yüzdelik: '+escapeHtml(r.percentile||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="font-size:13px;line-height:1.7">Türkçe: '+escapeHtml(r.turkce||'-')+' · Matematik: '+escapeHtml(r.matematik||'-')+' · Fen: '+escapeHtml(r.fen||'-')+' · İnkılap: '+escapeHtml(r.inkilap||'-')+' · Din: '+escapeHtml(r.din||'-')+' · İngilizce: '+escapeHtml(r.ingilizce||'-')+'</div></div>').join('');
 };
