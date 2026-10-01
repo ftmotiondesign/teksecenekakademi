@@ -22,7 +22,7 @@ main{padding:26px;min-width:0}.topbar{display:flex;justify-content:space-between
 .quick-action b{display:block;color:var(--navy);margin-bottom:4px}.quick-action span{font-size:12px;color:var(--muted)}
 .alert-list{display:grid;gap:9px}.alert-item{padding:12px;border-radius:10px;background:#fff8ee;border-left:4px solid var(--orange);font-size:13px}
 .status-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #eee}.status-ok{color:var(--green);font-weight:800}.status-warn{color:var(--orange);font-weight:800}
-.bulk-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px}.bulk-form{display:grid;gap:10px}.bulk-form textarea{min-height:120px;resize:vertical}.recipient-list{display:grid;gap:8px;max-height:320px;overflow:auto}.recipient{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #ececf2;border-radius:10px;padding:10px}.recipient small{color:var(--muted)}.wa-send{background:#25D366;color:#fff;border:0;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap}.stat{background:#fff;border-radius:17px;padding:19px}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:28px;color:var(--navy);margin-top:8px}
+.bulk-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px}.bulk-form{display:grid;gap:10px}.bulk-form textarea{min-height:120px;resize:vertical}.recipient-list{display:grid;gap:8px;max-height:320px;overflow:auto}.recipient{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #ececf2;border-radius:10px;padding:10px}.recipient-main{display:flex;align-items:center;gap:10px;min-width:0}.recipient-select{width:18px;height:18px;accent-color:var(--navy);flex:none}.recipient small{color:var(--muted)}.wa-send{background:#25D366;color:#fff;border:0;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap}.stat{background:#fff;border-radius:17px;padding:19px}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:28px;color:var(--navy);margin-top:8px}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-head h2{margin:0}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
 input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;background:#fff}.primary,.secondary,.danger{border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#eef0f7;color:var(--navy)}.danger{background:#ffeded;color:#bd3030}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:900px}.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top}.table th{color:var(--muted);font-size:11px}.empty{text-align:center;padding:28px;color:var(--muted)}
@@ -137,8 +137,24 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <div class="hint" style="margin:0">Mesajlar otomatik toplu gönderilmez. Her kişi için WhatsApp bağlantısı hazırlanır; gönderimi siz onaylayarak yaparsınız.</div>
 </div>
 <div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b>Alıcılar</b><span class="pill" id="bulkCount">0 kişi</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+  <b>Alıcılar</b>
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <button class="secondary" id="bulkSelectAll" type="button">☑ Tümünü Seç</button>
+    <button class="secondary" id="bulkClearSelect" type="button">Seçimi Kaldır</button>
+    <span class="pill" id="bulkCount">0 kişi</span>
+  </div>
+</div>
 <div id="bulkRecipients" class="recipient-list"><div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div></div>
+<div id="bulkQueueBar" style="display:none;margin-top:10px;padding:12px;border-radius:12px;background:#f8f8fb;border:1px solid #ececf2">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+    <div><b id="bulkSelectedCount">0 kişi seçildi</b><br><small id="bulkQueueStatus" style="color:var(--muted)">Gönderim sırası hazır değil.</small></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="primary" id="bulkStartQueue" type="button">Seçilenlere WhatsApp Gönder</button>
+      <button class="secondary" id="bulkNextQueue" type="button" style="display:none">Sıradakini Aç</button>
+    </div>
+  </div>
+</div>
 </div>
 </div>
 </div>
@@ -718,13 +734,55 @@ function bulkFiltered(){
 
 function renderBulkRecipients(){
  var list=bulkFiltered(),msg=(el('bulkMessage').value||'').trim();
+ window.__bulkRecipients=list;
+ window.__bulkQueue=[];
+ window.__bulkQueueIndex=0;
  el('bulkCount').textContent=list.length+' kişi';
- el('bulkRecipients').innerHTML=list.length?list.map(function(x){
+ el('bulkRecipients').innerHTML=list.length?list.map(function(x,i){
   var phone=normalizePhone(x.telefon);
   var text=msg.replace(/\{ad\}/g,x.ad||'').replace(/\{sinif\}/g,x.sinif||'').replace(/\{tur\}/g,x.type||'');
   var url=phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(text):'#';
-  return '<div class="recipient"><div><b>'+esc(x.ad||'-')+'</b><br><small>'+esc(x.telefon||'-')+' · '+esc(x.type||'-')+'</small></div>'+(phone?'<a class="wa-send" target="_blank" rel="noopener" href="'+url+'">WhatsApp</a>':'<span class="pill">Telefon yok</span>')+'</div>'
+  return '<div class="recipient"><div class="recipient-main"><input class="recipient-select" type="checkbox" data-bulkcheck="'+i+'" '+(phone?'':'disabled')+'><div><b>'+esc(x.ad||'-')+'</b><br><small>'+esc(x.telefon||'-')+' · '+esc(x.type||'-')+'</small></div></div>'+(phone?'<a class="wa-send" target="_blank" rel="noopener" href="'+url+'">WhatsApp</a>':'<span class="pill">Telefon yok</span>')+'</div>'
  }).join(''):'<div class="empty">Bu grupta alıcı bulunamadı.</div>';
+ updateBulkSelection();
+}
+function updateBulkSelection(){
+ var checks=[...document.querySelectorAll('[data-bulkcheck]:checked')];
+ var bar=el('bulkQueueBar');if(!bar)return;
+ bar.style.display=window.__bulkRecipients&&window.__bulkRecipients.length?'block':'none';
+ el('bulkSelectedCount').textContent=checks.length+' kişi seçildi';
+ if(!window.__bulkQueue||!window.__bulkQueue.length)el('bulkQueueStatus').textContent='Gönderim sırası hazır değil.';
+}
+function selectAllBulk(v){
+ document.querySelectorAll('[data-bulkcheck]:not(:disabled)').forEach(function(x){x.checked=v});
+ updateBulkSelection();
+}
+function buildBulkQueue(){
+ var msg=(el('bulkMessage').value||'').trim(),list=window.__bulkRecipients||[];
+ var selected=[...document.querySelectorAll('[data-bulkcheck]:checked')].map(function(cb){return list[parseInt(cb.getAttribute('data-bulkcheck'),10)]}).filter(Boolean);
+ window.__bulkQueue=selected.map(function(x){
+  var phone=normalizePhone(x.telefon);
+  var text=msg.replace(/\{ad\}/g,x.ad||'').replace(/\{sinif\}/g,x.sinif||'').replace(/\{tur\}/g,x.type||'');
+  return {ad:x.ad||'-',url:'https://wa.me/'+phone+'?text='+encodeURIComponent(text)};
+ });
+ window.__bulkQueueIndex=0;
+ return window.__bulkQueue.length;
+}
+function openNextBulk(){
+ var q=window.__bulkQueue||[],i=window.__bulkQueueIndex||0;
+ if(!q.length){alert('Önce en az bir alıcı seçin.');return}
+ if(i>=q.length){el('bulkQueueStatus').textContent='Gönderim sırası tamamlandı.';el('bulkNextQueue').style.display='none';return}
+ var item=q[i];
+ el('bulkQueueStatus').textContent=(i+1)+' / '+q.length+' · '+item.ad+' açılıyor';
+ window.open(item.url,'_blank');
+ window.__bulkQueueIndex=i+1;
+ if(window.__bulkQueueIndex<q.length){
+  el('bulkNextQueue').style.display='inline-block';
+  el('bulkNextQueue').textContent='Sıradakini Aç ('+(window.__bulkQueueIndex+1)+'/'+q.length+')';
+ }else{
+  el('bulkNextQueue').style.display='none';
+  el('bulkQueueStatus').textContent='Son alıcı açıldı. Sıra tamamlandı.';
+ }
 }
 var templates={
  exam:'Merhaba {ad}, Tek Seçenek Akademi sınavınızla ilgili hatırlatma yapmak istiyoruz.',
@@ -733,7 +791,12 @@ var templates={
 };
 el('bulkTemplate').addEventListener('change',function(){if(this.value&&templates[this.value])el('bulkMessage').value=templates[this.value]});
 el('prepareBulk').addEventListener('click',renderBulkRecipients);
-el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi'});
+el('bulkRecipients').addEventListener('change',function(e){if(e.target.hasAttribute('data-bulkcheck'))updateBulkSelection()});
+el('bulkSelectAll').addEventListener('click',function(){selectAllBulk(true)});
+el('bulkClearSelect').addEventListener('click',function(){selectAllBulk(false);window.__bulkQueue=[];window.__bulkQueueIndex=0;el('bulkNextQueue').style.display='none'});
+el('bulkStartQueue').addEventListener('click',function(){var n=buildBulkQueue();if(!n){alert('En az bir alıcı seçin.');return}openNextBulk()});
+el('bulkNextQueue').addEventListener('click',openNextBulk);
+el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){set(HERO_KEY,defaultHeroSlides());renderHeroAdmin();});
 showPage(location.hash.slice(1)||'dashboard');
 })();
