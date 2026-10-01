@@ -1,1 +1,689 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Tek Seçenek Akademi | Şehzadeler Manisa</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #292557;
+      background: #ffffff;
+    }
+
+    /* ÜST MENÜ */
+
+    header {
+      height: 82px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 15px rgba(0,0,0,.08);
+    }
+
+    .logo img {
+      height: 66px;
+      display: block;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #292557;
+      font-weight: 600;
+      font-size: 15px;
+      transition: .3s;
+    }
+
+    nav a:hover {
+      color: #f28b00;
+    }
+
+    .info-btn {
+      background: #f28b00;
+      color: white !important;
+      padding: 13px 22px;
+      border-radius: 30px;
+    }
+
+    /* HERO */
+
+    .hero {
+      min-height: calc(100vh - 82px);
+      background:
+        linear-gradient(
+          90deg,
+          rgba(25,21,69,.94) 0%,
+          rgba(25,21,69,.82) 38%,
+          rgba(25,21,69,.30) 70%,
+          rgba(25,21,69,.05) 100%
+        ),
+        url("bina.png");
+
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      padding: 70px 8%;
+    }
+
+    .hero-content {
+      max-width: 690px;
+      color: white;
+    }
+
+    .hero-small {
+      display: inline-block;
+      background: #f28b00;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 1.03;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #f28b00;
+    }
+
+    .hero p {
+      font-size: 20px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-bottom: 32px;
+      color: rgba(255,255,255,.92);
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 16px 27px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: .3s;
+    }
+
+    .btn-orange {
+      background: #f28b00;
+      color: white;
+    }
+
+    .btn-white {
+      background: white;
+      color: #292557;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    /* ORTAK */
+
+    section {
+      padding: 90px 8%;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title small {
+      color: #f28b00;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .section-title h2 {
+      font-size: 38px;
+      margin-top: 10px;
+      color: #292557;
+    }
+
+    .section-title p {
+      max-width: 680px;
+      margin: 15px auto 0;
+      color: #666;
+      line-height: 1.7;
+    }
+
+    /* EĞİTİMLER */
+
+    .education {
+      background: #f7f7fb;
+    }
+
+    .cards {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 35px 25px;
+      box-shadow: 0 8px 30px rgba(30,25,75,.07);
+      transition: .3s;
+      border-bottom: 4px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-bottom-color: #f28b00;
+    }
+
+    .card-number {
+      width: 55px;
+      height: 55px;
+      background: #292557;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      font-size: 21px;
+      font-weight: bold;
+      margin-bottom: 22px;
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    .card p {
+      color: #707070;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* DENEME */
+
+    .deneme {
+      background: #292557;
+      color: white;
+    }
+
+    .deneme-container {
+      max-width: 1150px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .deneme h2 {
+      font-size: 44px;
+      margin-bottom: 20px;
+    }
+
+    .deneme h2 span {
+      color: #f28b00;
+    }
+
+    .deneme p {
+      color: #ddd;
+      line-height: 1.8;
+      margin-bottom: 25px;
+    }
+
+    .deneme-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .deneme-list div {
+      background: rgba(255,255,255,.08);
+      padding: 15px 18px;
+      border-radius: 12px;
+    }
+
+    .deneme-boxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .deneme-box {
+      background: white;
+      color: #292557;
+      text-align: center;
+      padding: 40px 20px;
+      border-radius: 20px;
+    }
+
+    .deneme-box strong {
+      font-size: 50px;
+      display: block;
+      color: #f28b00;
+    }
+
+    .deneme-box span {
+      font-weight: bold;
+    }
+
+    /* HAKKIMIZDA */
+
+    .about {
+      max-width: 1050px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .about p {
+      font-size: 18px;
+      color: #666;
+      line-height: 1.9;
+    }
+
+    /* CTA */
+
+    .cta {
+      padding: 70px 8%;
+      background: #f28b00;
+      color: white;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .cta p {
+      margin-bottom: 28px;
+      font-size: 18px;
+    }
+
+    /* İLETİŞİM */
+
+    .contact {
+      background: #f7f7fb;
+    }
+
+    .contact-box {
+      max-width: 950px;
+      margin: auto;
+      background: white;
+      padding: 45px;
+      border-radius: 25px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.07);
+      text-align: center;
+    }
+
+    .contact-box h2 {
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .contact-box p {
+      color: #666;
+      line-height: 1.8;
+    }
+
+    footer {
+      background: #1d1948;
+      color: #ccc;
+      text-align: center;
+      padding: 25px;
+      font-size: 14px;
+    }
+
+    /* MOBİL */
+
+    @media (max-width: 900px) {
+
+      header {
+        padding: 0 20px;
+      }
+
+      nav a:not(.info-btn) {
+        display: none;
+      }
+
+      .logo img {
+        height: 58px;
+      }
+
+      .hero {
+        min-height: 78vh;
+        padding: 70px 25px;
+        background:
+          linear-gradient(
+            rgba(25,21,69,.72),
+            rgba(25,21,69,.78)
+          ),
+          url("bina.png");
+
+        background-size: cover;
+        background-position: center;
+      }
+
+      .hero h1 {
+        font-size: 45px;
+      }
+
+      .hero p {
+        font-size: 17px;
+      }
+
+      section {
+        padding: 70px 22px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .deneme-container {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    @media (max-width: 550px) {
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .deneme-boxes {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-title h2 {
+        font-size: 30px;
+      }
+
+      .hero h1 {
+        font-size: 39px;
+      }
+
+      .info-btn {
+        padding: 11px 15px;
+        font-size: 13px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <a class="logo" href="#">
+    <img src="logo.png" alt="Tek Seçenek Akademi">
+  </a>
+
+  <nav>
+    <a href="#hakkimizda">Hakkımızda</a>
+    <a href="#egitimler">Eğitimlerimiz</a>
+    <a href="#deneme">Deneme Kulübü</a>
+    <a href="#iletisim">İletişim</a>
+    <a class="info-btn" href="#iletisim">Bilgi Al</a>
+  </nav>
+
+</header>
+
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <span class="hero-small">
+      ŞEHZADELER • MANİSA
+    </span>
+
+    <h1>
+      Geleceğin İçin<br>
+      <span>Tek Seçenek.</span>
+    </h1>
+
+    <p>
+      Hedeflerine ulaşırken doğru eğitim, güçlü takip ve
+      planlı çalışma sistemiyle yanında olan eğitim adresi:
+      Tek Seçenek Akademi.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#egitimler" class="btn btn-orange">
+        Eğitimleri İncele
+      </a>
+
+      <a href="#iletisim" class="btn btn-white">
+        Bilgi Al
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="egitimler" class="education">
+
+  <div class="section-title">
+
+    <small>Eğitim Programlarımız</small>
+
+    <h2>
+      Her Hedef İçin Güçlü Bir Program
+    </h2>
+
+    <p>
+      Öğrencilerimizin akademik gelişimini destekleyen,
+      hedeflerine göre planlanan eğitim programları.
+    </p>
+
+  </div>
+
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-number">5-7</div>
+      <h3>Ortaokul Grupları</h3>
+      <p>
+        5, 6 ve 7. sınıf öğrencileri için okul destek,
+        konu takibi ve sınavlara hazırlık programları.
+      </p>
+    </div>
+
+
+    <div class="card">
+      <div class="card-number">8</div>
+      <h3>LGS Hazırlık</h3>
+      <p>
+        Düzenli denemeler, akademik takip ve hedef odaklı
+        çalışma sistemiyle LGS hazırlığı.
+      </p>
+    </div>
+
+
+    <div class="card">
+      <div class="card-number">9-12</div>
+      <h3>Lise Grupları</h3>
+      <p>
+        9, 10, 11 ve 12. sınıflara yönelik okul destek,
+        TYT ve AYT hazırlık programları.
+      </p>
+    </div>
+
+
+    <div class="card">
+      <div class="card-number">YDT</div>
+      <h3>Dil & İngilizce</h3>
+      <p>
+        YDT Dil sınıfları ve farklı seviyelere yönelik
+        İngilizce eğitim programları.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="deneme" class="deneme">
+
+  <div class="deneme-container">
+
+    <div>
+
+      <h2>
+        Gerçek Sınavın<br>
+        <span>Provasını Yap.</span>
+      </h2>
+
+      <p>
+        Türkiye'nin seçkin yayınlarından hazırlanan
+        deneme sınavlarıyla seviyeni düzenli olarak gör,
+        eksiklerini belirle ve hedeflerine daha sağlam ilerle.
+      </p>
+
+      <div class="deneme-list">
+
+        <div>✓ Düzenli Türkiye geneli denemeler</div>
+        <div>✓ Sonuç ve gelişim takibi</div>
+        <div>✓ Farklı yayınlardan sınav deneyimi</div>
+        <div>✓ Hedef odaklı sınav hazırlığı</div>
+
+      </div>
+
+    </div>
+
+
+    <div class="deneme-boxes">
+
+      <div class="deneme-box">
+        <strong>70</strong>
+        <span>Deneme Paketi</span>
+      </div>
+
+      <div class="deneme-box">
+        <strong>120</strong>
+        <span>Deneme Paketi</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="hakkimizda">
+
+  <div class="section-title">
+
+    <small>Tek Seçenek Akademi</small>
+
+    <h2>
+      Başarı Bir Tesadüf Değildir
+    </h2>
+
+  </div>
+
+  <div class="about">
+
+    <p>
+      Tek Seçenek Akademi; öğrencilerinin yalnızca sınavlara
+      değil, hedeflerine hazırlanmasını amaçlayan bir eğitim
+      anlayışıyla çalışmalarını sürdürür. Düzenli takip,
+      planlı çalışma, deneme sınavları ve öğrenciye özel
+      yönlendirmelerle eğitim sürecinin her aşamasında
+      öğrencilerimizin yanındayız.
+    </p>
+
+  </div>
+
+</section>
+
+
+<section class="cta">
+
+  <h2>
+    Hedefin İçin İlk Adımı At.
+  </h2>
+
+  <p>
+    Eğitim programlarımız ve kayıt süreci hakkında bilgi al.
+  </p>
+
+  <a href="#iletisim" class="btn btn-white">
+    Bilgi Al
+  </a>
+
+</section>
+
+
+<section id="iletisim" class="contact">
+
+  <div class="contact-box">
+
+    <h2>Tek Seçenek Akademi</h2>
+
+    <p>
+      Şehzadeler / Manisa
+    </p>
+
+    <br>
+
+    <p>
+      Eğitim programlarımız, Deneme Kulübü ve
+      kayıtlarımız hakkında detaylı bilgi için bizimle
+      iletişime geçebilirsiniz.
+    </p>
+
+  </div>
+
+</section>
+
+
+<footer>
+  © 2026 Tek Seçenek Akademi • Şehzadeler / Manisa
+</footer>
+
+</body>
+</html>
