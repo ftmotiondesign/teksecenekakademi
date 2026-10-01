@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tek Seçenek Akademi | Veli Girişi</title>
+<style>
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--green:#25b96b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy)}
+.wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#292557,#1c1848)}
+.card{width:min(760px,100%);background:#fff;border-radius:24px;padding:30px;box-shadow:0 20px 60px #0004}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:24px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:20px}.brand span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+h1{margin:0 0 8px}.desc{color:var(--muted);line-height:1.6;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr auto;gap:10px}.grid input{padding:13px;border:1px solid #dddfea;border-radius:10px;font:inherit}.grid button{border:0;border-radius:10px;background:var(--orange);color:#fff;font-weight:900;padding:0 18px;cursor:pointer}
+.box{border:1px solid #ececf2;border-radius:14px;padding:15px;margin-top:12px}.status{display:inline-block;margin-top:8px;background:#eef0f7;border-radius:18px;padding:6px 10px;font-size:12px;font-weight:900}.empty{padding:18px;background:#f7f7fa;border-radius:12px;color:var(--muted);margin-top:15px}
+.back{display:inline-block;margin-top:18px;font-weight:800;text-decoration:none;color:var(--navy)}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.grid button{padding:13px}}
+</style>
+</head>
+<body>
+<div class="wrap"><main class="card">
+<div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Veli Girişi</span></div></div>
+<h1>Başvuru Durumunu Gör</h1>
+<div class="desc">Başvuru numarası veya kayıt sırasında kullanılan telefon numarasıyla başvuru durumunu görüntüleyebilirsiniz.</div>
+<div class="grid"><input id="parentQuery" placeholder="Başvuru No / Telefon"><button id="parentBtn">Sorgula</button></div>
+<div id="parentResult"></div>
+<a class="back" href="index.html">← Ana Sayfaya Dön</a>
+</main></div>
+<script>
+const APP_KEY='tsa_applications_v1';
+function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function normPhone(v){return String(v||'').replace(/\D/g,'')}
+document.getElementById('parentBtn').onclick=()=>{
+ const q=document.getElementById('parentQuery').value.trim();
+ let apps=[];try{apps=JSON.parse(localStorage.getItem(APP_KEY)||'[]')}catch(e){}
+ const nq=normPhone(q);
+ const list=apps.filter(x=>String(x.basvuruNo||'').toLowerCase()===q.toLowerCase() || (nq && normPhone(x.telefon)===nq));
+ const out=document.getElementById('parentResult');
+ if(!list.length){out.innerHTML='<div class="empty">Bu bilgiyle eşleşen başvuru bulunamadı.</div>';return;}
+ out.innerHTML=list.map(x=>'<div class="box"><b>'+esc(x.ad||'-')+'</b><div style="margin-top:5px">'+esc(x.type||'-')+' · '+esc(x.sinif||'-')+'</div><div style="margin-top:6px;color:#707487">'+esc(x.ilce||'')+(x.okul?' · '+esc(x.okul):'')+'</div><span class="status">'+esc(x.status||'Yeni Başvuru')+'</span></div>').join('');
+};
+</script>
+</body>
+</html>
