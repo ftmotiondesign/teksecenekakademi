@@ -56,7 +56,7 @@ footer{background:var(--dark);color:#cbc9dc;padding:32px 0}.foot{display:flex;ju
 
 <section id="basvurular" class="dark"><div class="container"><div class="section-head"><small>BAŞVURU MERKEZİ</small><h2>Tek Formda Hızlı Başvuru</h2><p>Başvurular yönetim paneline düşecek ve Yeni Başvuru → Arandı → Görüşüldü → Kayıt Oldu / Kayıt Olmadı şeklinde takip edilecek.</p></div><div class="forms">
 <div class="form-card"><h3>🎓 Ön Kayıt</h3><p>Program hakkında bilgi almak ve kurum tarafından aranmak için.</p><form class="form-grid app-form" data-type="Ön Kayıt"><input name="ad" required placeholder="Ad Soyad"><input name="telefon" required placeholder="Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><select name="program"><option>Genel Bilgi</option><option>LGS</option><option>TYT / AYT</option><option>YDT</option><option>İngilizce</option><option>Deneme Kulübü</option></select><textarea name="not" placeholder="Notunuz (isteğe bağlı)"></textarea><button class="btn orange" type="submit">Ön Kayıt Oluştur</button><div class="form-message"></div></form></div>
-<div class="form-card"><h3>🏆 Bursluluk Başvurusu</h3><p>Bursluluk sınavı için öğrenci ve veli bilgilerini kaydedin.</p><form class="form-grid app-form" data-type="Bursluluk"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="telefon" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option></select><input name="okul" placeholder="Okulu"><textarea name="not" placeholder="Notunuz"></textarea><button class="btn orange" type="submit">Bursluluk Başvurusu Yap</button><div class="form-message"></div></form></div>
+<div class="form-card"><h3>🏆 Bursluluk Başvurusu</h3><p>Bursluluk sınavı için öğrenci ve veli bilgilerini kaydedin.</p><form class="form-grid app-form" data-type="Bursluluk"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="telefon" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option></select><select name="ilce" id="bursIlce" required><option value="">İlçe Seçin</option><option value="Şehzadeler">Şehzadeler</option><option value="Yunusemre">Yunusemre</option></select><select name="okul" id="bursOkul" required disabled><option value="">Önce ilçe seçin</option></select><input name="okulDiger" id="bursOkulDiger" placeholder="Okul adını yazın" style="display:none"><textarea name="not" placeholder="Notunuz"></textarea><button class="btn orange" type="submit">Bursluluk Başvurusu Yap</button><div class="form-message"></div></form></div>
 <div class="form-card"><h3>📝 Deneme Sınavı</h3><p>Türkiye geneli veya kurum içi deneme sınavlarına katılmak için.</p><form class="form-grid app-form" data-type="Deneme Sınavı"><input name="ad" required placeholder="Ad Soyad"><input name="telefon" required placeholder="Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><select name="program"><option>Türkiye Geneli Deneme</option><option>Deneme Kulübü 70</option><option>Deneme Kulübü 120</option></select><textarea name="not" placeholder="Notunuz"></textarea><button class="btn orange" type="submit">Deneme Başvurusu Yap</button><div class="form-message"></div></form></div>
 </div></div></section>
 
@@ -102,11 +102,30 @@ const RESULT_CAT_KEY='tsa_result_categories_v1';
 function getApps(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
 function saveApps(x){localStorage.setItem(STORAGE_KEY,JSON.stringify(x))}
 function makeNo(){return 'TSA-'+Date.now().toString().slice(-8)}
+const MANISA_SCHOOLS={
+ 'Şehzadeler':['Akşemseddin Ortaokulu','Avni Gemicioğlu Ortaokulu','Celalettin Ökten İmam Hatip Ortaokulu','Gediz Ortaokulu','Kazım Karabekir Ortaokulu','Manisa Mesleki ve Teknik Anadolu Lisesi','Murat Germen Ortaokulu','Müftü Ahmet Alim Efendi İmam Hatip Ortaokulu','Spil Ortaokulu'],
+ 'Yunusemre':['Abdülhamid Han İmam Hatip Ortaokulu','Atatürk Ortaokulu','Cemal Ergün Ortaokulu','Görgülüler Ortaokulu','Halit Görgülü Anadolu Lisesi','Merkez Efendi Mesleki ve Teknik Anadolu Lisesi','Mesir Şehit Hakan Acarkanlı Ortaokulu','Şehit Ömer Halisdemir Ortaokulu','TOBB Bülent Koşmaz Fen Lisesi']
+};
+const bursIlce=document.getElementById('bursIlce'),bursOkul=document.getElementById('bursOkul'),bursOkulDiger=document.getElementById('bursOkulDiger');
+if(bursIlce&&bursOkul){
+ bursIlce.addEventListener('change',()=>{
+  const ilce=bursIlce.value,schools=MANISA_SCHOOLS[ilce]||[];
+  bursOkul.disabled=!ilce;
+  bursOkul.innerHTML=ilce?'<option value="">Okul Seçin</option>'+schools.map(x=>'<option>'+escapeHtml(x)+'</option>').join('')+'<option value="__other">Okulum listede yok / Diğer</option>':'<option value="">Önce ilçe seçin</option>';
+  bursOkulDiger.style.display='none';bursOkulDiger.required=false;bursOkulDiger.value='';
+ });
+ bursOkul.addEventListener('change',()=>{
+  const other=bursOkul.value==='__other';
+  bursOkulDiger.style.display=other?'block':'none';bursOkulDiger.required=other;
+  if(!other)bursOkulDiger.value='';
+ });
+}
 document.querySelectorAll('.app-form').forEach(form=>{
  form.addEventListener('submit',e=>{
   e.preventDefault();
   const fd=new FormData(form), data=Object.fromEntries(fd.entries());
-  const app={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),basvuruNo:makeNo(),type:form.dataset.type,ad:data.ad||'',telefon:data.telefon||'',sinif:data.sinif||'',program:data.program||'',okul:data.okul||'',not:data.not||'',status:'Yeni Başvuru',createdAt:new Date().toISOString()};
+  const okulValue=data.okul==='__other'?(data.okulDiger||'Diğer'):(data.okul||'');
+  const app={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),basvuruNo:makeNo(),type:form.dataset.type,ad:data.ad||'',telefon:data.telefon||'',sinif:data.sinif||'',program:data.program||'',ilce:data.ilce||'',okul:okulValue,not:data.not||'',status:'Yeni Başvuru',createdAt:new Date().toISOString()};
   const list=getApps();list.unshift(app);saveApps(list);
   const msg=form.querySelector('.form-message');msg.textContent='Başvurunuz alındı. Başvuru No: '+app.basvuruNo;msg.classList.add('show');form.reset();
  });
