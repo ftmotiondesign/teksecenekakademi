@@ -69,8 +69,16 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 
     <div class="grid2">
       <div class="box">
-        <h3>Öğrenci Bilgileri</h3><div class="sub">Kayıtlı öğrenci ve başvuru bilgileri</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px">
+          <div><h3 style="margin:0">Öğrenci Bilgileri</h3><div class="sub" style="margin:4px 0 0">Kayıtlı öğrenci ve başvuru bilgileri</div></div>
+          <button id="editParentProfileBtn" type="button" class="step" style="border:0;cursor:pointer">✎ Düzenle</button>
+        </div>
         <div id="profileGrid" class="profile-grid"></div>
+        <div id="parentProfileActions" style="display:none;margin-top:12px;gap:8px">
+          <button id="saveParentProfileBtn" type="button" style="border:0;border-radius:10px;padding:10px 14px;background:var(--orange);color:#fff;font-weight:900;cursor:pointer">Kaydet</button>
+          <button id="cancelParentProfileBtn" type="button" style="border:0;border-radius:10px;padding:10px 14px;background:#eef0f7;color:var(--navy);font-weight:900;cursor:pointer">Vazgeç</button>
+          <span id="parentProfileSaved" style="display:none;color:#187f4a;font-weight:900;align-self:center">✓ Kaydedildi</span>
+        </div>
       </div>
       <div class="box">
         <h3>Veli İşlem Geçmişi</h3><div class="sub">Kurum tarafından kaydedilen veli hareketleri</div>
@@ -168,11 +176,12 @@ function openPanel(app){
  document.getElementById('statExamCount').textContent=results.length;
  document.getElementById('studentActionBox').innerHTML='<b>'+esc(app.studentAction||'Yeni Öğrenci')+'</b>'+(app.studentActionUpdatedAt?'<br><small>Son güncelleme: '+new Date(app.studentActionUpdatedAt).toLocaleString('tr-TR')+'</small>':'');
  const profile=[
-  ['Öğrenci',app.ad||'-'],['Sınıf',app.sinif||'-'],['Takip No',app.basvuruNo||'-'],
-  ['Okul',app.okul||'-'],['Öğrenci Cep',app.ogrenciTelefon||'-'],['Veli',app.veliAd||'-'],
-  ['Veli Telefon',app.telefon||'-'],['Kayıt Türü',app.type||'-']
+  ['Öğrenci',app.ad||'-','ad',true],['Sınıf',app.sinif||'-','sinif',true],['Takip No',app.basvuruNo||'-','basvuruNo',false],
+  ['Okul',app.okul||'-','okul',true],['Öğrenci Cep',app.ogrenciTelefon||'-','ogrenciTelefon',true],['Veli',app.veliAd||'-','veliAd',true],
+  ['Veli Telefon',app.telefon||'-','telefon',true],['Kayıt Türü',app.type||'-','type',false]
  ];
- document.getElementById('profileGrid').innerHTML=profile.map(x=>'<div class="profile-item"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');
+ document.getElementById('profileGrid').innerHTML=profile.map(x=>'<div class="profile-item" data-parent-key="'+esc(x[2])+'" data-parent-editable="'+(x[3]?'1':'0')+'"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');
+ window.__parentProfileAppId=String(app.id||'');
  const sh=Array.isArray(app.studentHistory)&&app.studentHistory.length?app.studentHistory:(app.studentAction?[{status:app.studentAction,at:app.studentActionUpdatedAt||app.createdAt}]:[]);
  document.getElementById('studentHistory').innerHTML=sh.length?sh.map(h=>'<div class="timeline-item"><b>'+esc(h.status||'-')+'</b><small>'+esc(h.at?new Date(h.at).toLocaleString('tr-TR'):'')+'</small></div>').join(''):'<div class="info">Henüz öğrenci işlem geçmişi yok.</div>';
  const ph=Array.isArray(app.veliHistory)&&app.veliHistory.length?app.veliHistory:(app.veliStatus?[{status:app.veliStatus,at:app.veliStatusUpdatedAt||app.createdAt}]:[]);
@@ -205,6 +214,44 @@ function login(){
  err.innerHTML='';sessionStorage.setItem(SESSION_KEY,apps[0].basvuruNo||value);openPanel(apps[0]);
 }
 document.getElementById('parentBtn').addEventListener('click',login);
+
+function setParentProfileEditMode(editing){
+ const id=window.__parentProfileAppId||'';
+ const apps=get(APP_KEY),app=apps.find(x=>String(x.id)===String(id));
+ if(!app)return;
+ document.querySelectorAll('#profileGrid .profile-item').forEach(box=>{
+  const editable=box.getAttribute('data-parent-editable')==='1';
+  const key=box.getAttribute('data-parent-key');
+  const b=box.querySelector('b');
+  if(editing&&editable){
+   const val=app[key]||'';
+   if(key==='sinif'){
+    const opts=['5. Sınıf','6. Sınıf','7. Sınıf','8. Sınıf','9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf','Mezun'];
+    b.innerHTML='<select data-parent-input="'+key+'" style="width:100%;padding:8px;border:1px solid #dddfea;border-radius:8px"><option value="">Seçin</option>'+opts.map(o=>'<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>';
+   }else{
+    b.innerHTML='<input data-parent-input="'+key+'" value="'+esc(val)+'" style="width:100%;padding:8px;border:1px solid #dddfea;border-radius:8px">';
+   }
+  }else if(!editing&&editable){
+   b.textContent=app[key]||'-';
+  }
+ });
+ document.getElementById('editParentProfileBtn').style.display=editing?'none':'inline-block';
+ document.getElementById('parentProfileActions').style.display=editing?'flex':'none';
+}
+
+document.getElementById('editParentProfileBtn').addEventListener('click',()=>setParentProfileEditMode(true));
+document.getElementById('cancelParentProfileBtn').addEventListener('click',()=>setParentProfileEditMode(false));
+document.getElementById('saveParentProfileBtn').addEventListener('click',()=>{
+ const id=window.__parentProfileAppId||'';
+ const apps=get(APP_KEY),app=apps.find(x=>String(x.id)===String(id)); if(!app)return;
+ document.querySelectorAll('[data-parent-input]').forEach(inp=>{app[inp.getAttribute('data-parent-input')]=inp.value.trim()});
+ localStorage.setItem(APP_KEY,JSON.stringify(apps));
+ setParentProfileEditMode(false);
+ const saved=document.getElementById('parentProfileSaved');saved.style.display='inline';
+ setTimeout(()=>saved.style.display='none',2200);
+ const session=sessionStorage.getItem(SESSION_KEY);
+ if(session){const fresh=findApplication(session);if(fresh)openPanel(fresh)}
+});
 document.getElementById('parentChoices').addEventListener('click',e=>{
  const btn=e.target.closest('[data-parentpick]');if(!btn)return;
  const app=get(APP_KEY).find(x=>String(x.id)===String(btn.getAttribute('data-parentpick')));if(!app)return;
