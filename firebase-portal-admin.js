@@ -7,8 +7,11 @@ const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const APP_KEY='tsa_applications_v1';
 const RESULT_KEY='tsa_results_v1';
 
-function getLocal(key){
-  try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}
+async function getRemoteCollection(name){
+  const snap=await getDocs(collection(db,name));
+  const rows=[];
+  snap.forEach(d=>rows.push({id:d.id,...(d.data()||{})}));
+  return rows;
 }
 function normPhone(v){
   let p=String(v||'').replace(/\D/g,'');
@@ -84,8 +87,8 @@ async function requireAdmin(){
 let timer=null;
 async function syncNow(){
   await requireAdmin();
-  const apps=getLocal(APP_KEY);
-  const allResults=getLocal(RESULT_KEY);
+  const apps=await getRemoteCollection('applications');
+  const allResults=await getRemoteCollection('results');
   const desired=new Map();
   for(const app of apps){
     const phone=normPhone(app.telefon);
@@ -124,5 +127,5 @@ window.addEventListener('tsa:applications-updated',schedule);
 window.addEventListener('tsa:results-updated',schedule);
 window.TSAFirebasePortalAdmin={sync:syncNow};
 if(typeof auth.authStateReady==='function'){
-  auth.authStateReady().then(()=>{if(auth.currentUser)schedule()});
+  auth.authStateReady().then(()=>{if(auth.currentUser)syncNow().catch(err=>console.error('Portal ilk senkronizasyon hatası:',err))});
 }
