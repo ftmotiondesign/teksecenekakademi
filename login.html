@@ -83,9 +83,11 @@ function saveLegacySession(email,remember){
   }
 }
 
-if(sessionStorage.getItem('tsa_admin_session_v1')==='1'||localStorage.getItem('tsa_admin_remember_v1')==='1'){
-  location.replace('admin.html');
-}
+// Eski local/session kayıtları tek başına giriş sayılmamalı.
+sessionStorage.removeItem('tsa_admin_session_v1');
+sessionStorage.removeItem('tsa_admin_email');
+localStorage.removeItem('tsa_admin_remember_v1');
+localStorage.removeItem('tsa_admin_email');
 
 form.addEventListener('submit',async e=>{
   e.preventDefault();
