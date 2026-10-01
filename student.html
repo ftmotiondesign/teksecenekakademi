@@ -33,8 +33,8 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
   <main class="login-card">
     <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
     <h1>Öğrenci Girişi</h1>
-    <div class="desc">Takip numaranı, öğrenci numaranı veya sana verilen sonuç kodunu gir. Başvuru durumunu ve yayınlanan sınavlarını tek ekranda görebilirsin.</div>
-    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><button id="studentBtn">Giriş Yap</button></div>
+    <div class="desc">Takip numaranı, öğrenci numaranı, sonuç kodunu veya başvuruda kullanılan veli telefonunu gir. Başvuru durumunu ve yayınlanan sınavlarını tek ekranda görebilirsin.</div>
+    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu / Telefon"><button id="studentBtn">Giriş Yap</button></div>
     <div id="loginError"></div>
     <a class="back" href="index.html">← Ana Sayfaya Dön</a>
   </main>
@@ -108,10 +108,17 @@ function findStudentApp(latest){
  return getApps().find(x=>(no&&String(x.studentNo||'').trim()===no)||String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===name)||null;
 }
 function norm(v){return String(v||'').trim().toLocaleLowerCase('tr-TR')}
+function onlyDigits(v){return String(v||'').replace(/[^0-9]/g,'')}
 function resolveStudent(query){
  const q=norm(query); if(!q)return null;
  const apps=getApps(), results=getResults();
- let app=apps.find(x=>norm(x.basvuruNo)===q||norm(x.studentNo)===q)||null;
+ const digits=onlyDigits(query);
+ const phoneMatches=digits.length>=10?apps.filter(x=>{
+  const p=onlyDigits(x.telefon);
+  return p.endsWith(digits.slice(-10));
+ }):[];
+ if(phoneMatches.length>1)return {multiple:true};
+ let app=apps.find(x=>norm(x.basvuruNo)===q||norm(x.studentNo)===q)||phoneMatches[0]||null;
  let hit=results.find(x=>norm(x.studentNo)===q||norm(x.code)===q)||null;
  if(!app&&hit)app=findStudentApp(hit);
  if(!hit&&app){
@@ -177,7 +184,8 @@ function openPanel(data){
 function login(){
  const q=document.getElementById('studentCode').value.trim();
  const data=resolveStudent(q), err=document.getElementById('loginError');
- if(!data){err.innerHTML='<div class="empty">Bu takip numarası, öğrenci numarası veya sonuç koduyla eşleşen öğrenci bulunamadı.</div>';return;}
+ if(data&&data.multiple){err.innerHTML='<div class="empty">Bu telefon numarasına birden fazla öğrenci bağlı. Lütfen Takip No veya Öğrenci No ile giriş yapın.</div>';return;}
+ if(!data){err.innerHTML='<div class="empty">Bu takip numarası, öğrenci numarası, sonuç kodu veya telefonla eşleşen öğrenci bulunamadı.</div>';return;}
  err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(data);
 }
 document.getElementById('studentBtn').addEventListener('click',login);
