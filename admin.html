@@ -56,7 +56,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 </nav>
 </aside>
 <main>
-<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a><button class="secondary" onclick="sessionStorage.removeItem('tsa_admin_session_v1');sessionStorage.removeItem('tsa_admin_email');localStorage.removeItem('tsa_admin_remember_v1');localStorage.removeItem('tsa_admin_email');location.href='login.html'">Çıkış</button></div></div>
+<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><a class="top-link" style="background:#eef0f7;color:var(--navy)" href="student.html" target="_blank" rel="noopener">🎓 Öğrenci Paneli</a><a class="top-link" style="background:#eef0f7;color:var(--navy)" href="parent.html" target="_blank" rel="noopener">👨‍👩‍👧 Veli Paneli</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a><button class="secondary" onclick="sessionStorage.removeItem('tsa_admin_session_v1');sessionStorage.removeItem('tsa_admin_email');localStorage.removeItem('tsa_admin_remember_v1');localStorage.removeItem('tsa_admin_email');location.href='login.html'">Çıkış</button></div></div>
 
 <section id="dashboard" class="section">
 <div class="stats">
@@ -171,7 +171,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 
 <section id="people" class="section">
 <div class="box">
-  <div class="section-head"><div><h2>Veli & Öğrenci</h2><small>Velileri ve öğrenci kayıtlarını tek merkezden yönetin.</small></div></div>
+  <div class="section-head"><div><h2>Veli & Öğrenci</h2><small>Velileri ve öğrenci kayıtlarını tek merkezden yönetin.</small></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="primary" style="text-decoration:none;display:inline-flex;align-items:center" href="student.html" target="_blank" rel="noopener">🎓 Öğrenci Panelini Aç</a><a class="secondary" style="text-decoration:none;display:inline-flex;align-items:center" href="parent.html" target="_blank" rel="noopener">👨‍👩‍👧 Veli Panelini Aç</a></div></div>
   <div class="toolbar">
     <button class="primary" id="showStudents">🎓 Öğrenciler</button>
     <button class="secondary" id="showParents">👨‍👩‍👧 Veliler</button>
