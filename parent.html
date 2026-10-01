@@ -31,9 +31,9 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
   <main class="login-card">
     <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Veli Paneli</span></div></div>
     <h1>Veli Girişi</h1>
-    <div class="desc">Başvuru numarası ve kayıt sırasında kullanılan veli telefon numarasıyla giriş yapın.</div>
+    <div class="desc">Size iletilen takip numarası ve başvuru sırasında kullanılan veli telefon numarasıyla giriş yapın. Bu bilgilerle öğrencinizin başvuru ve sınav sürecini takip edebilirsiniz.</div>
     <div class="login-grid">
-      <input id="applicationNo" placeholder="Başvuru No">
+      <input id="applicationNo" placeholder="Takip No">
       <input id="parentPhone" placeholder="Veli Telefonu">
     </div>
     <button id="parentBtn" class="login-btn">Giriş Yap</button>
@@ -55,7 +55,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     </div>
     <div class="welcome">
       <div><h2 id="welcomeTitle">Veli Paneli</h2><p id="welcomeText">Öğrencinizin başvuru ve sınav bilgileri burada.</p></div>
-      <div class="student-tag"><span>Başvuru No</span><b id="profileApplication">-</b></div>
+      <div class="student-tag"><span>Takip No</span><b id="profileApplication">-</b></div>
     </div>
   </div></div>
 
@@ -158,7 +158,7 @@ function openPanel(app){
 function login(){
  const no=document.getElementById('applicationNo').value.trim(),phone=document.getElementById('parentPhone').value.trim(),err=document.getElementById('loginError');
  const app=findApplication(no,phone);
- if(!app){err.innerHTML='<div class="empty">Başvuru numarası ve veli telefonu eşleşmedi.</div>';return;}
+ if(!app){err.innerHTML='<div class="empty">Takip numarası ve veli telefonu eşleşmedi.</div>';return;}
  err.innerHTML='';sessionStorage.setItem(SESSION_KEY,JSON.stringify({no:no,phone:phone}));openPanel(app);
 }
 document.getElementById('parentBtn').addEventListener('click',login);
