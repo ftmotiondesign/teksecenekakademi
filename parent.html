@@ -61,16 +61,16 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 
   <div class="container content">
     <div class="stats">
-      <div class="stat"><span>Başvuru Durumu</span><strong id="statStatus">-</strong></div>
-      <div class="stat"><span>Sınıf</span><strong id="statClass">-</strong></div>
+      <div class="stat"><span>Öğrenci Durumu</span><strong id="statStudentAction">-</strong></div>
+      <div class="stat"><span>Veli Durumu</span><strong id="statParentStatus">-</strong></div>
       <div class="stat"><span>Son Puan</span><strong id="statScore">-</strong></div>
       <div class="stat"><span>Toplam Sınav</span><strong id="statExamCount">0</strong></div>
     </div>
 
     <div class="grid2">
       <div class="box">
-        <h3>Başvuru Süreci</h3><div class="sub">Kurumdaki mevcut başvuru durumu</div>
-        <div id="statusFlow" class="status-flow"></div>
+        <h3>Öğrenci Takip Durumu</h3><div class="sub">Kurum tarafından kaydedilen son işlem</div>
+        <div id="studentActionBox" class="info">Henüz işlem kaydı yok.</div>
       </div>
       <div class="box">
         <h3>Son Sınav</h3><div class="sub" id="lastExamName">Yayınlanan son sonuç</div>
@@ -145,11 +145,11 @@ function openPanel(app){
  document.getElementById('welcomeTitle').textContent=(app.ad||'Öğrenci')+' · Veli Paneli';
  document.getElementById('welcomeText').textContent=(app.sinif||'-')+' · '+(app.type||'Başvuru');
  document.getElementById('profileApplication').textContent=app.basvuruNo||'-';
- document.getElementById('statStatus').textContent=app.status||'Yeni Başvuru';
- document.getElementById('statClass').textContent=app.sinif||'-';
+ document.getElementById('statStudentAction').textContent=app.studentAction||'Yeni Öğrenci';
+ document.getElementById('statParentStatus').textContent=app.veliStatus||'Yeni Veli';
  document.getElementById('statScore').textContent=latest?(latest.score||'-'):'-';
  document.getElementById('statExamCount').textContent=results.length;
- renderStatus(app.status||'Yeni Başvuru');
+ document.getElementById('studentActionBox').innerHTML='<b>'+esc(app.studentAction||'Yeni Öğrenci')+'</b>'+(app.studentActionUpdatedAt?'<br><small>Son güncelleme: '+new Date(app.studentActionUpdatedAt).toLocaleString('tr-TR')+'</small>':'');
  if(latest){
    document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
    document.getElementById('lastScore').textContent=latest.score||'-';
