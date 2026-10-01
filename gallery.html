@@ -34,32 +34,54 @@ footer{background:var(--dark);color:#c9c8d7;text-align:center;padding:22px;font-
 <div class="lightbox" id="lightbox"><button class="close" id="closeLightbox">×</button><img id="lightboxImg" alt=""></div>
 <footer>© 2026 Tek Seçenek Akademi · Şehzadeler / Manisa</footer>
 <script>
-const GALLERY_KEY='tsa_gallery_v1';
+const GALLERY_DB='tsa_gallery_db',GALLERY_STORE='media';
 const fallback=[
  {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız'},
  {id:'g2',type:'image',src:'Başlıksız-1.png',title:'Kurum Galerisi',text:'Kurum görseli'},
  {id:'g3',type:'image',src:'Başlıksız-2.png',title:'Eğitim Ortamımız',text:'Kurum görseli'}
 ];
-function getGallery(){try{const x=JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]');return x.length?x:fallback}catch(e){return fallback}}
 const grid=document.getElementById('galleryGrid'),lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
-let currentFilter='all';
+let currentFilter='all',allItems=[];
 function esc(v){return String(v||'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function openGalleryDb(){
+ return new Promise((resolve,reject)=>{
+  const req=indexedDB.open(GALLERY_DB,1);
+  req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(GALLERY_STORE))db.createObjectStore(GALLERY_STORE,{keyPath:'id'})};
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+ });
+}
+function galleryAll(){
+ return openGalleryDb().then(db=>new Promise((resolve,reject)=>{
+  const tx=db.transaction(GALLERY_STORE,'readonly'),r=tx.objectStore(GALLERY_STORE).getAll();
+  r.onsuccess=()=>resolve((r.result||[]).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))));
+  r.onerror=()=>reject(r.error);
+ }));
+}
+function urlFor(x){if(x.blob){try{return URL.createObjectURL(x.blob)}catch(e){}}return x.src||''}
 function render(){
- const items=getGallery().filter(x=>currentFilter==='all'||x.type===currentFilter);
+ const items=allItems.filter(x=>currentFilter==='all'||x.type===currentFilter);
  if(!items.length){grid.innerHTML='<div class="empty">Bu kategoride henüz içerik yok.</div>';return}
- grid.innerHTML=items.map((x,i)=>{
+ grid.innerHTML=items.map(x=>{
+  const src=urlFor(x);
   const media=x.type==='video'
-   ? '<div class="media"><span class="badge">VİDEO</span><video controls preload="metadata" playsinline src="'+esc(x.src)+'"></video></div>'
-   : '<div class="media"><span class="badge">FOTOĞRAF</span><img data-full="'+esc(x.src)+'" src="'+esc(x.src)+'" alt="'+esc(x.title||'Galeri görseli')+'"></div>';
+   ? '<div class="media"><span class="badge">VİDEO</span><video controls preload="metadata" playsinline src="'+esc(src)+'"></video></div>'
+   : '<div class="media"><span class="badge">FOTOĞRAF</span><img data-full="'+esc(src)+'" src="'+esc(src)+'" alt="'+esc(x.title||'Galeri görseli')+'"></div>';
   return '<article class="item">'+media+'<div class="info"><h3>'+esc(x.title||'Galeri')+'</h3><p>'+esc(x.text||'')+'</p></div></article>'
  }).join('');
  grid.querySelectorAll('img[data-full]').forEach(img=>img.addEventListener('click',()=>{lbImg.src=img.dataset.full;lb.classList.add('show')}));
+}
+async function loadGallery(){
+ try{
+  const saved=await galleryAll();
+  allItems=saved.length?saved:fallback;
+ }catch(e){console.error(e);allItems=fallback}
+ render();
 }
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentFilter=b.dataset.filter;render()}));
 document.getElementById('closeLightbox').onclick=()=>lb.classList.remove('show');
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('show')});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('show')});
-render();
+loadGallery();
 </script>
 </body>
 </html>
