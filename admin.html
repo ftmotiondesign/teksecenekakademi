@@ -678,9 +678,12 @@ function saveHeroEdit(){
  if(window.__heroPendingImage)x.image=window.__heroPendingImage;
  x.tag=el('heroTag').value.trim();x.title=el('heroTitle').value.trim();x.highlight=el('heroHighlight').value.trim();x.text=el('heroText').value.trim();
  x.btn1=el('heroBtn1').value.trim();x.link1=el('heroLink1').value.trim();x.btn2=el('heroBtn2').value.trim();x.link2=el('heroLink2').value.trim();
- try{set(HERO_KEY,a)}catch(err){alert('Görsel çok büyük. Daha küçük bir JPG/PNG deneyin.');return}
- renderHeroAdmin();
- var s=el('heroSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ var btn=el('saveHeroEdit'),oldText=btn?btn.textContent:'Kaydet';if(btn){btn.disabled=true;btn.textContent='Kaydediliyor...';}
+ window.TSAFirebaseSite.saveHero(a)
+  .then(function(){renderHeroAdmin();var s=el('heroSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}alert('Banner Firebase’e kaydedildi.');})
+  .catch(function(err){alert('Banner Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err));})
+  .finally(function(){if(btn){btn.disabled=false;btn.textContent=oldText;}});
 }
 
 
@@ -738,12 +741,19 @@ function renderSiteContentEditor(){
 function saveSiteContentNow(){
  var d={};
  Object.keys(SITE_CONTENT_FIELDS).forEach(function(k){var x=el(SITE_CONTENT_FIELDS[k]);d[k]=x?x.value.trim():''});
- set(SITE_CONTENT_KEY,d);
- var s=el('siteContentSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ var btn=el('saveSiteContent'),oldText=btn?btn.textContent:'Kaydet';if(btn){btn.disabled=true;btn.textContent='Kaydediliyor...';}
+ window.TSAFirebaseSite.saveSiteContent(d)
+  .then(function(){var s=el('siteContentSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}alert('Web sayfası içerikleri Firebase’e kaydedildi.');})
+  .catch(function(err){alert('Web sayfası içerikleri kaydedilemedi: '+(err&&err.message?err.message:err));})
+  .finally(function(){if(btn){btn.disabled=false;btn.textContent=oldText;}});
 }
 function resetSiteContentNow(){
  if(!confirm('Web sayfası metinleri varsayılan değerlere dönsün mü?'))return;
- set(SITE_CONTENT_KEY,defaultSiteContent());renderSiteContentEditor();
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ window.TSAFirebaseSite.saveSiteContent(defaultSiteContent())
+  .then(function(){renderSiteContentEditor();alert('Web sayfası metinleri varsayılan değerlere döndürüldü ve Firebase’e kaydedildi.');})
+  .catch(function(err){alert('Web sayfası içerikleri sıfırlanamadı: '+(err&&err.message?err.message:err));});
 }
 
 function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
@@ -752,6 +762,8 @@ window.addEventListener('tsa:applications-updated',function(){renderApps();rende
 window.addEventListener('tsa:results-updated',function(){renderResults();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:result-categories-updated',function(){renderCategories();renderResults();renderDashboard();updateStats();});
 window.addEventListener('tsa:simple-content-updated',function(e){var t=e.detail&&e.detail.type;if(t)renderSimple(t);});
+window.addEventListener('tsa:site-content-updated',function(){renderSiteContentEditor();});
+window.addEventListener('tsa:hero-updated',function(){renderHeroAdmin();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
@@ -1183,7 +1195,13 @@ el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
-var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){set(HERO_KEY,defaultHeroSlides());renderHeroAdmin();});
+var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){
+ if(!confirm('Bannerlar varsayılan haline dönsün mü?'))return;
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ window.TSAFirebaseSite.saveHero(defaultHeroSlides())
+  .then(function(){renderHeroAdmin();alert('Bannerlar varsayılan hale getirildi ve Firebase’e kaydedildi.');})
+  .catch(function(err){alert('Bannerlar sıfırlanamadı: '+(err&&err.message?err.message:err));});
+});
 showPage(location.hash.slice(1)||'dashboard');
 })();
 </script>
@@ -1193,5 +1211,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-portal-admin.js?v=3"></script>
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
+<script type="module" src="firebase-site-admin.js?v=1"></script>
 </body>
 </html>
