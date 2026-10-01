@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-core.js';
 import {
-  collection, deleteDoc, doc, getDocs, setDoc, serverTimestamp
+  collection, deleteDoc, doc, getDocs, setDoc, updateDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const ADMIN_EMAIL='ftmotiondesign@gmail.com';
@@ -92,12 +92,19 @@ async function addMany(results){
   }
   return load();
 }
+async function update(id,patch){
+  await requireAdmin();
+  const clean={...patch,updatedAt:serverTimestamp()};
+  delete clean.id;
+  await updateDoc(doc(db,'results',String(id)),clean);
+  return load();
+}
 async function remove(id){
   await requireAdmin();
   await deleteDoc(doc(db,'results',String(id)));
   return load();
 }
-window.TSAFirebaseResults={load,add,addMany,remove};
+window.TSAFirebaseResults={load,add,addMany,update,remove};
 
 if(typeof auth.authStateReady==='function'){
   auth.authStateReady().then(()=>{ if(auth.currentUser) load().catch(err=>console.error('Firestore sonuç yükleme hatası:',err)); });
