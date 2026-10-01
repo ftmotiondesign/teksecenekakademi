@@ -101,7 +101,8 @@ form.addEventListener('submit',async e=>{
   loginBtn.textContent='Giriş yapılıyor...';
 
   try{
-    await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);
+    // Firebase oturumunu yönetime geçişte kaybetmemek için kalıcı tutuyoruz.
+    await setPersistence(auth,browserLocalPersistence);
     const credential=await signInWithEmailAndPassword(auth,email,password);
 
     const signedInEmail=String(credential.user?.email||'').trim().toLowerCase();
