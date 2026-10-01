@@ -12,7 +12,7 @@
 .brand{padding:8px 10px 18px;font-weight:900;font-size:19px}.brand small{display:block;font-size:11px;opacity:.65;margin-top:4px}
 .nav{display:grid;gap:4px}.nav button,.nav a{display:block;width:100%;text-align:left;border:0;color:#fff;text-decoration:none;padding:12px;border-radius:10px;font-size:13px;font-weight:800;opacity:.85;background:transparent;cursor:pointer}
 .nav button:hover,.nav button.active{background:var(--orange);opacity:1}.nav a{border-top:1px solid #ffffff22;margin-top:8px}
-main{padding:26px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.topbar h1{margin:0;font-size:26px}.topbar p{margin:5px 0 0;color:var(--muted)}
+main{padding:26px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.topbar h1{margin:0;font-size:26px}.topbar p{margin:5px 0 0;color:var(--muted)}.top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.top-link{display:inline-flex;align-items:center;gap:7px;text-decoration:none;border-radius:10px;padding:10px 13px;font-size:13px;font-weight:900}.top-link.site{background:var(--orange);color:#fff}.top-link.wa{background:#25D366;color:#fff}.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:15px}.rank-list{display:grid;gap:8px}.rank-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid #ececf2;border-radius:11px}.rank-row small{display:block;color:var(--muted);margin-top:3px}.rank-num{min-width:38px;text-align:center;background:#eef0f7;border-radius:15px;padding:5px 8px;font-weight:900;color:var(--navy)}
 .section{display:none}.section.active{display:block}.box{background:#fff;border-radius:17px;padding:19px;box-shadow:0 6px 24px #24204d0d;margin-bottom:15px}
 .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:13px}
 .dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}
@@ -30,7 +30,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 .hint{padding:12px 14px;border-left:4px solid var(--orange);background:#fff5e7;border-radius:9px;color:#765329;font-size:12px;line-height:1.5;margin-bottom:14px}
 .pill{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:800;background:#eef0f7;color:#555b70}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}
-@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}.dashboard-grid,.dashboard-grid.two,.bulk-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.mini-stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}.mini-stats{grid-template-columns:1fr 1fr}.dashboard-grid,.dashboard-grid.two,.bulk-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}.topbar{align-items:flex-start;flex-direction:column}.top-actions{justify-content:flex-start}}
 </style>
 </head>
 <body>
@@ -52,7 +52,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 </nav>
 </aside>
 <main>
-<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div></div>
+<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a></div></div>
 
 <section id="dashboard" class="section">
 <div class="stats">
@@ -62,6 +62,13 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 <div class="stat"><span>Yayınlanan Sonuç</span><strong id="statResults">0</strong><small>Toplam öğrenci sonucu</small></div>
 <div class="stat"><span>Aktif Sınav</span><strong id="statExams">0</strong><small>Farklı sınav sayısı</small></div>
 <div class="stat"><span>Aktif Kategori</span><strong id="statCats">0</strong><small>Sonuç kategorileri</small></div>
+</div>
+
+<div class="mini-stats">
+<div class="stat"><span>Bugünkü Başvuru</span><strong id="statToday">0</strong><small>Bugün gelen</small></div>
+<div class="stat"><span>Bursluluk</span><strong id="statScholar">0</strong><small>Toplam bursluluk</small></div>
+<div class="stat"><span>Deneme Sınavı</span><strong id="statTrial">0</strong><small>Toplam deneme</small></div>
+<div class="stat"><span>Ön Kayıt</span><strong id="statPre">0</strong><small>Toplam ön kayıt</small></div>
 </div>
 
 <div class="dashboard-grid">
@@ -132,6 +139,17 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 <div id="dashAppBreakdown" class="list"></div>
 </div>
 <div class="box">
+<h2>İlçelere Göre Başvuru</h2>
+<div id="dashDistricts" class="rank-list"></div>
+</div>
+</div>
+
+<div class="dashboard-grid two">
+<div class="box">
+<h2>Okullara Göre Başvuru</h2>
+<div id="dashSchools" class="rank-list"></div>
+</div>
+<div class="box">
 <h2>Sistem Durumu</h2>
 <div class="status-row"><span>Web sitesi</span><span class="status-ok">Aktif</span></div>
 <div class="status-row"><span>Başvuru formları</span><span class="status-ok">Aktif</span></div>
@@ -144,7 +162,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 <section id="applications" class="section"><div class="box">
 <div class="section-head"><div><h2>Başvurular</h2><small>Ön kayıt, bursluluk, deneme ve seviye tespit.</small></div><button class="secondary" id="exportApps">CSV Dışa Aktar</button></div>
 <div class="toolbar"><input id="appSearch" placeholder="Ad, telefon, başvuru no ara"><select id="appType"><option value="">Tüm Türler</option><option>Ön Kayıt</option><option>Bursluluk</option><option>Deneme Sınavı</option><option>Seviye Tespit</option></select><select id="appStatus"><option value="">Tüm Durumlar</option><option>Yeni Başvuru</option><option>Arandı</option><option>Görüşüldü</option><option>Kayıt Oldu</option><option>Kayıt Olmadı</option></select></div>
-<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
 </div></section>
 
 <section id="results" class="section"><div class="box">
@@ -221,6 +239,11 @@ function updateStats(){
  var exams=[];r.forEach(function(x){var n=x.examName||x.code||'Sınav';if(exams.indexOf(n)<0)exams.push(n)});
  el('statExams').textContent=exams.length;
  el('statCats').textContent=cats.filter(function(x){return x.active!==false}).length;
+ var today=new Date();var y=today.getFullYear(),m=today.getMonth(),d=today.getDate();
+ el('statToday').textContent=a.filter(function(x){if(!x.createdAt)return false;var z=new Date(x.createdAt);return z.getFullYear()===y&&z.getMonth()===m&&z.getDate()===d}).length;
+ el('statScholar').textContent=a.filter(function(x){return x.type==='Bursluluk'}).length;
+ el('statTrial').textContent=a.filter(function(x){return x.type==='Deneme Sınavı'}).length;
+ el('statPre').textContent=a.filter(function(x){return x.type==='Ön Kayıt'}).length;
 }
 function renderDashboard(){
  var apps=get(APP_KEY,[]),results=get(RESULT_KEY,[]),cats=categories();
@@ -252,8 +275,17 @@ function renderDashboard(){
   var n=apps.filter(function(x){return x.type===t}).length;
   return '<div class="item"><b>'+esc(t)+'</b><span class="pill">'+n+'</span></div>'
  }).join('');
+ function topCounts(field){
+  var counts={};
+  apps.forEach(function(x){var v=(x[field]||'').trim();if(v)counts[v]=(counts[v]||0)+1});
+  return Object.keys(counts).map(function(k){return {name:k,count:counts[k]}}).sort(function(a,b){return b.count-a.count||a.name.localeCompare(b.name,'tr')}).slice(0,8);
+ }
+ var districts=topCounts('ilce');
+ el('dashDistricts').innerHTML=districts.length?districts.map(function(x){return '<div class="rank-row"><div><b>'+esc(x.name)+'</b><small>Başvuru sayısı</small></div><span class="rank-num">'+x.count+'</span></div>'}).join(''):'<div class="empty">Henüz ilçe bilgili başvuru yok.</div>';
+ var schools=topCounts('okul');
+ el('dashSchools').innerHTML=schools.length?schools.map(function(x){return '<div class="rank-row"><div><b>'+esc(x.name)+'</b><small>Başvuru sayısı</small></div><span class="rank-num">'+x.count+'</span></div>'}).join(''):'<div class="empty">Henüz okul bilgili başvuru yok.</div>';
 }
-function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="7" class="empty">Başvuru bulunamadı.</td></tr>'}
+function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">Başvuru bulunamadı.</td></tr>'}
 function categories(){
  var a=get(CAT_KEY,[]);
  if(!a.length){a=[{name:'LGS',active:true},{name:'Kurum İçi Deneme',active:true},{name:'Türkiye Geneli Deneme',active:true}];set(CAT_KEY,a)}
@@ -316,7 +348,7 @@ if(newCategoryInput)newCategoryInput.addEventListener('keydown',function(e){if(e
 el('addResult').addEventListener('click',function(){var name=prompt('Öğrenci Ad Soyad:');if(!name)return;var studentNo=prompt('Öğrenci No / TC:')||'';var cats=categories().filter(function(x){return x.active!==false});var category=prompt('Kategori:',(cats[0]&&cats[0].name)||'LGS')||'';var examName=prompt('Sınav Adı:','Türkiye Geneli Deneme 1')||'Sınav';var code=prompt('Sınav Kodu:','SINAV-'+String(Date.now()).slice(-5))||'';var score=prompt('Puan:')||'';var percentile=prompt('Yüzdelik Dilim:')||'';var rank=prompt('Sıralama:')||'';var a=get(RESULT_KEY,[]);a.unshift({id:String(Date.now()),name:name,studentNo:studentNo,category:category,examName:examName,code:code,score:score,percentile:percentile,rank:rank});set(RESULT_KEY,a);renderResults();updateStats()});
 el('downloadTemplate').addEventListener('click',function(){csvDownload('tek-secenek-sonuc-sablonu.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama','Türkçe','Matematik','Fen','İnkılap','Din','İngilizce'],['LGS','LGS 2026','LGS-2026','1001','Örnek Öğrenci','450,125','2,15','1250','18,75','17,50','19,25','9,50','9,00','8,75']])});
 el('exportResults').addEventListener('click',function(){var a=get(RESULT_KEY,[]);csvDownload('tek-secenek-sinav-sonuclari.csv',[['Kategori','Sınav Adı','Sınav Kodu','Öğrenci No','Ad Soyad','Puan','Yüzdelik Dilim','Sıralama'],].concat(a.map(function(x){return[x.category,x.examName,x.code,x.studentNo,x.name,x.score,x.percentile,x.rank]})))});
-el('exportApps').addEventListener('click',function(){var a=get(APP_KEY,[]);csvDownload('tek-secenek-basvurular.csv',[['Başvuru No','Tür','Tarih','Ad Soyad','Telefon','Sınıf','Durum']].concat(a.map(function(x){return[x.basvuruNo,x.type,x.createdAt,x.ad,x.telefon,x.sinif,x.status]})))});
+el('exportApps').addEventListener('click',function(){var a=get(APP_KEY,[]);csvDownload('tek-secenek-basvurular.csv',[['Başvuru No','Tür','Tarih','Ad Soyad','Telefon','Sınıf','İlçe','Okul','Durum']].concat(a.map(function(x){return[x.basvuruNo,x.type,x.createdAt,x.ad,x.telefon,x.sinif,x.ilce||'',x.okul||'',x.status]})))});
 el('importBtn').addEventListener('click',function(){el('resultFile').click()});
 el('resultFile').addEventListener('change',async function(e){var file=e.target.files[0];if(!file)return;try{var text=await file.text();var lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(function(x){return x.trim()});if(lines.length<2)throw new Error('Dosyada öğrenci satırı yok.');var sep=((lines[0].match(/;/g)||[]).length>=(lines[0].match(/,/g)||[]).length)?';':',';function parse(line){var out=[],cur='',q=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}else if(ch===sep&&!q){out.push(cur);cur=''}else cur+=ch}out.push(cur);return out}var rows=lines.map(parse),h=rows[0].map(function(x){return x.trim().toLowerCase()});function col(){for(var i=0;i<arguments.length;i++){var z=h.indexOf(arguments[i]);if(z>-1)return z}return-1}var ix={category:col('kategori'),examName:col('sınav adı','sinav adi'),code:col('sınav kodu','sinav kodu','kod'),studentNo:col('öğrenci no','ogrenci no'),name:col('ad soyad'),score:col('puan'),percentile:col('yüzdelik dilim','yuzdelik dilim'),rank:col('sıralama','siralama'),turkce:col('türkçe','turkce'),matematik:col('matematik'),fen:col('fen'),inkilap:col('inkılap','inkilap'),din:col('din'),ingilizce:col('ingilizce')};if(ix.name<0||ix.code<0)throw new Error('Sınav Kodu ve Ad Soyad sütunları gerekli.');var a=get(RESULT_KEY,[]);for(var r=1;r<rows.length;r++){if(!rows[r][ix.name])continue;var o={id:String(Date.now())+'-'+r};Object.keys(ix).forEach(function(k){var p=ix[k];o[k]=p>=0?String(rows[r][p]||'').trim():''});a.unshift(o)}set(RESULT_KEY,a);renderResults();updateStats();alert((rows.length-1)+' sonuç yüklendi.')}catch(err){alert('Dosya yüklenemedi: '+err.message)}e.target.value=''});
 
