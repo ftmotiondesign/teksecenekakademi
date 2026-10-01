@@ -36,6 +36,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     <div class="desc">Takip numaranı, öğrenci numaranı, sonuç kodunu veya başvuruda kullanılan veli telefonunu gir. Başvuru durumunu ve yayınlanan sınavlarını tek ekranda görebilirsin.</div>
     <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu / Telefon"><button id="studentBtn">Giriş Yap</button></div>
     <div id="loginError"></div>
+    <div id="studentChoices" style="display:none;margin-top:14px"></div>
     <a class="back" href="index.html">← Ana Sayfaya Dön</a>
   </main>
 </section>
@@ -119,7 +120,7 @@ function resolveStudent(query){
   const last10=digits.slice(-10);
   return (studentPhone&&studentPhone.endsWith(last10)) || (parentPhone&&parentPhone.endsWith(last10));
  }):[];
- if(phoneMatches.length>1)return {multiple:true};
+ if(phoneMatches.length>1)return {multiple:true,apps:phoneMatches};
  let app=apps.find(x=>norm(x.basvuruNo)===q||norm(x.studentNo)===q)||phoneMatches[0]||null;
  let hit=results.find(x=>norm(x.studentNo)===q||norm(x.code)===q)||null;
  if(!app&&hit)app=findStudentApp(hit);
@@ -185,12 +186,28 @@ function openPanel(data){
 }
 function login(){
  const q=document.getElementById('studentCode').value.trim();
- const data=resolveStudent(q), err=document.getElementById('loginError');
- if(data&&data.multiple){err.innerHTML='<div class="empty">Bu telefon numarasına birden fazla öğrenci bağlı. Lütfen Takip No veya Öğrenci No ile giriş yapın.</div>';return;}
+ const data=resolveStudent(q), err=document.getElementById('loginError'), choices=document.getElementById('studentChoices');
+ choices.style.display='none';choices.innerHTML='';
+ if(data&&data.multiple){
+  err.innerHTML='';
+  choices.style.display='grid';
+  choices.style.gap='8px';
+  choices.innerHTML='<div class="info"><b>Bu telefon numarasına birden fazla öğrenci bağlı.</b><br>Giriş yapmak istediğiniz öğrenciyi seçin.</div>'+
+   data.apps.map(app=>'<button type="button" data-pickapp="'+esc(app.id)+'" style="border:1px solid #dddfea;background:#fff;border-radius:12px;padding:12px;text-align:left;cursor:pointer"><b>'+esc(app.ad||'Öğrenci')+'</b><br><small>'+esc(app.sinif||'-')+' · '+esc(app.basvuruNo||'-')+'</small></button>').join('');
+  return;
+ }
  if(!data){err.innerHTML='<div class="empty">Bu takip numarası, öğrenci numarası, sonuç kodu veya telefonla eşleşen öğrenci bulunamadı.</div>';return;}
  err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(data);
 }
 document.getElementById('studentBtn').addEventListener('click',login);
+document.getElementById('studentChoices').addEventListener('click',e=>{
+ const btn=e.target.closest('[data-pickapp]'); if(!btn)return;
+ const id=btn.getAttribute('data-pickapp');
+ const app=getApps().find(x=>String(x.id)===String(id)); if(!app)return;
+ const results=getResults().filter(x=>norm(x.name)===norm(app.ad));
+ sessionStorage.setItem(SESSION_KEY,app.basvuruNo||app.studentNo||app.ogrenciTelefon||'');
+ openPanel({app:app,results:results});
+});
 document.getElementById('studentCode').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
 const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const data=resolveStudent(saved);if(data)openPanel(data);else sessionStorage.removeItem(SESSION_KEY)}
