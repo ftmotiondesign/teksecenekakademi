@@ -3,40 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tek Seçenek Akademi | Öğrenci Girişi</title>
+<title>Tek Seçenek Akademi | Öğrenci Paneli</title>
+<meta name="theme-color" content="#292557">
 <style>
-:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy)}
-.wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#292557,#1c1848)}
-.card{width:min(720px,100%);background:#fff;border-radius:24px;padding:30px;box-shadow:0 20px 60px #0004}
-.brand{display:flex;align-items:center;gap:14px;margin-bottom:24px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:20px}.brand span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
-h1{margin:0 0 8px}.desc{color:var(--muted);line-height:1.6;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:1fr auto;gap:10px}.grid input{padding:13px;border:1px solid #dddfea;border-radius:10px;font:inherit}.grid button{border:0;border-radius:10px;background:var(--orange);color:#fff;font-weight:900;padding:0 18px;cursor:pointer}
-.result{margin-top:18px}.box{border:1px solid #ececf2;border-radius:14px;padding:15px;margin-top:10px}.box small{color:var(--muted)}.empty{padding:18px;background:#f7f7fa;border-radius:12px;color:var(--muted);margin-top:15px}
-.back{display:inline-block;margin-top:18px;font-weight:800;text-decoration:none;color:var(--navy)}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.grid button{padding:13px}}
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--green:#25b96b;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#26243f}
+button,input{font:inherit}.hidden{display:none!important}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,var(--navy),var(--dark))}
+.login-card{width:min(520px,100%);background:#fff;border-radius:24px;padding:30px;box-shadow:0 20px 60px #0004}
+.brand{display:flex;align-items:center;gap:14px}.brand img{width:64px;height:64px;object-fit:contain}.brand b{font-size:20px;color:var(--navy)}.brand span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;margin-bottom:20px}
+.login-grid{display:grid;grid-template-columns:1fr auto;gap:10px}.login-grid input{padding:13px;border:1px solid #dddfea;border-radius:10px;outline:none}.login-grid input:focus{border-color:var(--orange)}.login-grid button{border:0;border-radius:10px;background:var(--orange);color:#fff;font-weight:900;padding:0 20px;cursor:pointer}
+.empty{padding:15px;background:#fff1f1;color:#b73737;border-radius:11px;margin-top:14px;font-size:13px;font-weight:700}.back{display:inline-block;margin-top:18px;font-weight:800;text-decoration:none;color:var(--navy);font-size:13px}
+
+.app{min-height:100vh}.top{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;padding:20px 0 34px}.container{width:min(1180px,92%);margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px}.topbar .brand b{color:#fff}.topbar .brand span{color:#d7d5e4}.logout{border:1px solid #ffffff44;background:#ffffff12;color:#fff;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+.welcome{margin-top:28px;display:flex;justify-content:space-between;align-items:end;gap:20px}.welcome h2{font-size:clamp(27px,4vw,42px);margin:0 0 7px}.welcome p{margin:0;color:#d7d5e4}.student-no{background:#ffffff12;border:1px solid #ffffff25;border-radius:14px;padding:12px 15px;font-size:13px}.student-no b{display:block;font-size:17px;margin-top:3px}
+.content{margin-top:-18px;padding-bottom:50px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{background:#fff;border-radius:17px;padding:19px;box-shadow:0 7px 28px #24204d12}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat strong{display:block;font-size:27px;color:var(--navy);margin-top:8px}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}.box{background:#fff;border-radius:18px;padding:20px;box-shadow:0 7px 28px #24204d0e}.box h3{margin:0 0 5px;color:var(--navy)}.sub{color:var(--muted);font-size:13px;margin-bottom:15px}
+.last-score{display:flex;justify-content:space-between;gap:18px;align-items:center;background:#f8f8fb;border-radius:15px;padding:18px}.score-big{font-size:42px;font-weight:900;color:var(--orange)}.score-meta{line-height:1.8;font-size:14px}.score-meta b{color:var(--navy)}
+.subjects{display:grid;gap:10px}.subject{display:grid;grid-template-columns:95px 1fr auto;align-items:center;gap:9px;font-size:13px}.bar{height:9px;background:#ececf2;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--orange);border-radius:10px}
+.exam-list{display:grid;gap:10px}.exam{border:1px solid #ececf2;border-radius:14px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.exam b{color:var(--navy)}.exam small{display:block;color:var(--muted);margin-top:5px}.badge{background:#eef0f7;border-radius:18px;padding:7px 10px;font-weight:900;color:var(--navy);font-size:12px}.progress-list{display:grid;gap:9px}.progress-row{display:grid;grid-template-columns:1fr 90px;gap:10px;align-items:center}.progress-row .line{height:10px;background:#ececf2;border-radius:10px;overflow:hidden}.progress-row .line i{display:block;height:100%;background:var(--navy);border-radius:10px}.progress-row span{font-size:12px;color:var(--muted)}.info{padding:14px;background:#fff8ee;border-left:4px solid var(--orange);border-radius:10px;color:#765329;font-size:13px;line-height:1.6}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.welcome{align-items:flex-start;flex-direction:column}}
+@media(max-width:600px){.login-grid{grid-template-columns:1fr}.login-grid button{padding:13px}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:23px}.last-score{align-items:flex-start;flex-direction:column}.subject{grid-template-columns:80px 1fr auto}.topbar{align-items:flex-start}.brand img{width:52px;height:52px}}
 </style>
 </head>
 <body>
-<div class="wrap"><main class="card">
-<div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Girişi</span></div></div>
-<h1>Sonuçlarını Gör</h1>
-<div class="desc">Öğrenci numaranı veya sonuç kodunu girerek yayınlanan sınav sonuçlarını görüntüleyebilirsin.</div>
-<div class="grid"><input id="studentCode" placeholder="Öğrenci No / Sonuç Kodu"><button id="studentBtn">Sorgula</button></div>
-<div id="studentResult" class="result"></div>
-<a class="back" href="index.html">← Ana Sayfaya Dön</a>
-</main></div>
+
+<section id="loginView" class="login-wrap">
+  <main class="login-card">
+    <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
+    <h1>Öğrenci Girişi</h1>
+    <div class="desc">Öğrenci numaranı veya sana verilen sonuç kodunu gir. Tüm yayınlanan sınavlarını tek ekranda görebilirsin.</div>
+    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Öğrenci No / Sonuç Kodu"><button id="studentBtn">Giriş Yap</button></div>
+    <div id="loginError"></div>
+    <a class="back" href="index.html">← Ana Sayfaya Dön</a>
+  </main>
+</section>
+
+<section id="panelView" class="app hidden">
+  <div class="top">
+    <div class="container">
+      <div class="topbar">
+        <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
+        <button id="logoutBtn" class="logout">Çıkış Yap</button>
+      </div>
+      <div class="welcome">
+        <div><h2 id="welcomeName">Hoş geldin</h2><p id="welcomeClass">Sınav sonuçların ve gelişimin burada.</p></div>
+        <div class="student-no"><span>Öğrenci No</span><b id="profileNo">-</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container content">
+    <div class="stats">
+      <div class="stat"><span>Son Puan</span><strong id="statLast">-</strong></div>
+      <div class="stat"><span>Toplam Sınav</span><strong id="statExam">0</strong></div>
+      <div class="stat"><span>En Yüksek Puan</span><strong id="statBest">-</strong></div>
+      <div class="stat"><span>Son Sıralama</span><strong id="statRank">-</strong></div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
+        <h3>Son Sınav Sonucun</h3><div class="sub" id="lastExamName">Son yayınlanan sınav</div>
+        <div class="last-score">
+          <div><div class="score-big" id="lastScore">-</div><div style="color:var(--muted);font-size:12px">Puan</div></div>
+          <div class="score-meta">Yüzdelik Dilim: <b id="lastPercentile">-</b><br>Sıralama: <b id="lastRank">-</b><br>Kategori: <b id="lastCategory">-</b></div>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Ders Netlerin</h3><div class="sub">Son sınavındaki ders sonuçları</div>
+        <div id="subjectList" class="subjects"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
+        <h3>Puan Gelişimin</h3><div class="sub">Son sınavlardan puan değişimi</div>
+        <div id="progressList" class="progress-list"></div>
+      </div>
+      <div class="box">
+        <h3>Bilgilendirme</h3><div class="sub">Öğrenci paneli</div>
+        <div class="info">Burada yalnızca kurum tarafından yayınlanan sonuçlar görünür. Eksik veya hatalı bir sonuç görürsen Tek Seçenek Akademi ile iletişime geçebilirsin.</div>
+      </div>
+    </div>
+
+    <div class="box" style="margin-top:16px">
+      <h3>Tüm Sınavlarım</h3><div class="sub">Yayınlanmış sınav geçmişin</div>
+      <div id="examList" class="exam-list"></div>
+    </div>
+  </div>
+</section>
+
 <script>
 const RESULTS_KEY='tsa_results_v1';
+const SESSION_KEY='tsa_student_session_v1';
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
-document.getElementById('studentBtn').onclick=()=>{
- const q=document.getElementById('studentCode').value.trim().toLowerCase();
- let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
- const list=results.filter(x=>String(x.code||'').toLowerCase()===q||String(x.studentNo||'').toLowerCase()===q);
- const out=document.getElementById('studentResult');
- if(!list.length){out.innerHTML='<div class="empty">Bu bilgiyle eşleşen yayınlanmış sonuç bulunamadı.</div>';return;}
- out.innerHTML=list.map(x=>'<div class="box"><b>'+esc(x.examName||x.code||'Sınav Sonucu')+'</b><br><small>'+esc(x.category||'')+'</small><div style="margin-top:9px">Puan: <b>'+esc(x.score||'-')+'</b> · Yüzdelik: '+esc(x.percentile||'-')+' · Sıralama: '+esc(x.rank||'-')+'</div></div>').join('');
-};
+function numberVal(v){const n=parseFloat(String(v??'').replace(',','.'));return Number.isFinite(n)?n:null}
+function getResults(){try{return JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){return[]}}
+function studentResults(query){
+ const q=String(query||'').trim().toLowerCase(); if(!q)return [];
+ const all=getResults();
+ const hit=all.find(x=>String(x.studentNo||'').toLowerCase()===q||String(x.code||'').toLowerCase()===q);
+ if(!hit)return [];
+ if(hit.studentNo)return all.filter(x=>String(x.studentNo||'')===String(hit.studentNo||''));
+ return all.filter(x=>String(x.name||'')===String(hit.name||''));
+}
+function percentFor(v,max){const n=numberVal(v);if(n===null)return 0;return Math.max(0,Math.min(100,(n/max)*100))}
+function openPanel(list){
+ if(!list.length)return;
+ const latest=list[0], name=latest.name||'Öğrenci', no=latest.studentNo||'-', sinif=latest.sinif||latest.className||'';
+ document.getElementById('loginView').classList.add('hidden');
+ document.getElementById('panelView').classList.remove('hidden');
+ document.getElementById('welcomeName').textContent='Hoş geldin, '+name;
+ document.getElementById('welcomeClass').textContent=sinif?sinif+' · Sınav sonuçların ve gelişimin burada.':'Sınav sonuçların ve gelişimin burada.';
+ document.getElementById('profileNo').textContent=no;
+
+ const scores=list.map(x=>numberVal(x.score)).filter(x=>x!==null);
+ document.getElementById('statLast').textContent=latest.score||'-';
+ document.getElementById('statExam').textContent=list.length;
+ document.getElementById('statBest').textContent=scores.length?Math.max(...scores).toLocaleString('tr-TR'):'-';
+ document.getElementById('statRank').textContent=latest.rank||'-';
+
+ document.getElementById('lastExamName').textContent=latest.examName||latest.code||'Son Sınav';
+ document.getElementById('lastScore').textContent=latest.score||'-';
+ document.getElementById('lastPercentile').textContent=latest.percentile||'-';
+ document.getElementById('lastRank').textContent=latest.rank||'-';
+ document.getElementById('lastCategory').textContent=latest.category||'-';
+
+ const subjects=[
+  ['Türkçe',latest.turkce,20],['Matematik',latest.matematik,20],['Fen',latest.fen,20],
+  ['İnkılap',latest.inkilap,10],['Din',latest.din,10],['İngilizce',latest.ingilizce,10]
+ ].filter(x=>x[1]!==undefined&&x[1]!==null&&String(x[1]).trim()!=='');
+ document.getElementById('subjectList').innerHTML=subjects.length?subjects.map(x=>'<div class="subject"><span>'+esc(x[0])+'</span><div class="bar"><i style="width:'+percentFor(x[1],x[2])+'%"></i></div><b>'+esc(x[1])+'</b></div>').join(''):'<div class="info">Bu sınav için ders netleri henüz eklenmemiş.</div>';
+
+ const ordered=list.slice().reverse().slice(-6);
+ const maxScore=Math.max(...ordered.map(x=>numberVal(x.score)||0),1);
+ document.getElementById('progressList').innerHTML=ordered.length?ordered.map(x=>'<div class="progress-row"><div><span>'+esc(x.examName||x.code||'Sınav')+'</span><div class="line"><i style="width:'+Math.max(3,((numberVal(x.score)||0)/maxScore)*100)+'%"></i></div></div><b>'+esc(x.score||'-')+'</b></div>').join(''):'<div class="info">Gelişim verisi bulunamadı.</div>';
+
+ document.getElementById('examList').innerHTML=list.map(x=>'<div class="exam"><div><b>'+esc(x.examName||x.code||'Sınav Sonucu')+'</b><small>'+esc(x.category||'-')+' · Yüzdelik: '+esc(x.percentile||'-')+' · Sıralama: '+esc(x.rank||'-')+'</small></div><span class="badge">'+esc(x.score||'-')+' puan</span></div>').join('');
+}
+function login(){
+ const q=document.getElementById('studentCode').value.trim();
+ const list=studentResults(q), err=document.getElementById('loginError');
+ if(!list.length){err.innerHTML='<div class="empty">Bu öğrenci numarası veya sonuç koduyla eşleşen yayınlanmış sonuç bulunamadı.</div>';return;}
+ err.innerHTML='';sessionStorage.setItem(SESSION_KEY,q);openPanel(list);
+}
+document.getElementById('studentBtn').addEventListener('click',login);
+document.getElementById('studentCode').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload()});
+const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const list=studentResults(saved);if(list.length)openPanel(list);else sessionStorage.removeItem(SESSION_KEY)}
 </script>
 </body>
 </html>
