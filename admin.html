@@ -751,6 +751,7 @@ window.addEventListener('tsa:announcements-updated',function(){renderSimple('ann
 window.addEventListener('tsa:applications-updated',function(){renderApps();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:results-updated',function(){renderResults();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:result-categories-updated',function(){renderCategories();renderResults();renderDashboard();updateStats();});
+window.addEventListener('tsa:simple-content-updated',function(e){var t=e.detail&&e.detail.type;if(t)renderSimple(t);});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
@@ -997,6 +998,11 @@ document.body.addEventListener('click',function(e){
   var t=d.getAttribute('data-delsimple'),m=SIMPLE[t],sid=d.getAttribute('data-id');
   if(t==='announcement'&&window.TSAFirebaseAnnouncements){
    if(confirm('Bu duyuru silinsin mi?'))window.TSAFirebaseAnnouncements.remove(sid).catch(function(err){alert('Duyuru Firebase\'den silinemedi: '+(err&&err.message?err.message:err))});
+  }else if(['teacher','success','review'].indexOf(t)>-1){
+   if(!window.TSAFirebaseSimpleContent){alert('Firebase içerik bağlantısı henüz hazır değil.');return;}
+   if(confirm('Bu kayıt silinsin mi?'))window.TSAFirebaseSimpleContent.remove(t,sid)
+    .then(function(){alert('Kayıt Firebase’den silindi.');})
+    .catch(function(err){alert('Kayıt silinemedi: '+(err&&err.message?err.message:err))});
   }else{set(m[0],get(m[0],[]).filter(function(x){return String(x.id)!==sid}));renderSimple(t)}
  }
  if(d.hasAttribute('data-addsimple')){
@@ -1006,6 +1012,11 @@ document.body.addEventListener('click',function(e){
    if(t2==='announcement'){
     if(!window.TSAFirebaseAnnouncements){alert('Firebase bağlantısı hazırlanıyor. Sayfayı bir kez yenileyip tekrar deneyin.');return;}
     window.TSAFirebaseAnnouncements.add(h,tx).then(function(){alert('Duyuru yayınlandı.');}).catch(function(err){alert('Duyuru Firebase\'e kaydedilemedi: '+(err&&err.message?err.message:err))});
+   }else if(['teacher','success','review'].indexOf(t2)>-1){
+    if(!window.TSAFirebaseSimpleContent){alert('Firebase içerik bağlantısı henüz hazır değil.');return;}
+    window.TSAFirebaseSimpleContent.add(t2,h,tx)
+     .then(function(){alert(m2[2]+' Firebase’e eklendi.');})
+     .catch(function(err){alert(m2[2]+' eklenemedi: '+(err&&err.message?err.message:err))});
    }else{var arr=get(m2[0],[]);arr.unshift({id:String(Date.now()),head:h,text:tx});set(m2[0],arr);renderSimple(t2)}
   }
  }
@@ -1181,5 +1192,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-results-admin.js?v=2"></script>
 <script type="module" src="firebase-portal-admin.js?v=3"></script>
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
+<script type="module" src="firebase-simple-content-admin.js?v=1"></script>
 </body>
 </html>
