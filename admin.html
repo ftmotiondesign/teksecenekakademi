@@ -43,7 +43,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
 <nav class="nav" id="nav">
 <button data-page="dashboard">⌂ Genel Bakış</button>
 <button data-page="applications">▣ Başvurular</button>
-<button data-page="parents">👨‍👩‍👧 Veliler</button>
+<button data-page="people">👨‍👩‍👧 Veli & Öğrenci</button>
 <button data-page="results">📊 Sonuçlar</button>
 <button data-page="result-categories">🗂 Sonuç Kategorileri</button>
 <button data-page="announcements">◉ Duyuru & Kampanya</button>
@@ -169,11 +169,22 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
 <div class="table-wrap"><table class="table"><thead><tr><th>Tarih</th><th>No/Tür</th><th>Ad Soyad</th><th>Telefon</th><th>Sınıf</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="appsBody"></tbody></table></div>
 </div></section>
 
-<section id="parents" class="section"><div class="box">
-<div class="section-head"><div><h2>Veliler</h2><small>Başvurulardaki veli telefonlarına göre öğrenci ve başvuru takibi.</small></div></div>
-<div class="toolbar"><input id="parentSearch" placeholder="Veli telefonu, öğrenci adı veya başvuru no ara"></div>
-<div class="table-wrap"><table class="table"><thead><tr><th>Veli Telefonu</th><th>Öğrenci</th><th>Sınıf</th><th>Başvuru No</th><th>Tür</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="parentsBody"></tbody></table></div>
-</div></section>
+<section id="people" class="section">
+<div class="box">
+  <div class="section-head"><div><h2>Veli & Öğrenci</h2><small>Velileri ve öğrenci kayıtlarını tek merkezden yönetin.</small></div></div>
+  <div class="toolbar">
+    <button class="primary" id="showStudents">🎓 Öğrenciler</button>
+    <button class="secondary" id="showParents">👨‍👩‍👧 Veliler</button>
+    <input id="peopleSearch" placeholder="Öğrenci, veli telefonu, başvuru no ara">
+  </div>
+  <div id="studentsPanel">
+    <div class="table-wrap"><table class="table"><thead><tr><th>Öğrenci</th><th>Sınıf</th><th>Öğrenci No</th><th>Başvuru No</th><th>Veli Telefonu</th><th>Okul</th><th>Durum</th></tr></thead><tbody id="studentsBody"></tbody></table></div>
+  </div>
+  <div id="parentsPanel" style="display:none">
+    <div class="table-wrap"><table class="table"><thead><tr><th>Veli Telefonu</th><th>Öğrenci</th><th>Sınıf</th><th>Başvuru No</th><th>Tür</th><th>İlçe / Okul</th><th>Durum</th><th>İşlem</th></tr></thead><tbody id="parentsBody"></tbody></table></div>
+  </div>
+</div>
+</section>
 
 <section id="results" class="section"><div class="box">
 <div class="section-head"><div><h2>Sınav Sonuçları</h2><small>Tek sonuç veya CSV toplu yükleme.</small></div></div>
@@ -218,7 +229,7 @@ var APP_KEY='tsa_applications_v1';
 var RESULT_KEY='tsa_results_v1';
 var CAT_KEY='tsa_result_categories_v1';
 var SIMPLE={announcement:['tsa_announcements_v1','announcementList','Duyuru'],teacher:['tsa_teachers_v1','teacherList','Öğretmen'],success:['tsa_success_v1','successList','Başarı'],review:['tsa_reviews_v1','reviewList','Yorum']};
-var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],parents:['Veliler','Velileri ve bağlı öğrencileri görüntüleyin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
+var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
 function el(id){return document.getElementById(id)}
 function get(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function set(key,val){localStorage.setItem(key,JSON.stringify(val))}
@@ -232,7 +243,7 @@ function showPage(id){
  el('pageTitle').textContent=pages[id][0];el('pageSub').textContent=pages[id][1];
  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);
  if(id==='dashboard')renderDashboard();if(id==='applications')renderApps();
- if(id==='parents')renderParents();
+ if(id==='people')renderPeople();
  if(id==='results')renderResults();
  if(id==='result-categories')renderCategories();
  if(id==='announcements')renderSimple('announcement');
@@ -298,14 +309,31 @@ function renderDashboard(){
 }
 function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">Başvuru bulunamadı.</td></tr>'}
 
-function renderParents(){
- var q=(el('parentSearch')?el('parentSearch').value:'').toLowerCase();
- var a=get(APP_KEY,[]).filter(function(x){
+function renderPeople(){
+ var q=(el('peopleSearch')?el('peopleSearch').value:'').toLowerCase();
+ var apps=get(APP_KEY,[]);
+ var results=get(RESULT_KEY,[]);
+ var filteredApps=apps.filter(function(x){
   return !q||[x.telefon,x.ad,x.basvuruNo,x.sinif,x.type,x.ilce,x.okul,x.status].join(' ').toLowerCase().indexOf(q)>-1;
  });
- el('parentsBody').innerHTML=a.length?a.map(function(x){
+ el('parentsBody').innerHTML=filteredApps.length?filteredApps.map(function(x){
   return '<tr><td><b>'+esc(x.telefon||'-')+'</b></td><td>'+esc(x.ad||'-')+'</td><td>'+esc(x.sinif||'-')+'</td><td><b>'+esc(x.basvuruNo||'-')+'</b></td><td>'+esc(x.type||'-')+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><span class="pill">'+esc(x.status||'Yeni Başvuru')+'</span></td><td><a class="wa-send" target="_blank" rel="noopener" href="https://wa.me/'+normalizePhone(x.telefon)+'">WhatsApp</a></td></tr>';
  }).join(''):'<tr><td colspan="8" class="empty">Veli kaydı bulunamadı.</td></tr>';
+
+ var students=[];
+ apps.forEach(function(a){
+  var r=results.find(function(x){return String(x.name||'').trim().toLowerCase()===String(a.ad||'').trim().toLowerCase()});
+  students.push({name:a.ad||'-',sinif:a.sinif||'-',studentNo:r?r.studentNo||'-':'-',basvuruNo:a.basvuruNo||'-',telefon:a.telefon||'-',okul:a.okul||'-',status:a.status||'Yeni Başvuru'});
+ });
+ results.forEach(function(r){
+  if(!students.some(function(s){return String(s.name).trim().toLowerCase()===String(r.name||'').trim().toLowerCase()})){
+   students.push({name:r.name||'-',sinif:r.sinif||'-',studentNo:r.studentNo||'-',basvuruNo:'-',telefon:'-',okul:'-',status:'Sonuç Kaydı'});
+  }
+ });
+ students=students.filter(function(x){return !q||[x.name,x.sinif,x.studentNo,x.basvuruNo,x.telefon,x.okul,x.status].join(' ').toLowerCase().indexOf(q)>-1});
+ el('studentsBody').innerHTML=students.length?students.map(function(x){
+  return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td><span class="pill">'+esc(x.status)+'</span></td></tr>';
+ }).join(''):'<tr><td colspan="7" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
 }
 
 function categories(){
@@ -332,7 +360,9 @@ document.body.addEventListener('click',function(e){
  if(q){showPage(q.getAttribute('data-dashgo'));return;}
 });
 ['appSearch','appType','appStatus'].forEach(function(id){el(id).addEventListener('input',renderApps)});
-if(el('parentSearch'))el('parentSearch').addEventListener('input',renderParents);
+if(el('peopleSearch'))el('peopleSearch').addEventListener('input',renderPeople);
+if(el('showStudents'))el('showStudents').addEventListener('click',function(){el('studentsPanel').style.display='block';el('parentsPanel').style.display='none';this.className='primary';el('showParents').className='secondary';});
+if(el('showParents'))el('showParents').addEventListener('click',function(){el('studentsPanel').style.display='none';el('parentsPanel').style.display='block';this.className='primary';el('showStudents').className='secondary';});
 el('resultSearch').addEventListener('input',renderResults);el('examFilter').addEventListener('change',renderResults);
 
 document.body.addEventListener('click',function(e){
