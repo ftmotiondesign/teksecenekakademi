@@ -34,11 +34,11 @@ footer{background:var(--dark);color:#c9c8d7;text-align:center;padding:22px;font-
 <div class="lightbox" id="lightbox"><button class="close" id="closeLightbox">×</button><img id="lightboxImg" alt=""></div>
 <footer>© 2026 Tek Seçenek Akademi · Şehzadeler / Manisa</footer>
 <script>
-const GALLERY_DB='tsa_gallery_db',GALLERY_STORE='media';
+const GALLERY_DB='tsa_gallery_db',GALLERY_STORE='media',GALLERY_INIT_KEY='tsa_gallery_initialized_v1';
 const fallback=[
- {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız'},
- {id:'g2',type:'image',src:'Başlıksız-1.png',title:'Kurum Galerisi',text:'Kurum görseli'},
- {id:'g3',type:'image',src:'Başlıksız-2.png',title:'Eğitim Ortamımız',text:'Kurum görseli'}
+ {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız',createdAt:'2026-01-03T00:00:00.000Z'},
+ {id:'g2',type:'image',src:'Başlıksız-1.png',title:'Kurum Galerisi',text:'Kurum görseli',createdAt:'2026-01-02T00:00:00.000Z'},
+ {id:'g3',type:'image',src:'Başlıksız-2.png',title:'Eğitim Ortamımız',text:'Kurum görseli',createdAt:'2026-01-01T00:00:00.000Z'}
 ];
 const grid=document.getElementById('galleryGrid'),lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
 let currentFilter='all',allItems=[];
@@ -57,6 +57,22 @@ function galleryAll(){
   r.onerror=()=>reject(r.error);
  }));
 }
+function galleryPut(item){
+ return openGalleryDb().then(db=>new Promise((resolve,reject)=>{
+  const tx=db.transaction(GALLERY_STORE,'readwrite');tx.objectStore(GALLERY_STORE).put(item);
+  tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);
+ }));
+}
+async function ensureGallerySeeded(){
+ let items=await galleryAll();
+ if(localStorage.getItem(GALLERY_INIT_KEY)==='1')return items;
+ if(!items.length){
+  for(const x of fallback)await galleryPut(x);
+  items=await galleryAll();
+ }
+ localStorage.setItem(GALLERY_INIT_KEY,'1');
+ return items;
+}
 function urlFor(x){if(x.blob){try{return URL.createObjectURL(x.blob)}catch(e){}}return x.src||''}
 function render(){
  const items=allItems.filter(x=>currentFilter==='all'||x.type===currentFilter);
@@ -72,8 +88,8 @@ function render(){
 }
 async function loadGallery(){
  try{
-  const saved=await galleryAll();
-  allItems=saved.length?saved:fallback;
+  const saved=await ensureGallerySeeded();
+  allItems=saved;
  }catch(e){console.error(e);allItems=fallback}
  render();
 }
