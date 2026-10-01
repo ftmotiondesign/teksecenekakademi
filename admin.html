@@ -919,17 +919,21 @@ document.body.addEventListener('click',function(e){
   return
  }
  if(saveVeli){
-  var vid=saveVeli.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]),saved=false;
-  va.forEach(function(x){if(String(x.id)===String(vid)){
-   var next=sel?sel.value:'Yeni Veli',now=new Date().toISOString();
-   x.veliStatus=next;x.veliStatusUpdatedAt=now;
-   if(!Array.isArray(x.veliHistory))x.veliHistory=[];
-   x.veliHistory.unshift({status:next,at:now});
-   x.veliHistory=x.veliHistory.slice(0,30);
-   saved=true;
-  }});
-  if(saved){set(APP_KEY,va);renderPeople();alert('Veli durumu kaydedildi.');}
-  else alert('Veli kaydı bulunamadı.');
+  var vid=saveVeli.getAttribute('data-saveveli'),sel=document.querySelector('[data-velistatus="'+vid+'"]'),va=get(APP_KEY,[]),app=va.find(function(x){return String(x.id)===String(vid)});
+  if(!app){alert('Veli kaydı bulunamadı.');return;}
+  var next=sel?sel.value:'Yeni Veli',now=new Date().toISOString();
+  var hist=Array.isArray(app.veliHistory)?app.veliHistory.slice():[];
+  hist.unshift({status:next,at:now});hist=hist.slice(0,30);
+  if(!window.TSAFirebaseApplications){alert('Firebase başvuru bağlantısı henüz hazır değil.');return;}
+  saveVeli.disabled=true;
+  window.TSAFirebaseApplications.update(vid,{veliStatus:next,veliStatusUpdatedAt:now,veliHistory:hist})
+   .then(function(){
+    renderPeople();
+    if(window.TSAFirebasePortalAdmin)return window.TSAFirebasePortalAdmin.sync();
+   })
+   .then(function(){alert('Veli durumu Firebase’e kaydedildi.');})
+   .catch(function(err){alert('Veli durumu Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err));})
+   .finally(function(){saveVeli.disabled=false;});
   return;
  }
  if(editHero){renderHeroEditor(parseInt(editHero.getAttribute('data-edithero'),10));return;}
@@ -937,25 +941,23 @@ document.body.addEventListener('click',function(e){
  if(delGallery){if(confirm('Bu galeri içeriği web sitesinden de silinsin mi?')){galleryDelete(delGallery.getAttribute('data-delgallery')).then(renderGalleryAdmin)}return;}
  if(editStudent){openStudentModal(editStudent.getAttribute('data-editstudent'));return;}
  if(saveStudent){
-  var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
-  sa.forEach(function(x){if(String(x.id)===String(sid)){
-   var next=ssel?ssel.value:'Yeni Öğrenci',now=new Date().toISOString();
-   x.studentAction=next;
-   x.ogrenciTelefon=sphone?sphone.value.trim():(x.ogrenciTelefon||'');
-   x.studentActionUpdatedAt=now;
-   if(!Array.isArray(x.studentHistory))x.studentHistory=[];
-   x.studentHistory.unshift({status:next,at:now});
-   x.studentHistory=x.studentHistory.slice(0,30);
-   studentSaved=true;
-  }});
-  if(studentSaved){
-   set(APP_KEY,sa);
-   var savedText=document.getElementById('studentSaved-'+sid);
-   if(savedText){
-    savedText.style.display='inline';
-    setTimeout(function(){savedText.style.display='none';},2200);
-   }
-  }else alert('Öğrenci kaydı bulunamadı.');
+  var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),app=sa.find(function(x){return String(x.id)===String(sid)});
+  if(!app){alert('Öğrenci kaydı bulunamadı.');return;}
+  var next=ssel?ssel.value:'Yeni Öğrenci',now=new Date().toISOString(),phone=sphone?sphone.value.trim():(app.ogrenciTelefon||'');
+  var hist=Array.isArray(app.studentHistory)?app.studentHistory.slice():[];
+  hist.unshift({status:next,at:now});hist=hist.slice(0,30);
+  if(!window.TSAFirebaseApplications){alert('Firebase başvuru bağlantısı henüz hazır değil.');return;}
+  saveStudent.disabled=true;
+  window.TSAFirebaseApplications.update(sid,{studentAction:next,ogrenciTelefon:phone,studentActionUpdatedAt:now,studentHistory:hist})
+   .then(function(){
+    renderPeople();
+    var savedText=document.getElementById('studentSaved-'+sid);
+    if(savedText){savedText.style.display='inline';setTimeout(function(){savedText.style.display='none';},2200);}
+    if(window.TSAFirebasePortalAdmin)return window.TSAFirebasePortalAdmin.sync();
+   })
+   .then(function(){alert('Öğrenci durumu Firebase’e kaydedildi.');})
+   .catch(function(err){alert('Öğrenci durumu Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err));})
+   .finally(function(){saveStudent.disabled=false;});
   return;
  }
  if(d.hasAttribute('data-editcat')){
