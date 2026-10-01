@@ -333,31 +333,41 @@ section{padding:95px 0}
 
 .gallery-grid{
   display:grid;
-  grid-template-columns:2fr 1fr 1fr;
-  gap:15px;
+  grid-template-columns:1.35fr 1fr 1fr;
+  gap:16px;
 }
 
 .gallery-box{
-  min-height:260px;
+  min-height:310px;
   border-radius:22px;
   overflow:hidden;
+  position:relative;
+  background-position:center;
+  background-size:cover;
+  box-shadow:0 10px 30px rgba(30,25,80,.08);
 }
 
-.gallery-box:first-child{
-  background:url("bina.png") center/cover;
+.gallery-box:nth-child(1){background-image:url("bina.png")}
+.gallery-box:nth-child(2){background-image:url("Ba%C5%9Fl%C4%B1ks%C4%B1z-1.png")}
+.gallery-box:nth-child(3){background-image:url("Ba%C5%9Fl%C4%B1ks%C4%B1z-2.png")}
+
+.gallery-box::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(28,24,72,.78));
 }
 
-.gallery-placeholder{
-  min-height:260px;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  background:linear-gradient(135deg,var(--lacivert),#48417d);
+.gallery-caption{
+  position:absolute;
+  left:20px;
+  right:20px;
+  bottom:18px;
+  z-index:2;
   color:#fff;
-  padding:30px;
 }
+.gallery-caption strong{display:block;font-size:18px;margin-bottom:4px}
+.gallery-caption span{font-size:13px;opacity:.92}
 
 .instagram-feed{
   background:#fff;
@@ -1152,23 +1162,24 @@ gelişimi takip etmek ve öğrencimizin yanında olmak.
 
 <div class="gallery-grid">
 
-<div class="gallery-box"></div>
-
 <div class="gallery-box">
-<div class="gallery-placeholder">
-<span>
-Sınıf fotoğraflarımız<br>
-yakında burada.
-</span>
+<div class="gallery-caption">
+<strong>Tek Seçenek Akademi</strong>
+<span>Şehzadeler • Manisa</span>
 </div>
 </div>
 
 <div class="gallery-box">
-<div class="gallery-placeholder">
-<span>
-Etkinlik ve eğitim<br>
-fotoğraflarımız.
-</span>
+<div class="gallery-caption">
+<strong>Kişiye Özel Çalışma</strong>
+<span>Planlı ve takip edilebilir çalışma sistemi</span>
+</div>
+</div>
+
+<div class="gallery-box">
+<div class="gallery-caption">
+<strong>Deneme & Analiz</strong>
+<span>Türkiye geneli denemeler ve gelişim takibi</span>
 </div>
 </div>
 
