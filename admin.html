@@ -35,7 +35,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 </head>
 <body>
 <script>
-if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login.html');}
+if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('tsa_admin_remember_v1')!=='1'){location.replace('login.html');}
 </script>
 <div class="app">
 <aside class="sidebar">
@@ -56,7 +56,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login
 </nav>
 </aside>
 <main>
-<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a><button class="secondary" onclick="sessionStorage.removeItem('tsa_admin_session_v1');sessionStorage.removeItem('tsa_admin_email');location.href='login.html'">Çıkış</button></div></div>
+<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a><button class="secondary" onclick="sessionStorage.removeItem('tsa_admin_session_v1');sessionStorage.removeItem('tsa_admin_email');localStorage.removeItem('tsa_admin_remember_v1');localStorage.removeItem('tsa_admin_email');location.href='login.html'">Çıkış</button></div></div>
 
 <section id="dashboard" class="section">
 <div class="stats">
@@ -342,7 +342,7 @@ function renderPeople(){
  el('studentsBody').innerHTML=students.length?students.map(function(x){
   var sel=x.appId?'<select data-studentaction="'+esc(x.appId)+'">'+studentOpts.map(function(s){return '<option'+(s===x.action?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select>':'<span class="pill">'+esc(x.action)+'</span>';
   var save=x.appId?'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button class="primary" data-savestudent="'+esc(x.appId)+'">Kaydet</button><span id="studentSaved-'+esc(x.appId)+'" style="display:none;color:#187f4a;font-weight:900;font-size:12px">✓ Kaydedildi</span></div>':'<span class="pill">Başvuru kaydı yok</span>';
-  var phoneInput=x.appId?'<input data-studentphone="'+esc(x.appId)+'" value="'+esc(x.ogrenciTelefon||'')+'" placeholder="05xx xxx xx xx" style="min-width:130px">':esc(x.ogrenciTelefon||'-');
+  var phoneInput=x.appId?'<input type="tel" inputmode="numeric" data-studentphone="'+esc(x.appId)+'" value="'+esc(x.ogrenciTelefon||'0')+'" placeholder="05xx xxx xx xx" style="min-width:130px">':esc(x.ogrenciTelefon||'-');
   return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.sinif)+'</td><td>'+esc(x.studentNo)+'</td><td>'+esc(x.basvuruNo)+'</td><td>'+phoneInput+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.okul)+'</td><td>'+sel+'</td><td>'+save+'</td></tr>';
  }).join(''):'<tr><td colspan="8" class="empty">Öğrenci kaydı bulunamadı.</td></tr>';
 }
