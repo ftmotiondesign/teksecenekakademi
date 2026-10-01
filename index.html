@@ -61,7 +61,7 @@ footer{background:var(--dark);color:#cbc9dc;padding:32px 0}.foot{display:flex;ju
 </div></div></section>
 
 <section id="sonuc" class="bg"><div class="container"><div class="section-head"><small>ÖĞRENCİ İŞLEMLERİ</small><h2>Sonuç Sorgulama ve Seviye Tespit</h2></div><div class="two">
-<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Öğrenci numaranızı girin; size ait LGS, Türkiye geneli deneme ve kurum içi sınav sonuçlarını birlikte görüntüleyin.</p><div class="form-grid"><select id="resultType"><option value="all">Hepsi</option><option value="lgs">LGS</option><option value="kurum">Kurum İçi Deneme</option><option value="turkiye">Türkiye Geneli Deneme</option></select><input id="resultCode" placeholder="Öğrenci No / Sonuç Kodu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
+<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Öğrenci numaranızı girin; size ait LGS, Türkiye geneli deneme ve kurum içi sınav sonuçlarını birlikte görüntüleyin.</p><div class="form-grid"><select id="resultType"><option value="all">Hepsi</option></select><input id="resultCode" placeholder="Öğrenci No / Sonuç Kodu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
 <div class="panel"><h3>🎯 Ücretsiz Seviye Tespit Talebi</h3><p>Seviyenizi değerlendirelim, size uygun programı birlikte belirleyelim.</p><form class="form-grid app-form" data-type="Seviye Tespit"><input name="ad" required placeholder="Ad Soyad"><input name="telefon" required placeholder="Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><textarea name="not" placeholder="Hangi derslerde destek istiyorsunuz?"></textarea><button class="btn orange" type="submit">Talep Oluştur</button><div class="form-message"></div></form></div>
 </div></div></section>
 
@@ -93,6 +93,7 @@ footer{background:var(--dark);color:#cbc9dc;padding:32px 0}.foot{display:flex;ju
 const STORAGE_KEY='tsa_applications_v1';
 const RESULTS_KEY='tsa_results_v1';
 const SETTINGS_KEY='tsa_site_settings_v1';
+const RESULT_CAT_KEY='tsa_result_categories_v1';
 function getApps(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
 function saveApps(x){localStorage.setItem(STORAGE_KEY,JSON.stringify(x))}
 function makeNo(){return 'TSA-'+Date.now().toString().slice(-8)}
@@ -111,10 +112,11 @@ document.querySelectorAll('#finderOptions button').forEach(btn=>btn.addEventList
  document.getElementById('finderWa').href='https://wa.me/905526959757?text='+encodeURIComponent('Merhaba Tek Seçenek Akademi, '+btn.dataset.title+' hakkında bilgi almak istiyorum.');
  document.getElementById('finderResult').classList.add('show');
 }));
+function loadResultCategories(){let cats=[];try{cats=JSON.parse(localStorage.getItem(RESULT_CAT_KEY)||'[]')}catch(e){}if(!cats.length)cats=['LGS','Kurum İçi Deneme','Türkiye Geneli Deneme'];const s=document.getElementById('resultType');s.innerHTML='<option value="all">Hepsi</option>'+cats.map(c=>'<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>').join('');}
+loadResultCategories();
 document.getElementById('resultBtn').onclick=()=>{
  const code=document.getElementById('resultCode').value.trim().toLowerCase(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');let results=[];try{results=JSON.parse(localStorage.getItem(RESULTS_KEY)||'[]')}catch(e){}
- const classify=x=>{const n=String(x.examName||x.code||'').toLowerCase();if(n.includes('lgs'))return'lgs';if(n.includes('türkiye geneli')||n.includes('turkiye geneli')||n.includes('tgd'))return'turkiye';if(n.includes('kurum içi')||n.includes('kurum ici')||n.includes('kurum'))return'kurum';return'other'};
- const matches=results.filter(x=>(String(x.code||'').toLowerCase()===code||String(x.studentNo||'').toLowerCase()===code)&&(type==='all'||classify(x)===type));
+ const matches=results.filter(x=>(String(x.code||'').toLowerCase()===code||String(x.studentNo||'').toLowerCase()===code)&&(type==='all'||String(x.category||'')===type));
  box.classList.add('show');
  if(!matches.length){box.innerHTML='Seçtiğiniz kategoride bu öğrenciye ait yayınlanmış bir sonuç bulunamadı.';return;}
  const name=matches[0].name||'Öğrenci';
