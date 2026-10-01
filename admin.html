@@ -30,7 +30,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 .hint{padding:12px 14px;border-left:4px solid var(--orange);background:#fff5e7;border-radius:9px;color:#765329;font-size:12px;line-height:1.5;margin-bottom:14px}
 .pill{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:800;background:#eef0f7;color:#555b70}
 .student-modal{position:fixed;inset:0;background:#15122f99;z-index:999;display:none;align-items:center;justify-content:center;padding:20px}.student-modal.show{display:flex}.student-modal-card{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:22px;box-shadow:0 24px 70px #0005}.student-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.student-modal-head h3{margin:0;color:var(--navy)}.student-modal-close{border:0;background:#eef0f7;color:var(--navy);width:38px;height:38px;border-radius:50%;font-size:20px;font-weight:900;cursor:pointer}.student-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.student-modal-field{display:grid;gap:6px}.student-modal-field.full{grid-column:1/-1}.student-modal-field label{font-size:11px;font-weight:900;color:var(--muted)}.student-modal-field input,.student-modal-field select{width:100%}.student-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}.student-modal-saved{display:none;color:#187f4a;font-weight:900;align-self:center}@media(max-width:650px){.student-modal-grid{grid-template-columns:1fr}.student-modal-field.full{grid-column:auto}}
-.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}
+.banner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.banner-card{border:1px solid #ececf2;border-radius:16px;overflow:hidden;background:#fff}.banner-thumb{height:150px;background:#eef0f7 center/cover no-repeat;position:relative}.banner-thumb span{position:absolute;left:10px;top:10px;background:#15122fcc;color:#fff;border-radius:15px;padding:5px 9px;font-size:11px;font-weight:900}.banner-card-body{padding:14px}.banner-card-body h3{margin:0 0 6px;color:var(--navy)}.banner-card-body p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.5}.banner-editor{display:none;margin-top:16px;border-top:1px solid #eee;padding-top:16px}.banner-editor.show{display:block}.banner-upload{border:2px dashed #d6d8e2;border-radius:14px;padding:22px;text-align:center;background:#fafafd;cursor:pointer}.banner-upload b{display:block;color:var(--navy);font-size:15px}.banner-upload span{display:block;color:var(--muted);font-size:12px;margin-top:5px}.banner-upload input{display:none}.banner-preview{width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-top:12px;display:none}@media(max-width:1000px){.banner-grid{grid-template-columns:1fr}}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted);font-weight:800}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.mini-stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{display:flex;overflow:auto}.nav button,.nav a{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr 1fr}.mini-stats{grid-template-columns:1fr 1fr}.dashboard-grid,.dashboard-grid.two,.bulk-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}main{padding:16px}.form{grid-template-columns:1fr}.field.full{grid-column:auto}.topbar{align-items:flex-start;flex-direction:column}.top-actions{justify-content:flex-start}}
 </style>
 </head>
@@ -238,15 +238,12 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <section id="banner" class="section">
   <div class="box">
     <div class="section-head">
-      <div><h2>Ana Sayfa Banner</h2><small>Ana sayfadaki 3 bannerı buradan yönetin.</small></div>
+      <div><h2>Ana Sayfa Banner</h2><small>Bannerları görüntüleyin, istediğinizi açıp düzenleyin.</small></div>
       <button class="secondary" id="resetHero">Varsayılana Dön</button>
     </div>
-    <div class="hint">Görsel alanına repo içindeki dosya adını yazabilirsiniz: bina.png, Başlıksız-1.png, Başlıksız-2.png gibi.</div>
-    <div id="heroAdminList" class="list"></div>
-    <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <button class="primary" id="saveHero">Bannerları Kaydet</button>
-      <span id="heroSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
-    </div>
+    <div class="hint"><b>Önerilen banner ölçüsü: 1920 × 720 px</b><br>JPG veya PNG kullanabilirsiniz. Görsel seçilmeden mevcut banner değişmez.</div>
+    <div id="heroAdminList" class="banner-grid"></div>
+    <div id="heroEditor" class="banner-editor"></div>
   </div>
 </section>
 
@@ -482,27 +479,62 @@ function heroSlidesData(){var a=get(HERO_KEY,[]);return Array.isArray(a)&&a.leng
 function renderHeroAdmin(){
  var a=heroSlidesData();
  el('heroAdminList').innerHTML=a.map(function(x,i){
-  return '<div class="item" style="display:block"><div style="font-weight:900;margin-bottom:10px">Banner '+(i+1)+'</div>'+
-   '<div class="form">'+
-   '<div class="field"><label>Görsel Dosyası</label><input data-hero="'+i+'" data-key="image" value="'+esc(x.image||'')+'"></div>'+
-   '<div class="field"><label>Üst Etiket</label><input data-hero="'+i+'" data-key="tag" value="'+esc(x.tag||'')+'"></div>'+
-   '<div class="field"><label>Ana Başlık</label><input data-hero="'+i+'" data-key="title" value="'+esc(x.title||'')+'"></div>'+
-   '<div class="field"><label>Turuncu Vurgu</label><input data-hero="'+i+'" data-key="highlight" value="'+esc(x.highlight||'')+'"></div>'+
-   '<div class="field full"><label>Açıklama</label><textarea data-hero="'+i+'" data-key="text">'+esc(x.text||'')+'</textarea></div>'+
-   '<div class="field"><label>1. Buton Yazısı</label><input data-hero="'+i+'" data-key="btn1" value="'+esc(x.btn1||'')+'"></div>'+
-   '<div class="field"><label>1. Buton Linki</label><input data-hero="'+i+'" data-key="link1" value="'+esc(x.link1||'')+'"></div>'+
-   '<div class="field"><label>2. Buton Yazısı</label><input data-hero="'+i+'" data-key="btn2" value="'+esc(x.btn2||'')+'"></div>'+
-   '<div class="field"><label>2. Buton Linki</label><input data-hero="'+i+'" data-key="link2" value="'+esc(x.link2||'')+'"></div>'+
-   '</div></div>';
+  var bg=String(x.image||'').replace(/"/g,'&quot;');
+  return '<div class="banner-card">'+
+   '<div class="banner-thumb" style="background-image:url(&quot;'+bg+'&quot;)"><span>Banner '+(i+1)+'</span></div>'+
+   '<div class="banner-card-body"><h3>'+esc(x.title||'Banner')+' '+(x.highlight?'<span style="color:var(--orange)">'+esc(x.highlight)+'</span>':'')+'</h3>'+
+   '<p>'+esc(x.tag||'')+'</p>'+
+   '<button class="primary" data-edithero="'+i+'">Düzenle</button></div></div>';
  }).join('');
 }
-function saveHeroAdmin(){
- var a=heroSlidesData().map(function(x){return Object.assign({},x)});
- document.querySelectorAll('[data-hero][data-key]').forEach(function(inp){
-  var i=parseInt(inp.getAttribute('data-hero'),10),k=inp.getAttribute('data-key');
-  if(a[i])a[i][k]=inp.value.trim();
- });
- set(HERO_KEY,a);
+function renderHeroEditor(i){
+ var a=heroSlidesData(),x=a[i];if(!x)return;
+ window.__heroEditIndex=i;window.__heroPendingImage='';
+ el('heroEditor').classList.add('show');
+ el('heroEditor').innerHTML=
+ '<div class="section-head"><div><h2>Banner '+(i+1)+' Düzenle</h2><small>Mevcut görsel yalnızca önizleme olarak gösterilir.</small></div><button class="secondary" id="closeHeroEditor">Kapat</button></div>'+
+ '<label class="banner-upload" for="heroImageFile"><b>Yeni Banner Görseli Yükle</b><span>Önerilen ölçü: 1920 × 720 px · JPG / PNG</span><input id="heroImageFile" type="file" accept="image/png,image/jpeg"></label>'+
+ '<img id="heroImagePreview" class="banner-preview" src="'+esc(x.image||'')+'" style="display:block">'+
+ '<div class="form" style="margin-top:14px">'+
+ '<div class="field"><label>Üst Etiket</label><input id="heroTag" value="'+esc(x.tag||'')+'"></div>'+
+ '<div class="field"><label>Ana Başlık</label><input id="heroTitle" value="'+esc(x.title||'')+'"></div>'+
+ '<div class="field"><label>Turuncu Vurgu</label><input id="heroHighlight" value="'+esc(x.highlight||'')+'"></div>'+
+ '<div class="field full"><label>Açıklama</label><textarea id="heroText">'+esc(x.text||'')+'</textarea></div>'+
+ '<div class="field"><label>1. Buton Yazısı</label><input id="heroBtn1" value="'+esc(x.btn1||'')+'"></div>'+
+ '<div class="field"><label>1. Buton Linki</label><input id="heroLink1" value="'+esc(x.link1||'')+'"></div>'+
+ '<div class="field"><label>2. Buton Yazısı</label><input id="heroBtn2" value="'+esc(x.btn2||'')+'"></div>'+
+ '<div class="field"><label>2. Buton Linki</label><input id="heroLink2" value="'+esc(x.link2||'')+'"></div>'+
+ '</div>'+
+ '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="primary" id="saveHeroEdit">Kaydet</button><span id="heroSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span></div>';
+ el('closeHeroEditor').addEventListener('click',function(){el('heroEditor').classList.remove('show')});
+ el('heroImageFile').addEventListener('change',handleHeroImageFile);
+ el('saveHeroEdit').addEventListener('click',saveHeroEdit);
+ el('heroEditor').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function handleHeroImageFile(e){
+ var file=e.target.files&&e.target.files[0];if(!file)return;
+ var reader=new FileReader();
+ reader.onload=function(ev){
+  var img=new Image();
+  img.onload=function(){
+   var maxW=1920,ratio=Math.min(1,maxW/img.width),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio);
+   var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+   var ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+   var data=canvas.toDataURL('image/jpeg',0.82);
+   window.__heroPendingImage=data;
+   var p=el('heroImagePreview');p.src=data;p.style.display='block';
+  };
+  img.src=ev.target.result;
+ };
+ reader.readAsDataURL(file);
+}
+function saveHeroEdit(){
+ var i=window.__heroEditIndex,a=heroSlidesData().map(function(x){return Object.assign({},x)}),x=a[i];if(!x)return;
+ if(window.__heroPendingImage)x.image=window.__heroPendingImage;
+ x.tag=el('heroTag').value.trim();x.title=el('heroTitle').value.trim();x.highlight=el('heroHighlight').value.trim();x.text=el('heroText').value.trim();
+ x.btn1=el('heroBtn1').value.trim();x.link1=el('heroLink1').value.trim();x.btn2=el('heroBtn2').value.trim();x.link2=el('heroLink2').value.trim();
+ try{set(HERO_KEY,a)}catch(err){alert('Görsel çok büyük. Daha küçük bir JPG/PNG deneyin.');return}
+ renderHeroAdmin();
  var s=el('heroSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
 }
 
@@ -527,6 +559,7 @@ document.body.addEventListener('click',function(e){
  var saveVeli=d.closest('[data-saveveli]');
  var saveStudent=d.closest('[data-savestudent]');
  var editStudent=d.closest('[data-editstudent]');
+ var editHero=d.closest('[data-edithero]');
  if(delApp){var id=delApp.getAttribute('data-delapp');set(APP_KEY,get(APP_KEY,[]).filter(function(x){return String(x.id)!==id}));renderApps();updateStats();return}
  if(delResult){var rid=delResult.getAttribute('data-delresult');set(RESULT_KEY,get(RESULT_KEY,[]).filter(function(x){return String(x.id)!==rid}));renderResults();updateStats();return}
  if(saveVeli){
@@ -543,6 +576,7 @@ document.body.addEventListener('click',function(e){
   else alert('Veli kaydı bulunamadı.');
   return;
  }
+ if(editHero){renderHeroEditor(parseInt(editHero.getAttribute('data-edithero'),10));return;}
  if(editStudent){openStudentModal(editStudent.getAttribute('data-editstudent'));return;}
  if(saveStudent){
   var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),studentSaved=false;
@@ -651,7 +685,6 @@ var templates={
 el('bulkTemplate').addEventListener('change',function(){if(this.value&&templates[this.value])el('bulkMessage').value=templates[this.value]});
 el('prepareBulk').addEventListener('click',renderBulkRecipients);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi'});
-var saveHeroBtn=el('saveHero');if(saveHeroBtn)saveHeroBtn.addEventListener('click',saveHeroAdmin);
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){set(HERO_KEY,defaultHeroSlides());renderHeroAdmin();});
 showPage(location.hash.slice(1)||'dashboard');
 })();
