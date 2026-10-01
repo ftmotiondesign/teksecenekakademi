@@ -62,7 +62,14 @@ async function remove(id){
 window.TSAFirebaseAnnouncements={load,add,remove};
 
 onAuthStateChanged(auth,async user=>{
-  if(!user || String(user.email||'').toLowerCase()!==ADMIN_EMAIL) return;
+  if(!user || String(user.email||'').trim().toLowerCase()!==ADMIN_EMAIL){
+    sessionStorage.removeItem('tsa_admin_session_v1');
+    sessionStorage.removeItem('tsa_admin_email');
+    localStorage.removeItem('tsa_admin_remember_v1');
+    localStorage.removeItem('tsa_admin_email');
+    if(!location.pathname.endsWith('/login.html')) location.replace('login.html?reauth=1');
+    return;
+  }
   try{ await load(); }
   catch(err){
     console.error('Firestore duyuru yükleme hatası:',err);
