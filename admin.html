@@ -925,15 +925,18 @@ document.body.addEventListener('click',function(e){
   var hist=Array.isArray(app.veliHistory)?app.veliHistory.slice():[];
   hist.unshift({status:next,at:now});hist=hist.slice(0,30);
   if(!window.TSAFirebaseApplications){alert('Firebase başvuru bağlantısı henüz hazır değil.');return;}
-  saveVeli.disabled=true;
+  var oldVeliText=saveVeli.textContent;
+  saveVeli.disabled=true;saveVeli.textContent='Kaydediliyor...';
   window.TSAFirebaseApplications.update(vid,{veliStatus:next,veliStatusUpdatedAt:now,veliHistory:hist})
    .then(function(){
     renderPeople();
-    if(window.TSAFirebasePortalAdmin)return window.TSAFirebasePortalAdmin.sync();
+    alert('Veli durumu Firebase’e kaydedildi.');
+    if(window.TSAFirebasePortalAdmin){
+      window.TSAFirebasePortalAdmin.sync().catch(function(err){console.error('Portal senkronizasyon hatası:',err);});
+    }
    })
-   .then(function(){alert('Veli durumu Firebase’e kaydedildi.');})
    .catch(function(err){alert('Veli durumu Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err));})
-   .finally(function(){saveVeli.disabled=false;});
+   .finally(function(){saveVeli.disabled=false;saveVeli.textContent=oldVeliText;});
   return;
  }
  if(editHero){renderHeroEditor(parseInt(editHero.getAttribute('data-edithero'),10));return;}
@@ -947,17 +950,20 @@ document.body.addEventListener('click',function(e){
   var hist=Array.isArray(app.studentHistory)?app.studentHistory.slice():[];
   hist.unshift({status:next,at:now});hist=hist.slice(0,30);
   if(!window.TSAFirebaseApplications){alert('Firebase başvuru bağlantısı henüz hazır değil.');return;}
-  saveStudent.disabled=true;
+  var oldStudentText=saveStudent.textContent;
+  saveStudent.disabled=true;saveStudent.textContent='Kaydediliyor...';
   window.TSAFirebaseApplications.update(sid,{studentAction:next,ogrenciTelefon:phone,studentActionUpdatedAt:now,studentHistory:hist})
    .then(function(){
     renderPeople();
     var savedText=document.getElementById('studentSaved-'+sid);
     if(savedText){savedText.style.display='inline';setTimeout(function(){savedText.style.display='none';},2200);}
-    if(window.TSAFirebasePortalAdmin)return window.TSAFirebasePortalAdmin.sync();
+    alert('Öğrenci durumu Firebase’e kaydedildi.');
+    if(window.TSAFirebasePortalAdmin){
+      window.TSAFirebasePortalAdmin.sync().catch(function(err){console.error('Portal senkronizasyon hatası:',err);});
+    }
    })
-   .then(function(){alert('Öğrenci durumu Firebase’e kaydedildi.');})
    .catch(function(err){alert('Öğrenci durumu Firebase’e kaydedilemedi: '+(err&&err.message?err.message:err));})
-   .finally(function(){saveStudent.disabled=false;});
+   .finally(function(){saveStudent.disabled=false;saveStudent.textContent=oldStudentText;});
   return;
  }
  if(d.hasAttribute('data-editcat')){
