@@ -1,5 +1,5 @@
 import { auth, db } from './firebase-core.js';
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {
   collection, addDoc, deleteDoc, doc, getDocs, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
@@ -76,3 +76,13 @@ onAuthStateChanged(auth,async user=>{
     window.dispatchEvent(new CustomEvent('tsa:firebase-error',{detail:err}));
   }
 });
+
+
+window.TSAFirebaseLogout=async function(){
+  try{ await signOut(auth); }catch(e){ console.warn(e); }
+  sessionStorage.removeItem('tsa_admin_session_v1');
+  sessionStorage.removeItem('tsa_admin_email');
+  localStorage.removeItem('tsa_admin_remember_v1');
+  localStorage.removeItem('tsa_admin_email');
+  location.href='login.html?logout=1';
+};
