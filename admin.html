@@ -34,6 +34,9 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 </style>
 </head>
 <body>
+<script>
+if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'){location.replace('login.html');}
+</script>
 <div class="app">
 <aside class="sidebar">
 <div class="brand">Tek Seçenek Akademi<small>Yönetim Paneli</small></div>
@@ -52,7 +55,7 @@ input,select,textarea{border:1px solid #dddfea;border-radius:9px;padding:10px;ba
 </nav>
 </aside>
 <main>
-<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a></div></div>
+<div class="topbar"><div><h1 id="pageTitle">Genel Bakış</h1><p id="pageSub">Başvuruları ve site içeriklerini yönetin.</p></div><div class="top-actions"><a class="top-link site" href="index.html" target="_blank" rel="noopener">↗ Siteyi Gör</a><button class="secondary" data-dashgo="announcements">+ Duyuru</button><button class="secondary" data-dashgo="results">+ Sonuç</button><a class="top-link wa" href="https://wa.me/905526959757" target="_blank" rel="noopener">WhatsApp</a><button class="secondary" onclick="sessionStorage.removeItem('tsa_admin_session_v1');sessionStorage.removeItem('tsa_admin_email');location.href='login.html'">Çıkış</button></div></div>
 
 <section id="dashboard" class="section">
 <div class="stats">
