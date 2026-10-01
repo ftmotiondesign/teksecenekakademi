@@ -391,6 +391,7 @@ function loadManagedContent(){
 }
 function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
 loadManagedContent();
+window.addEventListener('tsa:simple-public-updated',loadManagedContent);
 loadSiteContent();
 
 function loadManagedHero(){
@@ -436,5 +437,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 <script type="module" src="firebase-applications-public.js?v=1"></script>
 <script type="module" src="firebase-portal-public.js?v=1"></script>
 <script type="module" src="firebase-result-categories-public.js?v=1"></script>
+<script type="module" src="firebase-simple-content-public.js?v=1"></script>
 </body>
 </html>
