@@ -792,7 +792,17 @@ function resetSiteContentNow(){
   .catch(function(err){alert('Web sayfası içerikleri sıfırlanamadı: '+(err&&err.message?err.message:err));});
 }
 
-function renderSimple(type){var m=SIMPLE[type],a=get(m[0],[]);el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'}
+function renderSimple(type){
+ var m=SIMPLE[type],a=get(m[0],[]);
+ if(type==='teacher'){
+  el(m[1]).innerHTML=a.length?a.map(function(x){
+   var photo=x.image?'<img src="'+esc(x.image)+'" alt="'+esc(x.head||'Öğretmen')+'" style="width:72px;height:72px;object-fit:cover;border-radius:14px;border:1px solid #e5e7ef;margin-right:14px">':'<div style="width:72px;height:72px;border-radius:14px;background:#eef0f7;display:grid;place-items:center;font-weight:900;margin-right:14px">TSA</div>';
+   return '<div class="item"><div style="display:flex;align-items:center;min-width:0">'+photo+'<div><b>'+esc(x.head||'-')+'</b><br><small>'+esc(x.text||'Alan belirtilmedi')+'</small></div></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>';
+  }).join(''):'<div class="empty">Henüz öğretmen kaydı yok.</div>';
+  return;
+ }
+ el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'
+}
 window.addEventListener('tsa:announcements-updated',function(){renderSimple('announcement')});
 window.addEventListener('tsa:applications-updated',function(){renderApps();renderPeople();renderDashboard();updateStats();});
 window.addEventListener('tsa:results-updated',function(){renderResults();renderPeople();renderDashboard();updateStats();});
@@ -1059,15 +1069,17 @@ document.body.addEventListener('click',function(e){
   }else{set(m[0],get(m[0],[]).filter(function(x){return String(x.id)!==sid}));renderSimple(t)}
  }
  if(d.hasAttribute('data-addsimple')){
-  var t2=d.getAttribute('data-addsimple'),m2=SIMPLE[t2],h=prompt(m2[2]+' başlığı / adı:');
+  var t2=d.getAttribute('data-addsimple'),m2=SIMPLE[t2];
+  var h=t2==='teacher'?prompt('Öğretmen Ad Soyad:'):prompt(m2[2]+' başlığı / adı:');
   if(h){
-   var tx=prompt('Açıklama:')||'';
+   var tx=t2==='teacher'?(prompt('Alan / Branş:')||''):(prompt('Açıklama:')||'');
+   var teacherImage=t2==='teacher'?(prompt('Öğretmen fotoğrafı URL veya dosya yolu (isteğe bağlı):')||''):'';
    if(t2==='announcement'){
     if(!window.TSAFirebaseAnnouncements){alert('Firebase bağlantısı hazırlanıyor. Sayfayı bir kez yenileyip tekrar deneyin.');return;}
     window.TSAFirebaseAnnouncements.add(h,tx).then(function(){alert('Duyuru yayınlandı.');}).catch(function(err){alert('Duyuru Firebase\'e kaydedilemedi: '+(err&&err.message?err.message:err))});
    }else if(['teacher','success','review'].indexOf(t2)>-1){
     if(!window.TSAFirebaseSimpleContent){alert('Firebase içerik bağlantısı henüz hazır değil.');return;}
-    window.TSAFirebaseSimpleContent.add(t2,h,tx)
+    window.TSAFirebaseSimpleContent.add(t2,h,tx,t2==='teacher'?{image:teacherImage}:null)
      .then(function(){alert(m2[2]+' Firebase’e eklendi.');})
      .catch(function(err){alert(m2[2]+' eklenemedi: '+(err&&err.message?err.message:err))});
    }else{var arr=get(m2[0],[]);arr.unshift({id:String(Date.now()),head:h,text:tx});set(m2[0],arr);renderSimple(t2)}
