@@ -473,5 +473,20 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 <script type="module" src="firebase-result-categories-public.js?v=1"></script>
 <script type="module" src="firebase-simple-content-public.js?v=1"></script>
 <script type="module" src="firebase-site-public.js?v=3"></script>
+
+<script>
+(function(){
+  function removeReviewSection(){
+    document.querySelectorAll('section').forEach(function(section){
+      var h2=section.querySelector('h2');
+      if(h2 && h2.textContent.trim()==='Veli ve Öğrenci Yorumları'){
+        section.remove();
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', removeReviewSection);
+  else removeReviewSection();
+})();
+</script>
 </body>
 </html>
