@@ -430,6 +430,9 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div class="field"><label>Logo Yolu / URL</label><input id="nfcLogo" placeholder="../logo.png"></div>
       <div class="field"><label>Arka Plan Görseli / URL</label><input id="nfcBackground" placeholder="../bina.png"></div>
       <div class="field full"><label>Slogan</label><input id="nfcSlogan"></div>
+      <div class="field full"><label><input type="checkbox" id="nfcShowVideo"> Tanıtım videosunu göster</label></div>
+      <div class="field"><label>Video Başlığı</label><input id="nfcVideoTitle" placeholder="Tanıtım Videosu"></div>
+      <div class="field"><label>Video URL</label><input id="nfcVideo" placeholder="YouTube veya MP4/WebM bağlantısı"></div>
       <div class="field"><label>Üst Etiket</label><input id="nfcBadge"></div>
       <div class="field"><label>Web Adresi</label><input id="nfcWebsite"></div>
       <div class="field"><label>WhatsApp / Cep</label><input id="nfcMobile"></div>
@@ -905,6 +908,9 @@ function siteSettingsData(){return Object.assign({
  cardWebsite:'https://manisateksecenekakademi.com',
  cardLogo:'../logo.png',
  cardBackground:'../bina.png',
+ cardVideo:'',
+ cardVideoTitle:'Tanıtım Videosu',
+ cardShowVideo:true,
  cardShowCall:true,
  cardShowWhatsapp:true,
  cardShowLocation:true,
@@ -926,8 +932,8 @@ function siteSettingsData(){return Object.assign({
 },get(SETTINGS_KEY,{}))}
 function setNfcCardEditMode(editing){
  window.__nfcEditing=!!editing;
- var textIds=['nfcLogo','nfcBackground','nfcSlogan','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram','nfcCallLabel','nfcCallLink','nfcWhatsappLabel','nfcWhatsappLink','nfcLocationLabel','nfcLocationLink','nfcInstagramLabel','nfcInstagramLink','nfcPreTitle','nfcPreLink','nfcScholarTitle','nfcScholarLink','nfcTrialTitle','nfcTrialLink','nfcResultTitle','nfcResultLink'];
- var checkIds=['nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
+ var textIds=['nfcLogo','nfcBackground','nfcSlogan','nfcVideoTitle','nfcVideo','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram','nfcCallLabel','nfcCallLink','nfcWhatsappLabel','nfcWhatsappLink','nfcLocationLabel','nfcLocationLink','nfcInstagramLabel','nfcInstagramLink','nfcPreTitle','nfcPreLink','nfcScholarTitle','nfcScholarLink','nfcTrialTitle','nfcTrialLink','nfcResultTitle','nfcResultLink'];
+ var checkIds=['nfcShowVideo','nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
  textIds.forEach(function(id){
   var x=el(id); if(!x)return;
   x.removeAttribute('readonly');
@@ -954,6 +960,8 @@ function renderNfcCardSettings(){
  if(el('nfcLogo'))el('nfcLogo').value=d.cardLogo||'../logo.png';
  if(el('nfcBackground'))el('nfcBackground').value=d.cardBackground||'../bina.png';
  if(el('nfcSlogan'))el('nfcSlogan').value=d.cardSlogan||'';
+ if(el('nfcVideoTitle'))el('nfcVideoTitle').value=d.cardVideoTitle||'Tanıtım Videosu';
+ if(el('nfcVideo'))el('nfcVideo').value=d.cardVideo||'';
  if(el('nfcBadge'))el('nfcBadge').value=d.cardBadge||'';
  if(el('nfcWebsite'))el('nfcWebsite').value=d.cardWebsite||'';
  if(el('nfcMobile'))el('nfcMobile').value=d.mobile||'';
@@ -976,6 +984,7 @@ function renderNfcCardSettings(){
  if(el('nfcTrialLink'))el('nfcTrialLink').value=d.cardTrialLink||'../deneme-sinavi/';
  if(el('nfcResultTitle'))el('nfcResultTitle').value=d.cardResultTitle||'Sonuç Sorgula';
  if(el('nfcResultLink'))el('nfcResultLink').value=d.cardResultLink||'../sonuc-sorgula/';
+ if(el('nfcShowVideo'))el('nfcShowVideo').checked=d.cardShowVideo!==false;
  [
   ['nfcShowCall','cardShowCall'],['nfcShowWhatsapp','cardShowWhatsapp'],
   ['nfcShowLocation','cardShowLocation'],['nfcShowInstagram','cardShowInstagram'],
@@ -991,6 +1000,9 @@ function saveNfcCardSettingsNow(){
  d.cardLogo=el('nfcLogo').value.trim()||'../logo.png';
  d.cardBackground=el('nfcBackground').value.trim()||'../bina.png';
  d.cardSlogan=el('nfcSlogan').value.trim();
+ d.cardVideoTitle=el('nfcVideoTitle').value.trim()||'Tanıtım Videosu';
+ d.cardVideo=el('nfcVideo').value.trim();
+ d.cardShowVideo=el('nfcShowVideo').checked;
  d.cardBadge=el('nfcBadge').value.trim();
  d.cardWebsite=el('nfcWebsite').value.trim();
  d.mobile=el('nfcMobile').value.trim();
