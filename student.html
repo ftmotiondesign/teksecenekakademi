@@ -28,6 +28,13 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
 </style>
 </head>
 <body>
+<script>
+(function(){
+  if(location.protocol!=='https:' && location.hostname==='manisateksecenekakademi.com'){
+    location.replace('https://ftmotiondesign.github.io/teksecenekakademi/student.html'+location.search+location.hash);
+  }
+})();
+</script>
 
 <section id="loginView" class="login-wrap">
   <main class="login-card">
@@ -244,7 +251,14 @@ async function login(){
   sessionStorage.setItem(SESSION_KEY,JSON.stringify({identifier:q,phone:phone}));
   openPanel({app:remote.app,results:remote.results||[]});
  }catch(e){
-  console.error(e);err.innerHTML='<div class="empty">Öğrenci bilgileri alınamadı. Lütfen tekrar deneyin.</div>';
+  console.error(e);
+  const msg=(e&&e.message)?String(e.message):'';
+  if(location.protocol!=='https:' || /subtle|crypto|secure/i.test(msg)){
+    err.innerHTML='<div class="empty">Güvenli bağlantı gerekli. Sayfa HTTPS üzerinden yeniden açılıyor...</div>';
+    setTimeout(()=>location.replace('https://ftmotiondesign.github.io/teksecenekakademi/student.html'),900);
+    return;
+  }
+  err.innerHTML='<div class="empty">Öğrenci bilgileri alınamadı. Lütfen tekrar deneyin.</div>';
  }
 }
 document.getElementById('studentBtn').addEventListener('click',login);
