@@ -68,6 +68,21 @@ button{font:inherit}
   font-weight:900;
   letter-spacing:.7px;
 }
+.video-card{
+  display:none;
+  margin:0 0 16px;
+  background:rgba(255,255,255,.94);
+  border:1px solid #ffffff66;
+  border-radius:22px;
+  padding:10px;
+  box-shadow:0 18px 45px #0005;
+  overflow:hidden;
+}
+.video-card.show{display:block}
+.video-card video,.video-card iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:15px;background:#111}
+.video-title{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 4px 10px}
+.video-title b{font-size:14px;color:var(--navy)}
+.video-title span{font-size:10px;color:var(--text);font-weight:800;letter-spacing:.4px}
 .card{
   background:rgba(255,255,255,.93);
   border:1px solid #ffffff66;
@@ -293,6 +308,11 @@ button{font:inherit}
     <p>Şehzadeler • Manisa<br><span id="cardSlogan">Geleceğin için Tek Seçenek</span></p>
   </section>
 
+  <section class="video-card" id="cardVideoBlock">
+    <div class="video-title"><b id="cardVideoTitle">Tanıtım Videosu</b><span>▶ VİDEOYU İZLE</span></div>
+    <div id="cardVideoMount"></div>
+  </section>
+
   <section class="card">
     <div class="quick-wrap">
       <div class="quick-head">
@@ -401,6 +421,9 @@ const defaults={
   cardWebsite:'https://manisateksecenekakademi.com',
   cardLogo:'../logo.png',
   cardBackground:'../bina.png',
+  cardVideo:'',
+  cardVideoTitle:'Tanıtım Videosu',
+  cardShowVideo:true,
   cardShowCall:true,
   cardShowWhatsapp:true,
   cardShowLocation:true,
@@ -429,12 +452,48 @@ function instagramUrl(v){
   if(/^https?:\/\//i.test(s))return s;
   return 'https://instagram.com/'+s.replace(/^@/,'');
 }
+function videoEmbedUrl(url){
+  const u=String(url||'').trim();
+  if(!u)return '';
+  const m=u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/i);
+  return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0':'';
+}
 function applySettings(data){
   const d={...defaults,...(data||{})};
   const mob=telHref(d.mobile), land=telHref(d.landline);
   document.getElementById('cardLogo').src=d.cardLogo||defaults.cardLogo;
   document.body.style.background='linear-gradient(155deg,rgba(41,37,87,.82),rgba(28,24,72,.92) 58%,rgba(18,16,47,.95)), url("'+(d.cardBackground||defaults.cardBackground).replace(/"/g,'')+'") center/cover no-repeat fixed';
   document.getElementById('cardSlogan').textContent=d.cardSlogan||defaults.cardSlogan;
+  const videoBlock=document.getElementById('cardVideoBlock');
+  const videoMount=document.getElementById('cardVideoMount');
+  const videoTitle=document.getElementById('cardVideoTitle');
+  const videoUrl=String(d.cardVideo||'').trim();
+  if(videoTitle)videoTitle.textContent=d.cardVideoTitle||'Tanıtım Videosu';
+  if(videoBlock&&videoMount){
+    videoMount.innerHTML='';
+    if(videoUrl&&d.cardShowVideo!==false){
+      const yt=videoEmbedUrl(videoUrl);
+      if(yt){
+        const iframe=document.createElement('iframe');
+        iframe.src=yt;
+        iframe.title=d.cardVideoTitle||'Tanıtım Videosu';
+        iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen=true;
+        videoMount.appendChild(iframe);
+      }else{
+        const v=document.createElement('video');
+        v.src=videoUrl;
+        v.controls=true;
+        v.playsInline=true;
+        v.preload='metadata';
+        v.poster=d.cardBackground||defaults.cardBackground;
+        videoMount.appendChild(v);
+      }
+      videoBlock.classList.add('show');
+    }else{
+      videoBlock.classList.remove('show');
+    }
+  }
   document.getElementById('cardAddress').innerHTML=String(d.address||defaults.address).replace(/,\s*/g,',<br>');
   const call=document.getElementById('quickCall');
   const wa=document.getElementById('quickWhatsapp');
