@@ -69,6 +69,13 @@ async function add(type,head,text,extra){
     createdAt:serverTimestamp()
   };
   if(type==='teacher' && extra && extra.image)payload.image=String(extra.image||'').trim();
+  if(type==='review' && extra){
+    payload.source=String(extra.source||'').trim();
+    payload.rating=Number(extra.rating||0);
+    payload.authorUri=String(extra.authorUri||'').trim();
+    payload.relativeTime=String(extra.relativeTime||'').trim();
+    payload.googleReviewKey=String(extra.googleReviewKey||'').trim();
+  }
   await addDoc(collection(db,cfg.collection),payload);
   return load(type);
 }
