@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-core.js';
 import {
-  addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp
+  addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const ADMIN_EMAIL='ftmotiondesign@gmail.com';
@@ -71,6 +71,23 @@ async function add(type,head,text,extra){
   await addDoc(collection(db,cfg.collection),payload);
   return load(type);
 }
+async function update(type,id,patch){
+  await requireAdmin();
+  const cfg=MAP[type];
+  if(!cfg)throw new Error('Geçersiz içerik türü.');
+  const ref=doc(db,cfg.collection,String(id));
+  const snap=await getDoc(ref);
+  if(!snap.exists())throw new Error('Kayıt bulunamadı.');
+  const old=snap.data()||{};
+  const payload={
+    head:String(patch&&patch.head!=null?patch.head:(old.head||'')).trim(),
+    text:String(patch&&patch.text!=null?patch.text:(old.text||'')).trim(),
+    updatedAt:serverTimestamp()
+  };
+  if(type==='teacher')payload.image=String(patch&&patch.image!=null?patch.image:(old.image||'')).trim();
+  await setDoc(ref,payload,{merge:true});
+  return load(type);
+}
 async function remove(type,id){
   await requireAdmin();
   const cfg=MAP[type];
@@ -78,7 +95,7 @@ async function remove(type,id){
   await deleteDoc(doc(db,cfg.collection,String(id)));
   return load(type);
 }
-window.TSAFirebaseSimpleContent={load,loadAll,add,remove};
+window.TSAFirebaseSimpleContent={load,loadAll,add,update,remove};
 
 if(typeof auth.authStateReady==='function'){
   auth.authStateReady().then(()=>{if(auth.currentUser)loadAll().catch(err=>console.error('Site içerikleri Firebase yükleme hatası:',err))});
