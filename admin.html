@@ -897,10 +897,10 @@ function siteSettingsData(){return Object.assign({
  cardWhatsappLabel:'WhatsApp',cardWhatsappLink:'https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum.',
  cardLocationLabel:'Konum',cardLocationLink:'https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa',
  cardInstagramLabel:'Instagram',cardInstagramLink:'https://instagram.com/manisateksecenekakademi',
- cardPreTitle:'Ön Kayıt Oluştur',cardPreLink:'../index.html#basvurular',
- cardScholarTitle:'Bursluluk Başvurusu',cardScholarLink:'../index.html#basvurular',
- cardTrialTitle:'Deneme Sınavı',cardTrialLink:'../index.html#basvurular',
- cardResultTitle:'Sonuç Sorgula',cardResultLink:'../index.html#sonuc'
+ cardPreTitle:'Ön Kayıt Oluştur',cardPreLink:'../on-kayit/',
+ cardScholarTitle:'Bursluluk Başvurusu',cardScholarLink:'../bursluluk/',
+ cardTrialTitle:'Deneme Sınavı',cardTrialLink:'../deneme-sinavi/',
+ cardResultTitle:'Sonuç Sorgula',cardResultLink:'../sonuc-sorgula/'
 },get(SETTINGS_KEY,{}))}
 function setNfcCardEditMode(editing){
  window.__nfcEditing=!!editing;
@@ -947,13 +947,13 @@ function renderNfcCardSettings(){
  if(el('nfcInstagramLabel'))el('nfcInstagramLabel').value=d.cardInstagramLabel||'Instagram';
  if(el('nfcInstagramLink'))el('nfcInstagramLink').value=d.cardInstagramLink||'https://instagram.com/manisateksecenekakademi';
  if(el('nfcPreTitle'))el('nfcPreTitle').value=d.cardPreTitle||'Ön Kayıt Oluştur';
- if(el('nfcPreLink'))el('nfcPreLink').value=d.cardPreLink||'../index.html#basvurular';
+ if(el('nfcPreLink'))el('nfcPreLink').value=d.cardPreLink||'../on-kayit/';
  if(el('nfcScholarTitle'))el('nfcScholarTitle').value=d.cardScholarTitle||'Bursluluk Başvurusu';
- if(el('nfcScholarLink'))el('nfcScholarLink').value=d.cardScholarLink||'../index.html#basvurular';
+ if(el('nfcScholarLink'))el('nfcScholarLink').value=d.cardScholarLink||'../bursluluk/';
  if(el('nfcTrialTitle'))el('nfcTrialTitle').value=d.cardTrialTitle||'Deneme Sınavı';
- if(el('nfcTrialLink'))el('nfcTrialLink').value=d.cardTrialLink||'../index.html#basvurular';
+ if(el('nfcTrialLink'))el('nfcTrialLink').value=d.cardTrialLink||'../deneme-sinavi/';
  if(el('nfcResultTitle'))el('nfcResultTitle').value=d.cardResultTitle||'Sonuç Sorgula';
- if(el('nfcResultLink'))el('nfcResultLink').value=d.cardResultLink||'../index.html#sonuc';
+ if(el('nfcResultLink'))el('nfcResultLink').value=d.cardResultLink||'../sonuc-sorgula/';
  [
   ['nfcShowCall','cardShowCall'],['nfcShowWhatsapp','cardShowWhatsapp'],
   ['nfcShowLocation','cardShowLocation'],['nfcShowInstagram','cardShowInstagram'],
