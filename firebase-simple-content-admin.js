@@ -1,7 +1,8 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, storage } from './firebase-core.js';
 import {
   addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
 
 const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const MAP={
@@ -88,6 +89,17 @@ async function update(type,id,patch){
   await setDoc(ref,payload,{merge:true});
   return load(type);
 }
+async function uploadTeacherImage(file){
+  await requireAdmin();
+  if(!file)throw new Error('Fotoğraf seçilmedi.');
+  if(!String(file.type||'').match(/^image\/(png|jpeg|webp)$/))throw new Error('Fotoğraf JPG, PNG veya WebP olmalı.');
+  if(file.size>10*1024*1024)throw new Error('Fotoğraf en fazla 10 MB olabilir.');
+  const ext=(String(file.name||'foto.jpg').split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';
+  const path='site/teachers/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;
+  const storageRef=ref(storage,path);
+  await uploadBytes(storageRef,file,{contentType:file.type});
+  return getDownloadURL(storageRef);
+}
 async function remove(type,id){
   await requireAdmin();
   const cfg=MAP[type];
@@ -95,7 +107,7 @@ async function remove(type,id){
   await deleteDoc(doc(db,cfg.collection,String(id)));
   return load(type);
 }
-window.TSAFirebaseSimpleContent={load,loadAll,add,update,remove};
+window.TSAFirebaseSimpleContent={load,loadAll,add,update,remove,uploadTeacherImage};
 
 if(typeof auth.authStateReady==='function'){
   auth.authStateReady().then(()=>{if(auth.currentUser)loadAll().catch(err=>console.error('Site içerikleri Firebase yükleme hatası:',err))});
