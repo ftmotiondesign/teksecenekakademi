@@ -267,7 +267,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div class="field full"><button class="secondary" id="saveGalleryCloudinary" type="button">Cloudinary Ayarlarını Kaydet</button></div>
       <div class="field"><label>Başlık</label><input id="galleryTitle" placeholder="Örn. Sınıflarımız"></div>
       <div class="field"><label>Açıklama</label><input id="galleryText" placeholder="Kısa açıklama"></div>
-      <div class="field full"><label>Fotoğraf / Video Seç</label><input id="galleryFile" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"></div>
+      <div class="field full"><label>Fotoğraf / Video Seç</label><input id="galleryFile" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"><small style="display:block;margin-top:6px;color:#6d7280">GALERİ DOĞRUDAN YÜKLEME · GitHub'a yönlendirme yapmaz.</small></div>
       <div class="field"><label>Tür</label><select id="galleryType"><option value="auto">Otomatik</option><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
       <div class="field" style="align-self:end"><button class="primary" id="galleryAdd" type="button">+ Galeriye Ekle</button></div>
     </div>
@@ -1375,6 +1375,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
 <script type="module" src="firebase-site-admin.js?v=5"></script>
-<script type="module" src="firebase-gallery-admin.js?v=2"></script>
+<script type="module" src="firebase-gallery-admin.js?v=3"></script>
 </body>
 </html>
