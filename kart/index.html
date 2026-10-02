@@ -24,8 +24,8 @@ body{
   font-family:Arial,Helvetica,sans-serif;
   color:var(--navy);
   background:
-    radial-gradient(circle at 85% 2%,#f28a0030 0 16%,transparent 17%),
-    linear-gradient(155deg,var(--navy),var(--dark) 44%,#12102f);
+    linear-gradient(155deg,rgba(41,37,87,.82),rgba(28,24,72,.92) 58%,rgba(18,16,47,.95)),
+    url('../bina.png') center/cover no-repeat fixed;
 }
 a{text-decoration:none;color:inherit}
 button{font:inherit}
@@ -39,6 +39,7 @@ button{font:inherit}
   text-align:center;
   color:#fff;
   padding:12px 8px 18px;
+  text-shadow:0 2px 12px #0008;
 }
 .logo-wrap{
   width:106px;
@@ -66,10 +67,13 @@ button{font:inherit}
   letter-spacing:.7px;
 }
 .card{
-  background:#fff;
+  background:rgba(255,255,255,.93);
+  border:1px solid #ffffff66;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   border-radius:26px;
   padding:18px;
-  box-shadow:0 22px 55px #0004;
+  box-shadow:0 22px 55px #0006;
 }
 .quick{
   display:grid;
