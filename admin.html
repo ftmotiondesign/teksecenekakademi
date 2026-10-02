@@ -842,8 +842,31 @@ function openTeacherModal(id){
 }
 async function uploadTeacherPhoto(file){
  if(!file)return window.__teacherExistingImage||'';
- if(!window.TSAFirebaseSimpleContent||!window.TSAFirebaseSimpleContent.uploadTeacherImage)throw new Error('Firebase Storage bağlantısı henüz hazır değil.');
- return window.TSAFirebaseSimpleContent.uploadTeacherImage(file);
+ if(['image/png','image/jpeg','image/webp'].indexOf(file.type)===-1)throw new Error('Fotoğraf JPG, PNG veya WebP olmalı.');
+ if(file.size>15*1024*1024)throw new Error('Fotoğraf en fazla 15 MB olabilir.');
+ return new Promise(function(resolve,reject){
+  var reader=new FileReader();
+  reader.onerror=function(){reject(new Error('Fotoğraf okunamadı.'));};
+  reader.onload=function(){
+   var img=new Image();
+   img.onerror=function(){reject(new Error('Fotoğraf açılamadı.'));};
+   img.onload=function(){
+    var max=700,w=img.width,h=img.height;
+    if(w>h&&w>max){h=Math.round(h*(max/w));w=max}
+    else if(h>=w&&h>max){w=Math.round(w*(max/h));h=max}
+    var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    var ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+    var data=canvas.toDataURL('image/jpeg',0.78);
+    if(data.length>850000){
+     data=canvas.toDataURL('image/jpeg',0.58);
+    }
+    if(data.length>950000){reject(new Error('Fotoğraf kaydedilemeyecek kadar büyük. Daha küçük bir fotoğraf seçin.'));return}
+    resolve(data);
+   };
+   img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
 }
 async function saveTeacherModal(){
  var name=(el('teacherName').value||'').trim(),field=(el('teacherField').value||'').trim();
