@@ -470,7 +470,8 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
   </div>
   <div class="hint" style="margin-top:14px">Kaydettiğiniz bilgiler <b>/kart/</b> sayfasına yansır. Fiziksel NFC karta yazılan bağlantıyı değiştirmeden içerikleri güncelleyebilirsiniz.</div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px">
-    <button class="primary" id="saveNfcSettings" type="button">NFC Kart Bilgilerini Kaydet</button>
+    <button class="secondary" id="editNfcSettings" type="button">Düzenle</button>
+    <button class="primary" id="saveNfcSettings" type="button" disabled>Kaydet</button>
     <span id="nfcSettingsSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
   </div>
 </div>
@@ -942,6 +943,14 @@ function renderSiteSettings(){
  if(el('settingCardBadge'))el('settingCardBadge').value=d.cardBadge||'';
  if(el('settingCardWebsite'))el('settingCardWebsite').value=d.cardWebsite||'';
 }
+function setNfcEditMode(editing){
+ var ids=['nfcMobile','nfcLandline','nfcAddress','nfcInstagram','nfcSlogan','nfcBadge','nfcWebsite'];
+ ids.forEach(function(id){var x=el(id);if(x)x.disabled=!editing;});
+ var editBtn=el('editNfcSettings'),saveBtn=el('saveNfcSettings');
+ if(editBtn){editBtn.disabled=editing;editBtn.textContent=editing?'Düzenleniyor...':'Düzenle';}
+ if(saveBtn)saveBtn.disabled=!editing;
+ if(editing&&el('nfcSettingsSaved'))el('nfcSettingsSaved').style.display='none';
+}
 function renderNfcSettings(){
  var d=siteSettingsData();
  if(el('nfcMobile'))el('nfcMobile').value=d.mobile||'';
@@ -951,6 +960,7 @@ function renderNfcSettings(){
  if(el('nfcSlogan'))el('nfcSlogan').value=d.cardSlogan||'';
  if(el('nfcBadge'))el('nfcBadge').value=d.cardBadge||'';
  if(el('nfcWebsite'))el('nfcWebsite').value=d.cardWebsite||'';
+ setNfcEditMode(false);
 }
 function saveNfcSettingsNow(){
  if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
@@ -967,11 +977,12 @@ function saveNfcSettingsNow(){
  var btn=el('saveNfcSettings'),old=btn.textContent;btn.disabled=true;btn.textContent='Kaydediliyor...';
  window.TSAFirebaseSite.saveSettings(d)
   .then(function(){
-   var s=el('nfcSettingsSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
-   alert('NFC kart bilgileri Firebase’e kaydedildi.');
+   var s=el('nfcSettingsSaved');if(s){s.style.display='inline';}
+   setNfcEditMode(false);
+   setTimeout(function(){if(s)s.style.display='none'},2500);
   })
   .catch(function(err){alert('NFC kart bilgileri kaydedilemedi: '+(err&&err.message?err.message:err));})
-  .finally(function(){btn.disabled=false;btn.textContent=old;});
+  .finally(function(){btn.textContent='Kaydet';});
 }
 function saveSiteSettingsNow(){
  if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
@@ -1641,6 +1652,7 @@ el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
 if(el('saveSettings'))el('saveSettings').addEventListener('click',saveSiteSettingsNow);
+if(el('editNfcSettings'))el('editNfcSettings').addEventListener('click',function(){setNfcEditMode(true);});
 if(el('saveNfcSettings'))el('saveNfcSettings').addEventListener('click',saveNfcSettingsNow);
 if(el('saveNfcCard'))el('saveNfcCard').addEventListener('click',saveNfcCardSettingsNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
