@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tek Seçenek Akademi | Dijital Kart</title>
+<meta name="description" content="Tek Seçenek Akademi Manisa dijital iletişim kartı. Telefon, WhatsApp, konum ve hızlı başvuru bağlantıları.">
+<meta name="theme-color" content="#292557">
+<style>
+:root{
+  --navy:#292557;
+  --dark:#1c1848;
+  --orange:#f28a00;
+  --bg:#f5f6fa;
+  --text:#676b79;
+  --white:#fff;
+  --green:#25D366;
+}
+*{box-sizing:border-box}
+html{background:var(--dark)}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--navy);
+  background:
+    radial-gradient(circle at 85% 2%,#f28a0030 0 16%,transparent 17%),
+    linear-gradient(155deg,var(--navy),var(--dark) 44%,#12102f);
+}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+.shell{
+  width:min(520px,100%);
+  min-height:100vh;
+  margin:auto;
+  padding:22px 16px calc(26px + env(safe-area-inset-bottom));
+}
+.brand{
+  text-align:center;
+  color:#fff;
+  padding:12px 8px 18px;
+}
+.logo-wrap{
+  width:106px;
+  height:106px;
+  margin:0 auto 14px;
+  border-radius:50%;
+  background:#fff;
+  padding:12px;
+  display:grid;
+  place-items:center;
+  box-shadow:0 16px 38px #0005,0 0 0 5px #ffffff16;
+}
+.logo-wrap img{width:100%;height:100%;object-fit:contain}
+.brand h1{font-size:25px;margin:0 0 7px;letter-spacing:.2px}
+.brand p{margin:0;color:#dad8ea;font-size:14px;line-height:1.55}
+.badge{
+  display:inline-flex;
+  margin-top:12px;
+  background:var(--orange);
+  color:#fff;
+  border-radius:999px;
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.7px;
+}
+.card{
+  background:#fff;
+  border-radius:26px;
+  padding:18px;
+  box-shadow:0 22px 55px #0004;
+}
+.quick{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+.quick a{
+  min-width:0;
+  display:grid;
+  place-items:center;
+  gap:7px;
+  padding:13px 5px 10px;
+  background:#f6f6fa;
+  border-radius:17px;
+  font-size:11px;
+  font-weight:900;
+  text-align:center;
+}
+.quick .ico{
+  width:42px;height:42px;border-radius:14px;
+  display:grid;place-items:center;
+  color:#fff;font-size:19px;font-weight:900;
+  background:var(--navy);
+}
+.quick a:nth-child(2) .ico{background:var(--green)}
+.quick a:nth-child(3) .ico{background:var(--orange)}
+.quick a:nth-child(4) .ico{background:var(--dark)}
+.section-title{
+  margin:20px 2px 10px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.8px;
+  color:#8a8d98;
+}
+.actions{display:grid;gap:10px}
+.action{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:62px;
+  padding:11px 13px;
+  border:1px solid #ececf2;
+  border-radius:17px;
+  background:#fff;
+}
+.action .icon{
+  width:42px;height:42px;border-radius:13px;
+  flex:none;display:grid;place-items:center;
+  background:#f0eff7;
+  font-size:20px;
+}
+.action .text{min-width:0;flex:1}
+.action b{display:block;font-size:14px}
+.action span{display:block;margin-top:4px;color:var(--text);font-size:11px;line-height:1.35}
+.action .arrow{font-size:20px;color:#b5b6be}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.cta{
+  border:0;
+  border-radius:17px;
+  padding:15px 12px;
+  text-align:center;
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  background:var(--navy);
+}
+.cta.orange{background:var(--orange)}
+.info{
+  margin-top:17px;
+  padding:15px;
+  border-radius:17px;
+  background:#f7f7fa;
+  color:var(--text);
+  font-size:12px;
+  line-height:1.65;
+}
+.info strong{display:block;color:var(--navy);font-size:13px;margin-bottom:4px}
+.save{
+  width:100%;
+  margin-top:12px;
+  border:1px solid #dedfea;
+  background:#fff;
+  color:var(--navy);
+  padding:14px;
+  border-radius:16px;
+  font-weight:900;
+  cursor:pointer;
+}
+.footer{
+  color:#bbb9cf;
+  text-align:center;
+  font-size:11px;
+  padding:17px 8px 2px;
+  line-height:1.5;
+}
+@media(max-width:390px){
+  .quick{grid-template-columns:repeat(2,1fr)}
+  .quick a{display:flex;justify-content:flex-start;padding:11px}
+  .cta-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="brand">
+    <div class="logo-wrap"><img src="../logo.png" alt="Tek Seçenek Akademi"></div>
+    <h1>Tek Seçenek Akademi</h1>
+    <p>Şehzadeler • Manisa<br>Geleceğin için Tek Seçenek</p>
+    <div class="badge">DİJİTAL İLETİŞİM KARTI</div>
+  </section>
+
+  <section class="card">
+    <div class="quick">
+      <a href="tel:+905526959757"><div class="ico">☎</div><span>Ara</span></a>
+      <a href="https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><div class="ico">WA</div><span>WhatsApp</span></a>
+      <a href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa" target="_blank" rel="noopener"><div class="ico">⌖</div><span>Konum</span></a>
+      <a href="../index.html"><div class="ico">⌂</div><span>Web Sitesi</span></a>
+    </div>
+
+    <div class="section-title">HIZLI İŞLEMLER</div>
+    <div class="actions">
+      <a class="action" href="../index.html#basvurular">
+        <div class="icon">🎓</div>
+        <div class="text"><b>Ön Kayıt Oluştur</b><span>Program bilgisi bırakın, kurum sizinle iletişime geçsin.</span></div>
+        <div class="arrow">›</div>
+      </a>
+      <a class="action" href="../index.html#basvurular">
+        <div class="icon">🏆</div>
+        <div class="text"><b>Bursluluk Başvurusu</b><span>Bursluluk sınavı başvuru formuna hızlıca ulaşın.</span></div>
+        <div class="arrow">›</div>
+      </a>
+      <a class="action" href="../index.html#basvurular">
+        <div class="icon">📝</div>
+        <div class="text"><b>Deneme Sınavı</b><span>Türkiye geneli ve kurum içi deneme sınavlarına başvurun.</span></div>
+        <div class="arrow">›</div>
+      </a>
+      <a class="action" href="../index.html#sonuc">
+        <div class="icon">📊</div>
+        <div class="text"><b>Sonuç Sorgula</b><span>Deneme ve sınav sonuçlarınızı görüntüleyin.</span></div>
+        <div class="arrow">›</div>
+      </a>
+    </div>
+
+    <div class="cta-grid">
+      <a class="cta orange" href="tel:+902362380066">0236 238 00 66</a>
+      <a class="cta" href="tel:+905526959757">0552 695 97 57</a>
+    </div>
+
+    <div class="info">
+      <strong>Tek Seçenek Akademi</strong>
+      Utku Mah. Çimentepe Cd. No: 4/4<br>
+      45060 Şehzadeler / Manisa
+    </div>
+
+    <button class="save" id="saveContact" type="button">＋ Rehbere Kaydet</button>
+  </section>
+
+  <div class="footer">© 2026 Tek Seçenek Akademi<br>NFC / QR Dijital Kart</div>
+</main>
+
+<script>
+document.getElementById('saveContact').addEventListener('click',()=>{
+  const vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    'FN:Tek Seçenek Akademi',
+    'ORG:Tek Seçenek Akademi',
+    'TEL;TYPE=CELL:+905526959757',
+    'TEL;TYPE=WORK:+902362380066',
+    'ADR;TYPE=WORK:;;Utku Mah. Çimentepe Cd. No: 4/4;Şehzadeler;Manisa;45060;Türkiye',
+    'URL:https://manisateksecenekakademi.com',
+    'END:VCARD'
+  ].join('\r\n');
+  const blob = new Blob([vcard],{type:'text/vcard;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url;
+  a.download='tek-secenek-akademi.vcf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+</script>
+</body>
+</html>
