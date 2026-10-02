@@ -291,7 +291,6 @@ button{font:inherit}
     <div class="logo-wrap"><img id="cardLogo" src="../logo.png" alt="Tek Seçenek Akademi"></div>
     <h1>Tek Seçenek Akademi</h1>
     <p>Şehzadeler • Manisa<br><span id="cardSlogan">Geleceğin için Tek Seçenek</span></p>
-    <div class="badge" id="cardBadge">DİJİTAL İLETİŞİM KARTI</div>
   </section>
 
   <section class="card">
@@ -436,7 +435,6 @@ function applySettings(data){
   document.getElementById('cardLogo').src=d.cardLogo||defaults.cardLogo;
   document.body.style.background='linear-gradient(155deg,rgba(41,37,87,.82),rgba(28,24,72,.92) 58%,rgba(18,16,47,.95)), url("'+(d.cardBackground||defaults.cardBackground).replace(/"/g,'')+'") center/cover no-repeat fixed';
   document.getElementById('cardSlogan').textContent=d.cardSlogan||defaults.cardSlogan;
-  document.getElementById('cardBadge').textContent=d.cardBadge||defaults.cardBadge;
   document.getElementById('cardAddress').innerHTML=String(d.address||defaults.address).replace(/,\s*/g,',<br>');
   const call=document.getElementById('quickCall');
   const wa=document.getElementById('quickWhatsapp');
