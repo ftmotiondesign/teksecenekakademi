@@ -181,7 +181,7 @@ button{font:inherit}
 <body>
 <main class="shell">
   <section class="brand">
-    <div class="logo-wrap"><img src="../logo.png" alt="Tek Seçenek Akademi"></div>
+    <div class="logo-wrap"><img id="cardLogo" src="../logo.png" alt="Tek Seçenek Akademi"></div>
     <h1>Tek Seçenek Akademi</h1>
     <p>Şehzadeler • Manisa<br><span id="cardSlogan">Geleceğin için Tek Seçenek</span></p>
     <div class="badge" id="cardBadge">DİJİTAL İLETİŞİM KARTI</div>
@@ -189,30 +189,30 @@ button{font:inherit}
 
   <section class="card">
     <div class="quick">
-      <a href="tel:+905526959757"><div class="ico">☎</div><span>Ara</span></a>
-      <a href="https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><div class="ico">WA</div><span>WhatsApp</span></a>
-      <a href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa" target="_blank" rel="noopener"><div class="ico">⌖</div><span>Konum</span></a>
-      <a id="instagramQuick" href="https://instagram.com/manisateksecenekakademi" target="_blank" rel="noopener"><div class="ico">◎</div><span>Instagram</span></a>
+      <a id="quickCall" href="tel:+905526959757"><div class="ico">☎</div><span>Ara</span></a>
+      <a id="quickWhatsapp" href="https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><div class="ico">WA</div><span>WhatsApp</span></a>
+      <a id="quickLocation" href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa" target="_blank" rel="noopener"><div class="ico">⌖</div><span>Konum</span></a>
+      <a id="quickInstagram" href="https://instagram.com/manisateksecenekakademi" target="_blank" rel="noopener"><div class="ico">◎</div><span>Instagram</span></a>
     </div>
 
     <div class="section-title">HIZLI İŞLEMLER</div>
     <div class="actions">
-      <a class="action" href="../index.html#basvurular">
+      <a class="action" id="actionPreRegister" href="../index.html#basvurular">
         <div class="icon">🎓</div>
         <div class="text"><b>Ön Kayıt Oluştur</b><span>Program bilgisi bırakın, kurum sizinle iletişime geçsin.</span></div>
         <div class="arrow">›</div>
       </a>
-      <a class="action" href="../index.html#basvurular">
+      <a class="action" id="actionScholarship" href="../index.html#basvurular">
         <div class="icon">🏆</div>
         <div class="text"><b>Bursluluk Başvurusu</b><span>Bursluluk sınavı başvuru formuna hızlıca ulaşın.</span></div>
         <div class="arrow">›</div>
       </a>
-      <a class="action" href="../index.html#basvurular">
+      <a class="action" id="actionTrial" href="../index.html#basvurular">
         <div class="icon">📝</div>
         <div class="text"><b>Deneme Sınavı</b><span>Türkiye geneli ve kurum içi deneme sınavlarına başvurun.</span></div>
         <div class="arrow">›</div>
       </a>
-      <a class="action" href="../index.html#sonuc">
+      <a class="action" id="actionResult" href="../index.html#sonuc">
         <div class="icon">📊</div>
         <div class="text"><b>Sonuç Sorgula</b><span>Deneme ve sınav sonuçlarınızı görüntüleyin.</span></div>
         <div class="arrow">›</div>
@@ -229,7 +229,7 @@ button{font:inherit}
       <span id="cardAddress">Utku Mah. Çimentepe Cd. No: 4/4<br>45060 Şehzadeler / Manisa</span>
     </div>
 
-    <div style="display:grid;grid-template-columns:112px 1fr;gap:14px;align-items:center;margin-top:14px;padding:14px;border-radius:17px;background:#f7f7fa">
+    <div id="qrBlock" style="display:grid;grid-template-columns:112px 1fr;gap:14px;align-items:center;margin-top:14px;padding:14px;border-radius:17px;background:#f7f7fa">
       <div id="qrCode" style="width:112px;height:112px;background:#fff;border-radius:12px;padding:6px;display:grid;place-items:center"></div>
       <div>
         <b style="display:block;font-size:14px;margin-bottom:5px">QR ile Aç</b>
@@ -256,7 +256,19 @@ const defaults={
   instagram:'@manisateksecenekakademi',
   cardSlogan:'Geleceğin için Tek Seçenek',
   cardBadge:'DİJİTAL İLETİŞİM KARTI',
-  cardWebsite:'https://manisateksecenekakademi.com'
+  cardWebsite:'https://manisateksecenekakademi.com',
+  cardLogo:'../logo.png',
+  cardBackground:'../bina.png',
+  cardShowCall:true,
+  cardShowWhatsapp:true,
+  cardShowLocation:true,
+  cardShowInstagram:true,
+  cardShowPreRegister:true,
+  cardShowScholarship:true,
+  cardShowTrial:true,
+  cardShowResult:true,
+  cardShowQr:true,
+  cardShowSaveContact:true
 };
 
 function digits(v){return String(v||'').replace(/\D/g,'')}
@@ -270,18 +282,31 @@ function instagramUrl(v){
 function applySettings(data){
   const d={...defaults,...(data||{})};
   const mob=telHref(d.mobile), land=telHref(d.landline);
+  document.getElementById('cardLogo').src=d.cardLogo||defaults.cardLogo;
+  document.body.style.background='linear-gradient(155deg,rgba(41,37,87,.82),rgba(28,24,72,.92) 58%,rgba(18,16,47,.95)), url("'+(d.cardBackground||defaults.cardBackground).replace(/"/g,'')+'") center/cover no-repeat fixed';
   document.getElementById('cardSlogan').textContent=d.cardSlogan||defaults.cardSlogan;
   document.getElementById('cardBadge').textContent=d.cardBadge||defaults.cardBadge;
   document.getElementById('cardAddress').innerHTML=String(d.address||defaults.address).replace(/,\s*/g,',<br>');
-  const ig=document.getElementById('instagramQuick');ig.href=instagramUrl(d.instagram);
-  const quick=document.querySelectorAll('.quick a');
-  if(quick[0])quick[0].href='tel:'+mob;
-  if(quick[1])quick[1].href='https://wa.me/'+digits(mob)+'?text='+encodeURIComponent('Merhaba Tek Seçenek Akademi, bilgi almak istiyorum.');
+  const call=document.getElementById('quickCall');
+  const wa=document.getElementById('quickWhatsapp');
+  const loc=document.getElementById('quickLocation');
+  const ig=document.getElementById('quickInstagram');
+  if(call){call.href='tel:'+mob;call.style.display=d.cardShowCall===false?'none':'';}
+  if(wa){wa.href='https://wa.me/'+digits(mob)+'?text='+encodeURIComponent('Merhaba Tek Seçenek Akademi, bilgi almak istiyorum.');wa.style.display=d.cardShowWhatsapp===false?'none':'';}
+  if(loc){loc.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(d.address||defaults.address);loc.style.display=d.cardShowLocation===false?'none':'';}
+  if(ig){ig.href=instagramUrl(d.instagram);ig.style.display=d.cardShowInstagram===false?'none':'';}
+  const pre=document.getElementById('actionPreRegister');if(pre)pre.style.display=d.cardShowPreRegister===false?'none':'';
+  const sch=document.getElementById('actionScholarship');if(sch)sch.style.display=d.cardShowScholarship===false?'none':'';
+  const tri=document.getElementById('actionTrial');if(tri)tri.style.display=d.cardShowTrial===false?'none':'';
+  const res=document.getElementById('actionResult');if(res)res.style.display=d.cardShowResult===false?'none':'';
   const ctas=document.querySelectorAll('.cta-grid a');
   if(ctas[0]){ctas[0].href='tel:'+land;ctas[0].textContent=d.landline||defaults.landline}
   if(ctas[1]){ctas[1].href='tel:'+mob;ctas[1].textContent=d.mobile||defaults.mobile}
   const site=(d.cardWebsite||defaults.cardWebsite).replace(/\/$/,'');
   const websiteLink=document.getElementById('websiteLink');websiteLink.href=site;
+  const qrBlock=document.getElementById('qrBlock');if(qrBlock)qrBlock.style.display=d.cardShowQr===false?'none':'grid';
+  const save=document.getElementById('saveContact');if(save)save.style.display=d.cardShowSaveContact===false?'none':'block';
+  renderQr(site.replace(/\/$/,'')+'/kart/');
   window.__tsaCardSettings=d;
 }
 try{
@@ -292,9 +317,11 @@ try{
   applySettings(defaults);
 }
 
-const qrTarget='https://manisateksecenekakademi.com/kart/';
-if(window.QRCode){
-  new QRCode(document.getElementById('qrCode'),{text:qrTarget,width:100,height:100,correctLevel:QRCode.CorrectLevel.M});
+function renderQr(target){
+  const box=document.getElementById('qrCode');
+  if(!box||!window.QRCode)return;
+  box.innerHTML='';
+  new QRCode(box,{text:target,width:100,height:100,correctLevel:QRCode.CorrectLevel.M});
 }
 
 document.getElementById('saveContact').addEventListener('click',()=>{
