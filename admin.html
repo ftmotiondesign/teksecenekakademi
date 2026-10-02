@@ -412,7 +412,12 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <div class="field"><label>Sabit Telefon</label><input id="settingLandline" value="0236 238 00 66"></div>
 <div class="field full"><label>Adres</label><input id="settingAddress" value="Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa"></div>
 <div class="field full"><label>Instagram</label><input id="settingInstagram" value="@manisateksecenekakademi"></div>
-</div><div style="display:flex;gap:8px;align-items:center;margin-top:14px"><button class="primary" id="saveSettings" style="min-width:220px;font-size:15px;padding:13px 18px">Site Ayarlarını Kaydet</button><span id="settingsSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span></div></div></section>
+<div class="field full"><label>NFC Kart Sloganı</label><input id="settingCardSlogan" value="Geleceğin için Tek Seçenek"></div>
+<div class="field"><label>NFC Kart Üst Etiketi</label><input id="settingCardBadge" value="DİJİTAL İLETİŞİM KARTI"></div>
+<div class="field"><label>NFC Kart Web Adresi</label><input id="settingCardWebsite" value="https://manisateksecenekakademi.com"></div>
+</div>
+<div class="hint" style="margin-top:14px"><b>NFC Kart Yönetimi</b><br>Bu bilgiler <b>/kart/</b> sayfasında kullanılır. Telefon, WhatsApp, Instagram, slogan ve web adresini buradan değiştirebilirsiniz.</div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="primary" id="saveSettings" style="min-width:220px;font-size:15px;padding:13px 18px">Site Ayarlarını Kaydet</button><a class="secondary" href="kart/" target="_blank" rel="noopener" style="text-decoration:none">NFC Kartı Gör</a><span id="settingsSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span></div></div></section>
 
 <div id="galleryEditModal" class="gallery-edit-modal" aria-hidden="true">
   <div class="gallery-edit-card">
@@ -785,13 +790,16 @@ var SITE_CONTENT_FIELDS={
 };
 function siteContentData(){return Object.assign(defaultSiteContent(),get(SITE_CONTENT_KEY,{}))}
 var SETTINGS_KEY='tsa_site_settings_v1';
-function siteSettingsData(){return Object.assign({mobile:'0552 695 97 57',landline:'0236 238 00 66',address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',instagram:'@manisateksecenekakademi'},get(SETTINGS_KEY,{}))}
+function siteSettingsData(){return Object.assign({mobile:'0552 695 97 57',landline:'0236 238 00 66',address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',instagram:'@manisateksecenekakademi',cardSlogan:'Geleceğin için Tek Seçenek',cardBadge:'DİJİTAL İLETİŞİM KARTI',cardWebsite:'https://manisateksecenekakademi.com'},get(SETTINGS_KEY,{}))}
 function renderSiteSettings(){
  var d=siteSettingsData();
  if(el('settingMobile'))el('settingMobile').value=d.mobile||'';
  if(el('settingLandline'))el('settingLandline').value=d.landline||'';
  if(el('settingAddress'))el('settingAddress').value=d.address||'';
  if(el('settingInstagram'))el('settingInstagram').value=d.instagram||'';
+ if(el('settingCardSlogan'))el('settingCardSlogan').value=d.cardSlogan||'';
+ if(el('settingCardBadge'))el('settingCardBadge').value=d.cardBadge||'';
+ if(el('settingCardWebsite'))el('settingCardWebsite').value=d.cardWebsite||'';
 }
 function saveSiteSettingsNow(){
  if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
@@ -799,7 +807,10 @@ function saveSiteSettingsNow(){
   mobile:el('settingMobile').value.trim(),
   landline:el('settingLandline').value.trim(),
   address:el('settingAddress').value.trim(),
-  instagram:el('settingInstagram').value.trim()
+  instagram:el('settingInstagram').value.trim(),
+  cardSlogan:el('settingCardSlogan').value.trim(),
+  cardBadge:el('settingCardBadge').value.trim(),
+  cardWebsite:el('settingCardWebsite').value.trim()
  };
  var btn=el('saveSettings'),old=btn.textContent;btn.disabled=true;btn.textContent='Kaydediliyor...';
  window.TSAFirebaseSite.saveSettings(d)
