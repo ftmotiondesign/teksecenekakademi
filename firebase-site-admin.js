@@ -1,10 +1,7 @@
-import { auth, db, storage } from './firebase-core.js';
+import { auth, db } from './firebase-core.js';
 import {
   doc, getDoc, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import {
-  ref, uploadString, getDownloadURL
-} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
 
 const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const SITE_CONTENT_KEY='tsa_site_content_v1';
@@ -17,25 +14,6 @@ async function requireAdmin(){
 }
 
 function emit(name,detail){window.dispatchEvent(new CustomEvent(name,{detail}));}
-
-async function uploadDataUrl(dataUrl,index){
-  const path='site/hero/slide-'+index+'-'+Date.now()+'.jpg';
-  const r=ref(storage,path);
-  await uploadString(r,dataUrl,'data_url');
-  return getDownloadURL(r);
-}
-
-async function normalizeSlides(slides){
-  const out=[];
-  for(let i=0;i<slides.length;i++){
-    const x={...(slides[i]||{})};
-    if(typeof x.image==='string' && x.image.startsWith('data:image/')){
-      x.image=await uploadDataUrl(x.image,i);
-    }
-    out.push(x);
-  }
-  return out;
-}
 
 async function loadSiteContent(){
   await requireAdmin();
@@ -85,7 +63,12 @@ async function loadHero(){
 async function saveHero(slides){
   await requireAdmin();
   if(!Array.isArray(slides))throw new Error('Banner listesi geçersiz.');
-  const normalized=await normalizeSlides(slides);
+  const normalized=slides.map((x)=>({...x}));
+  for(const x of normalized){
+    if(typeof x.image==='string' && x.image.startsWith('data:image/')){
+      throw new Error('Firebase Storage bu projede aktif değil. Yeni banner görselini önce GitHub dosyalarına yükleyin; metin ve mevcut görseller Firebase üzerinden yönetilebilir.');
+    }
+  }
   await setDoc(doc(db,'siteConfig','hero'),{slides:normalized,updatedAt:serverTimestamp()},{merge:false});
   localStorage.setItem(HERO_KEY,JSON.stringify(normalized));
   emit('tsa:hero-updated',normalized);
