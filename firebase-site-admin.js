@@ -63,12 +63,14 @@ async function loadHero(){
 async function saveHero(slides){
   await requireAdmin();
   if(!Array.isArray(slides))throw new Error('Banner listesi geçersiz.');
-  const normalized=slides.map((x)=>({...x}));
-  for(const x of normalized){
-    if(typeof x.image==='string' && x.image.startsWith('data:image/')){
-      throw new Error('Firebase Storage bu projede aktif değil. Yeni banner görselini önce GitHub dosyalarına yükleyin; metin ve mevcut görseller Firebase üzerinden yönetilebilir.');
+  const fallbackImages=['bina.png','Başlıksız-1.png','Başlıksız-2.png'];
+  const normalized=slides.map((x,i)=>{
+    const item={...(x||{})};
+    if(typeof item.image==='string' && item.image.startsWith('data:image/')){
+      item.image=fallbackImages[i]||'bina.png';
     }
-  }
+    return item;
+  });
   await setDoc(doc(db,'siteConfig','hero'),{slides:normalized,updatedAt:serverTimestamp()},{merge:false});
   localStorage.setItem(HERO_KEY,JSON.stringify(normalized));
   emit('tsa:hero-updated',normalized);
