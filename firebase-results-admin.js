@@ -5,6 +5,7 @@ import {
 
 const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const LOCAL_KEY='tsa_results_v1';
+const MIGRATION_KEY='tsa_results_migrated_v1';
 
 async function requireAdmin(){
   if(typeof auth.authStateReady==='function') await auth.authStateReady();
@@ -52,11 +53,18 @@ async function readRemote(){
   return rows;
 }
 async function migrateLocalIfNeeded(remote){
-  if(remote.length) return remote;
+  if(remote.length){
+    localStorage.setItem(MIGRATION_KEY,'1');
+    return remote;
+  }
+  if(localStorage.getItem(MIGRATION_KEY)==='1') return remote;
   let local=[];
   try{ local=JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]'); }catch(e){}
   local=Array.isArray(local)?local.filter(isRealResult):[];
-  if(!local.length) return remote;
+  if(!local.length){
+    localStorage.setItem(MIGRATION_KEY,'1');
+    return remote;
+  }
   for(let i=0;i<local.length;i+=100){
     await Promise.all(local.slice(i,i+100).map((x,j)=>{
       const id=String(x.id||('result-'+Date.now()+'-'+(i+j)));
@@ -64,6 +72,7 @@ async function migrateLocalIfNeeded(remote){
       return setDoc(doc(db,'results',id),{...row,migratedAt:serverTimestamp()},{merge:true});
     }));
   }
+  localStorage.setItem(MIGRATION_KEY,'1');
   return readRemote();
 }
 async function load(){
@@ -101,7 +110,16 @@ async function update(id,patch){
 }
 async function remove(id){
   await requireAdmin();
-  await deleteDoc(doc(db,'results',String(id)));
+  const sid=String(id);
+  await deleteDoc(doc(db,'results',sid));
+
+  let local=[];
+  try{ local=JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]'); }catch(e){}
+  local=Array.isArray(local)?local.filter(x=>String(x.id||'')!==sid):[];
+  mirror(local);
+
+  // Silinen son kayıt eski localStorage verisinden tekrar Firebase'e taşınmasın.
+  localStorage.setItem(MIGRATION_KEY,'1');
   return load();
 }
 window.TSAFirebaseResults={load,add,addMany,update,remove};
