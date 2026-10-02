@@ -451,7 +451,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:18px">
       <button class="secondary" id="editNfcCard" type="button">Düzenle</button>
-      <button class="primary" id="saveNfcCard" type="button" disabled style="min-width:140px;font-size:15px;padding:13px 18px">Kaydet</button>
+      <button class="primary" id="saveNfcCard" type="button" style="min-width:140px;font-size:15px;padding:13px 18px">Kaydet</button>
       <span id="nfcCardSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
     </div>
   </div>
@@ -868,36 +868,24 @@ function setNfcCardEditMode(editing){
  var checkIds=['nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
  textIds.forEach(function(id){
   var x=el(id); if(!x)return;
-  if(editing){
-   x.removeAttribute('readonly');
-   x.removeAttribute('disabled');
-   x.readOnly=false;
-   x.disabled=false;
-   x.style.pointerEvents='auto';
-   x.style.userSelect='text';
-   x.style.background='#fff';
-   x.style.cursor='text';
-  }else{
-   x.setAttribute('readonly','readonly');
-   x.readOnly=true;
-   x.disabled=false;
-   x.style.pointerEvents='auto';
-   x.style.background='#f6f7fb';
-   x.style.cursor='default';
-  }
+  x.removeAttribute('readonly');
+  x.removeAttribute('disabled');
+  x.readOnly=false;
+  x.disabled=false;
+  x.style.pointerEvents='auto';
+  x.style.userSelect='text';
+  x.style.background='#fff';
+  x.style.cursor='text';
  });
  checkIds.forEach(function(id){
   var x=el(id); if(!x)return;
-  x.disabled=!editing;
-  x.style.pointerEvents=editing?'auto':'none';
+  x.disabled=false;
+  x.style.pointerEvents='auto';
  });
  var editBtn=el('editNfcCard'),saveBtn=el('saveNfcCard');
- if(editBtn){editBtn.disabled=false;editBtn.textContent=editing?'Düzenlemeyi İptal Et':'Düzenle';}
- if(saveBtn)saveBtn.disabled=!editing;
- if(editing){
-  var first=el('nfcLogo'); if(first)setTimeout(function(){first.focus();},0);
-  if(el('nfcCardSaved'))el('nfcCardSaved').style.display='none';
- }
+ if(editBtn){editBtn.disabled=false;editBtn.textContent=editing?'Düzenleniyor':'Düzenle';}
+ if(saveBtn)saveBtn.disabled=false;
+ if(editing&&el('nfcCardSaved'))el('nfcCardSaved').style.display='none';
 }
 function renderNfcCardSettings(){
  var d=siteSettingsData();
@@ -917,7 +905,7 @@ function renderNfcCardSettings(){
   ['nfcShowTrial','cardShowTrial'],['nfcShowResult','cardShowResult'],
   ['nfcShowQr','cardShowQr'],['nfcShowSaveContact','cardShowSaveContact']
  ].forEach(function(x){if(el(x[0]))el(x[0]).checked=d[x[1]]!==false;});
- setNfcCardEditMode(false);
+ setNfcCardEditMode(true);
 }
 function saveNfcCardSettingsNow(){
  if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
@@ -946,7 +934,7 @@ function saveNfcCardSettingsNow(){
   .then(function(){
    localStorage.setItem(SETTINGS_KEY,JSON.stringify(d));
    var s=el('nfcCardSaved');if(s)s.style.display='inline';
-   setNfcCardEditMode(false);
+   setNfcCardEditMode(true);
    setTimeout(function(){if(s)s.style.display='none'},2500);
   })
   .catch(function(err){alert('NFC kart ayarları kaydedilemedi: '+(err&&err.message?err.message:err));})
@@ -1631,7 +1619,8 @@ el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';e
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
 if(el('saveSettings'))el('saveSettings').addEventListener('click',saveSiteSettingsNow);
 if(el('editNfcCard'))el('editNfcCard').addEventListener('click',function(){
- if(window.__nfcEditing){renderNfcCardSettings();}else{setNfcCardEditMode(true);}
+ setNfcCardEditMode(true);
+ var first=el('nfcLogo');if(first){first.focus();first.select&&first.select();}
 });
 if(el('saveNfcCard'))el('saveNfcCard').addEventListener('click',saveNfcCardSettingsNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
