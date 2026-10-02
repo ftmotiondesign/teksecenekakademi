@@ -863,10 +863,13 @@ function siteSettingsData(){return Object.assign({
  cardShowSaveContact:true
 },get(SETTINGS_KEY,{}))}
 function setNfcCardEditMode(editing){
- var ids=['nfcLogo','nfcBackground','nfcSlogan','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram','nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
- ids.forEach(function(id){var x=el(id);if(x)x.disabled=!editing;});
+ window.__nfcEditing=!!editing;
+ var textIds=['nfcLogo','nfcBackground','nfcSlogan','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram'];
+ var checkIds=['nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
+ textIds.forEach(function(id){var x=el(id);if(x){x.readOnly=!editing;x.disabled=false;x.style.background=editing?'#fff':'#f6f7fb';}});
+ checkIds.forEach(function(id){var x=el(id);if(x)x.disabled=!editing;});
  var editBtn=el('editNfcCard'),saveBtn=el('saveNfcCard');
- if(editBtn){editBtn.disabled=editing;editBtn.textContent=editing?'Düzenleniyor...':'Düzenle';}
+ if(editBtn){editBtn.disabled=false;editBtn.textContent=editing?'Düzenlemeyi İptal Et':'Düzenle';}
  if(saveBtn)saveBtn.disabled=!editing;
  if(editing&&el('nfcCardSaved'))el('nfcCardSaved').style.display='none';
 }
@@ -1601,9 +1604,9 @@ el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
 if(el('saveSettings'))el('saveSettings').addEventListener('click',saveSiteSettingsNow);
-if(el('editNfcCard'))el('editNfcCard').addEventListener('click',function(){setNfcCardEditMode(true);});
-if(el('saveNfcCard'))el('saveNfcCard').addEventListener('click',saveNfcCardSettingsNow);
-
+if(el('editNfcCard'))el('editNfcCard').addEventListener('click',function(){
+ if(window.__nfcEditing){renderNfcCardSettings();}else{setNfcCardEditMode(true);}
+});
 if(el('saveNfcCard'))el('saveNfcCard').addEventListener('click',saveNfcCardSettingsNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){
