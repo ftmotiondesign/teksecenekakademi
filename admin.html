@@ -433,6 +433,15 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div class="field full"><label><input type="checkbox" id="nfcShowVideo"> Tanıtım videosunu göster</label></div>
       <div class="field"><label>Video Başlığı</label><input id="nfcVideoTitle" placeholder="Tanıtım Videosu"></div>
       <div class="field"><label>Video URL</label><input id="nfcVideo" placeholder="YouTube veya MP4/WebM bağlantısı"></div>
+      <div class="field full">
+        <label>Bilgisayardan Video Seç</label>
+        <input id="nfcVideoFile" type="file" accept="video/mp4,video/webm">
+        <small style="display:block;margin-top:6px;color:#6d7280">Cloudinary ayarları Galeri Yönetimi bölümündeki mevcut ayarlardan kullanılır.</small>
+      </div>
+      <div class="field full" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="secondary" id="nfcVideoUpload" type="button">Videoyu Yükle</button>
+        <span id="nfcVideoUploadStatus" style="font-size:12px;color:var(--muted)"></span>
+      </div>
       <div class="field"><label>Üst Etiket</label><input id="nfcBadge"></div>
       <div class="field"><label>Web Adresi</label><input id="nfcWebsite"></div>
       <div class="field"><label>WhatsApp / Cep</label><input id="nfcMobile"></div>
@@ -1233,6 +1242,7 @@ async function saveGoogleManualReview(){
  }finally{btn.disabled=false;btn.textContent=old}
 }
 if(el('saveGoogleManualReview'))el('saveGoogleManualReview').addEventListener('click',saveGoogleManualReview);
+if(el('nfcVideoUpload'))el('nfcVideoUpload').addEventListener('click',uploadNfcVideo);
 
 var GALLERY_KEY='tsa_gallery_v1';
 function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
@@ -1315,6 +1325,27 @@ async function uploadGalleryFileToCloudinary(file){
  if(!data.secure_url)throw new Error('Cloudinary dosya adresi döndürmedi.');
  return {url:data.secure_url,resourceType:data.resource_type||''};
 }
+
+async function uploadNfcVideo(){
+ var file=el('nfcVideoFile')&&el('nfcVideoFile').files&&el('nfcVideoFile').files[0];
+ if(!file){alert('Önce bilgisayarınızdan MP4 veya WebM video seçin.');return;}
+ if(['video/mp4','video/webm'].indexOf(file.type)===-1){alert('Yalnızca MP4 veya WebM video seçin.');return;}
+ var btn=el('nfcVideoUpload'),st=el('nfcVideoUploadStatus'),old=btn.textContent;
+ btn.disabled=true;btn.textContent='Yükleniyor...';if(st)st.textContent='Video Cloudinary’ye yükleniyor...';
+ try{
+   var up=await uploadGalleryFileToCloudinary(file);
+   if(!up||!up.url)throw new Error('Video adresi alınamadı.');
+   el('nfcVideo').value=up.url;
+   el('nfcShowVideo').checked=true;
+   if(st)st.textContent='✓ Video yüklendi. Şimdi Kaydet’e basın.';
+ }catch(err){
+   if(st)st.textContent='';
+   alert('Video yüklenemedi: '+(err&&err.message?err.message:err));
+ }finally{
+   btn.disabled=false;btn.textContent=old;
+ }
+}
+
 async function addGalleryItem(){
  var file=el('galleryFile').files&&el('galleryFile').files[0];
  if(!file){alert('Lütfen bilgisayarınızdan bir fotoğraf veya video seçin.');return}
