@@ -842,19 +842,8 @@ function openTeacherModal(id){
 }
 async function uploadTeacherPhoto(file){
  if(!file)return window.__teacherExistingImage||'';
- if(['image/png','image/jpeg','image/webp'].indexOf(file.type)===-1)throw new Error('Fotoğraf JPG, PNG veya WebP olmalı.');
- if(file.size>10*1024*1024)throw new Error('Fotoğraf en fazla 10 MB olabilir.');
- var s=galleryCloudinarySettings();
- if(!s.cloudName||!s.uploadPreset)throw new Error('Galeri Yönetimi bölümünden Cloudinary ayarlarını önce kaydedin.');
- var fd=new FormData();
- fd.append('file',file);
- fd.append('upload_preset',s.uploadPreset);
- fd.append('folder','teksecenek-ogretmenler');
- var res=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(s.cloudName)+'/image/upload',{method:'POST',body:fd});
- var data=await res.json().catch(function(){return{}});
- if(!res.ok)throw new Error((data.error&&data.error.message)||'Fotoğraf yüklenemedi.');
- if(!data.secure_url)throw new Error('Fotoğraf bağlantısı alınamadı.');
- return data.secure_url;
+ if(!window.TSAFirebaseSimpleContent||!window.TSAFirebaseSimpleContent.uploadTeacherImage)throw new Error('Firebase Storage bağlantısı henüz hazır değil.');
+ return window.TSAFirebaseSimpleContent.uploadTeacherImage(file);
 }
 async function saveTeacherModal(){
  var name=(el('teacherName').value||'').trim(),field=(el('teacherField').value||'').trim();
