@@ -264,8 +264,8 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
     <div class="gallery-admin-form">
       <div class="field"><label>Başlık</label><input id="galleryTitle" placeholder="Örn. Sınıflarımız"></div>
       <div class="field"><label>Açıklama</label><input id="galleryText" placeholder="Kısa açıklama"></div>
-      <div class="field full"><label>Dosya Seç</label><input id="galleryFile" type="file" accept="image/png,image/jpeg,video/mp4,video/webm"></div>
-      <div class="field"><label>Tür</label><select id="galleryType"><option value="auto">Otomatik</option><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
+      <div class="field full"><label>Görsel / Video Yolu veya URL</label><input id="gallerySrc" placeholder="Örn. bina.png veya https://..."></div>
+      <div class="field"><label>Tür</label><select id="galleryType"><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
       <div class="field" style="align-self:end"><button class="primary" id="galleryAdd" type="button">+ Galeriye Ekle</button></div>
     </div>
     <div id="galleryUploadInfo" class="hint" style="display:none;margin-top:12px"></div>
@@ -380,7 +380,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div class="field full"><label>Başlık</label><input id="galleryEditTitle"></div>
       <div class="field full"><label>Açıklama</label><textarea id="galleryEditText"></textarea></div>
       <div class="field"><label>Tür</label><select id="galleryEditType"><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
-      <div class="field"><label>Dosyayı Değiştir</label><input id="galleryEditFile" type="file" accept="image/png,image/jpeg,video/mp4,video/webm"></div>
+      <div class="field"><label>Görsel / Video Yolu veya URL</label><input id="galleryEditSrc" placeholder="Örn. bina.png veya https://..."></div>
     </div>
     <div class="gallery-edit-actions">
       <span id="galleryEditSaved" style="display:none;color:#187f4a;font-weight:900;align-self:center">✓ Kaydedildi</span>
@@ -792,79 +792,45 @@ window.addEventListener('tsa:simple-content-updated',function(e){var t=e.detail&
 window.addEventListener('tsa:site-content-updated',function(){renderSiteContentEditor();});
 window.addEventListener('tsa:hero-updated',function(){renderHeroAdmin();});
 window.addEventListener('tsa:settings-updated',function(){renderSiteSettings();});
+window.addEventListener('tsa:gallery-updated',function(){renderGalleryAdmin();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
-var GALLERY_DB='tsa_gallery_db',GALLERY_STORE='media',GALLERY_INIT_KEY='tsa_gallery_initialized_v1';
-var GALLERY_DEFAULTS=[
- {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız',createdAt:'2026-01-03T00:00:00.000Z'},
- {id:'g2',type:'image',src:'Başlıksız-1.png',title:'Kurum Galerisi',text:'Kurum görseli',createdAt:'2026-01-02T00:00:00.000Z'},
- {id:'g3',type:'image',src:'Başlıksız-2.png',title:'Eğitim Ortamımız',text:'Kurum görseli',createdAt:'2026-01-01T00:00:00.000Z'}
-];
-function openGalleryDb(){
- return new Promise(function(resolve,reject){
-  var req=indexedDB.open(GALLERY_DB,1);
-  req.onupgradeneeded=function(){var db=req.result;if(!db.objectStoreNames.contains(GALLERY_STORE))db.createObjectStore(GALLERY_STORE,{keyPath:'id'});};
-  req.onsuccess=function(){resolve(req.result)};req.onerror=function(){reject(req.error)};
- });
-}
-function galleryAll(){
- return openGalleryDb().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(GALLERY_STORE,'readonly'),st=tx.objectStore(GALLERY_STORE),r=st.getAll();r.onsuccess=function(){resolve((r.result||[]).sort(function(a,b){return String(b.createdAt||'').localeCompare(String(a.createdAt||''))}) )};r.onerror=function(){reject(r.error)}})});
-}
-function galleryPut(item){
- return openGalleryDb().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(GALLERY_STORE,'readwrite');tx.objectStore(GALLERY_STORE).put(item);tx.oncomplete=function(){resolve()};tx.onerror=function(){reject(tx.error)}})});
-}
-function galleryDelete(id){
- return openGalleryDb().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(GALLERY_STORE,'readwrite');tx.objectStore(GALLERY_STORE).delete(id);tx.oncomplete=function(){resolve()};tx.onerror=function(){reject(tx.error)}})});
-}
-function galleryGet(id){
- return openGalleryDb().then(function(db){return new Promise(function(resolve,reject){var tx=db.transaction(GALLERY_STORE,'readonly'),r=tx.objectStore(GALLERY_STORE).get(id);r.onsuccess=function(){resolve(r.result||null)};r.onerror=function(){reject(r.error)}})});
-}
-async function ensureGallerySeeded(){
- var items=await ensureGallerySeeded();
- if(localStorage.getItem(GALLERY_INIT_KEY)==='1')return items;
- if(!items.length){
-  for(var i=0;i<GALLERY_DEFAULTS.length;i++)await galleryPut(GALLERY_DEFAULTS[i]);
-  items=await galleryAll();
- }
- localStorage.setItem(GALLERY_INIT_KEY,'1');
- return items;
-}
-function galleryTypeFromFile(file){
- if(!file)return'image';
- if(file.type.indexOf('video/')===0)return'video';
- return'image';
-}
-function galleryObjectUrl(blob){try{return URL.createObjectURL(blob)}catch(e){return''}}
-function galleryItemUrl(x){if(x&&x.blob)return galleryObjectUrl(x.blob);return x&&x.src?x.src:''}
+var GALLERY_KEY='tsa_gallery_v1';
+function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
+function galleryItemUrl(x){return x&&x.src?x.src:''}
 async function renderGalleryAdmin(){
  var listEl=el('galleryAdminList');if(!listEl)return;
  try{
-  var items=await galleryAll();
+  var items=window.TSAFirebaseGallery?await window.TSAFirebaseGallery.load():galleryLocal();
   el('galleryCount').textContent=items.length+' içerik';
   if(!items.length){listEl.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz galeri içeriği yok.</div>';return}
   listEl.innerHTML=items.map(function(x){
    var url=galleryItemUrl(x);
    var media=x.type==='video'
-    ?'<video controls preload="metadata" src="'+url+'"></video>'
-    :'<img src="'+url+'" alt="">';
+    ?'<video controls preload="metadata" src="'+esc(url)+'"></video>'
+    :'<img src="'+esc(url)+'" alt="">';
    return '<div class="gallery-admin-card"><div class="gallery-admin-media">'+media+'</div><div class="gallery-admin-body"><h3>'+esc(x.title||'Galeri')+'</h3><p>'+esc(x.text||'')+'</p><div class="gallery-admin-actions"><span class="pill">'+(x.type==='video'?'VİDEO':'FOTOĞRAF')+'</span><button class="secondary" data-editgallery="'+esc(x.id)+'">Düzenle</button><button class="danger" data-delgallery="'+esc(x.id)+'">Sil</button></div></div></div>';
   }).join('');
  }catch(err){listEl.innerHTML='<div class="empty" style="grid-column:1/-1">Galeri yüklenemedi.</div>';console.error(err)}
 }
 async function addGalleryItem(){
- var file=el('galleryFile').files&&el('galleryFile').files[0];
- if(!file){alert('Lütfen PNG, JPG/JPEG, MP4 veya WebM dosyası seçin.');return}
- var ok=['image/png','image/jpeg','video/mp4','video/webm'];
- if(ok.indexOf(file.type)===-1){alert('Desteklenmeyen dosya türü. PNG, JPG/JPEG, MP4 veya WebM seçin.');return}
- var type=el('galleryType').value==='auto'?galleryTypeFromFile(file):el('galleryType').value;
- var info=el('galleryUploadInfo');info.style.display='block';info.textContent='Dosya kaydediliyor...';
+ var src=(el('gallerySrc').value||'').trim();
+ if(!src){alert('Görsel/video yolu veya URL girin.');return}
+ if(!window.TSAFirebaseGallery){alert('Firebase galeri bağlantısı henüz hazır değil.');return}
+ var info=el('galleryUploadInfo');info.style.display='block';info.textContent='Firebase’e kaydediliyor...';
  try{
-  await galleryPut({id:'g-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),title:el('galleryTitle').value.trim()||file.name,text:el('galleryText').value.trim(),type:type,name:file.name,mime:file.type,size:file.size,blob:file,createdAt:new Date().toISOString()});
-  el('galleryTitle').value='';el('galleryText').value='';el('galleryFile').value='';el('galleryType').value='auto';
-  info.textContent='✓ Galeri içeriği kaydedildi.';setTimeout(function(){info.style.display='none'},2200);
-  renderGalleryAdmin();
- }catch(err){console.error(err);alert('Dosya kaydedilemedi. Tarayıcı depolama alanı yetersiz olabilir.');info.style.display='none'}
+  await window.TSAFirebaseGallery.add({
+   id:'g-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),
+   title:el('galleryTitle').value.trim()||'Galeri',
+   text:el('galleryText').value.trim(),
+   type:el('galleryType').value,
+   src:src,
+   createdAt:new Date().toISOString()
+  });
+  el('galleryTitle').value='';el('galleryText').value='';el('gallerySrc').value='';el('galleryType').value='image';
+  info.textContent='✓ Galeri içeriği Firebase’e kaydedildi.';setTimeout(function(){info.style.display='none'},2200);
+ }catch(err){console.error(err);alert('Galeri içeriği kaydedilemedi: '+(err&&err.message?err.message:err));info.style.display='none'}
 }
 if(el('galleryAdd'))el('galleryAdd').addEventListener('click',addGalleryItem);
 
@@ -874,35 +840,31 @@ function closeGalleryEdit(){
 }
 async function openGalleryEdit(id){
  try{
-  var x=await galleryGet(id);if(!x)return;
+  var items=window.TSAFirebaseGallery?await window.TSAFirebaseGallery.load():galleryLocal();
+  var x=items.find(function(y){return String(y.id)===String(id)});if(!x)return;
   window.__galleryEditId=id;
   el('galleryEditTitle').value=x.title||'';
   el('galleryEditText').value=x.text||'';
   el('galleryEditType').value=x.type||'image';
-  el('galleryEditFile').value='';
+  el('galleryEditSrc').value=x.src||'';
   var url=galleryItemUrl(x),p=el('galleryEditPreview');
-  p.innerHTML=x.type==='video'?'<video controls preload="metadata" src="'+url+'"></video>':'<img src="'+url+'" alt="">';
+  p.innerHTML=x.type==='video'?'<video controls preload="metadata" src="'+esc(url)+'"></video>':'<img src="'+esc(url)+'" alt="">';
   var m=el('galleryEditModal');m.classList.add('show');m.setAttribute('aria-hidden','false');
  }catch(err){console.error(err);alert('İçerik açılamadı.')}
 }
 async function saveGalleryEdit(){
  var id=window.__galleryEditId;if(!id)return;
+ if(!window.TSAFirebaseGallery){alert('Firebase galeri bağlantısı henüz hazır değil.');return}
  try{
-  var x=await galleryGet(id);if(!x)return;
-  x.title=el('galleryEditTitle').value.trim()||x.title||'Galeri';
-  x.text=el('galleryEditText').value.trim();
-  x.type=el('galleryEditType').value||x.type||'image';
-  var file=el('galleryEditFile').files&&el('galleryEditFile').files[0];
-  if(file){
-   var ok=['image/png','image/jpeg','video/mp4','video/webm'];
-   if(ok.indexOf(file.type)===-1){alert('Desteklenmeyen dosya türü.');return}
-   x.blob=file;x.src='';x.name=file.name;x.mime=file.type;x.size=file.size;x.type=galleryTypeFromFile(file);
-  }
-  x.updatedAt=new Date().toISOString();
-  await galleryPut(x);
-  renderGalleryAdmin();
+  await window.TSAFirebaseGallery.update(id,{
+   title:el('galleryEditTitle').value.trim()||'Galeri',
+   text:el('galleryEditText').value.trim(),
+   type:el('galleryEditType').value||'image',
+   src:el('galleryEditSrc').value.trim()
+  });
   var s=el('galleryEditSaved');s.style.display='inline';setTimeout(function(){s.style.display='none';closeGalleryEdit()},800);
- }catch(err){console.error(err);alert('Değişiklik kaydedilemedi.')}
+  alert('Galeri içeriği Firebase’e kaydedildi.');
+ }catch(err){console.error(err);alert('Değişiklik kaydedilemedi: '+(err&&err.message?err.message:err))}
 }
 if(el('galleryEditClose'))el('galleryEditClose').addEventListener('click',closeGalleryEdit);
 if(el('galleryEditCancel'))el('galleryEditCancel').addEventListener('click',closeGalleryEdit);
@@ -983,7 +945,15 @@ document.body.addEventListener('click',function(e){
  }
  if(editHero){renderHeroEditor(parseInt(editHero.getAttribute('data-edithero'),10));return;}
  if(editGallery){openGalleryEdit(editGallery.getAttribute('data-editgallery'));return;}
- if(delGallery){if(confirm('Bu galeri içeriği web sitesinden de silinsin mi?')){galleryDelete(delGallery.getAttribute('data-delgallery')).then(renderGalleryAdmin)}return;}
+ if(delGallery){
+  if(!window.TSAFirebaseGallery){alert('Firebase galeri bağlantısı henüz hazır değil.');return;}
+  if(confirm('Bu galeri içeriği web sitesinden de silinsin mi?')){
+   window.TSAFirebaseGallery.remove(delGallery.getAttribute('data-delgallery'))
+    .then(function(){alert('Galeri içeriği Firebase’den silindi.');})
+    .catch(function(err){alert('Galeri içeriği silinemedi: '+(err&&err.message?err.message:err))});
+  }
+  return;
+ }
  if(editStudent){openStudentModal(editStudent.getAttribute('data-editstudent'));return;}
  if(saveStudent){
   var sid=saveStudent.getAttribute('data-savestudent'),ssel=document.querySelector('[data-studentaction="'+sid+'"]'),sphone=document.querySelector('[data-studentphone="'+sid+'"]'),sa=get(APP_KEY,[]),app=sa.find(function(x){return String(x.id)===String(sid)});
@@ -1241,5 +1211,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
 <script type="module" src="firebase-site-admin.js?v=4"></script>
+<script type="module" src="firebase-gallery-admin.js?v=1"></script>
 </body>
 </html>
