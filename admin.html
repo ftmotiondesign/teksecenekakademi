@@ -56,6 +56,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <button data-page="success">★ Başarılar</button>
 <button data-page="reviews">♡ Yorumlar</button>
 <button data-page="programs">▤ Programlar</button>
+<button data-page="nfc-card">📲 NFC Kart Yönetimi</button>
 <button data-page="settings">⚙ Site Ayarları</button>
 <a href="index.html" target="_blank">↗ Siteyi Gör</a>
 </nav>
@@ -407,6 +408,51 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <div class="item"><b>Deneme Kulübü</b><span class="pill">Aktif</span></div>
 </div></div></section>
 
+<section id="nfc-card" class="section">
+  <div class="box">
+    <div class="section-head">
+      <div><h2>NFC Kart Yönetimi</h2><small>Dijital kartın görünümünü, bağlantılarını ve butonlarını buradan yönetin.</small></div>
+      <a class="secondary" href="kart/" target="_blank" rel="noopener" style="text-decoration:none">↗ Kartı Önizle</a>
+    </div>
+    <div class="hint"><b>Kart adresi:</b> /kart/<br>NFC karta yalnızca bu adres yazılır; içerikleri daha sonra buradan değiştirebilirsiniz.</div>
+
+    <div class="form">
+      <div class="field"><label>Logo Yolu / URL</label><input id="nfcLogo" placeholder="../logo.png"></div>
+      <div class="field"><label>Arka Plan Görseli / URL</label><input id="nfcBackground" placeholder="../bina.png"></div>
+      <div class="field full"><label>Slogan</label><input id="nfcSlogan"></div>
+      <div class="field"><label>Üst Etiket</label><input id="nfcBadge"></div>
+      <div class="field"><label>Web Adresi</label><input id="nfcWebsite"></div>
+      <div class="field"><label>WhatsApp / Cep</label><input id="nfcMobile"></div>
+      <div class="field"><label>Sabit Telefon</label><input id="nfcLandline"></div>
+      <div class="field full"><label>Adres / Konum</label><input id="nfcAddress"></div>
+      <div class="field full"><label>Instagram</label><input id="nfcInstagram"></div>
+    </div>
+
+    <h3 style="margin:22px 0 10px">Hızlı Butonlar</h3>
+    <div class="quick-grid">
+      <label class="quick-action"><input type="checkbox" id="nfcShowCall"> <b style="display:inline">Ara</b><span>Telefon arama butonu</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowWhatsapp"> <b style="display:inline">WhatsApp</b><span>WhatsApp iletişim butonu</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowLocation"> <b style="display:inline">Konum</b><span>Google Maps yönlendirmesi</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowInstagram"> <b style="display:inline">Instagram</b><span>Instagram profil bağlantısı</span></label>
+    </div>
+
+    <h3 style="margin:22px 0 10px">Hızlı İşlemler</h3>
+    <div class="quick-grid">
+      <label class="quick-action"><input type="checkbox" id="nfcShowPreRegister"> <b style="display:inline">Ön Kayıt</b><span>Ön kayıt kartını göster</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowScholarship"> <b style="display:inline">Bursluluk</b><span>Bursluluk başvurusunu göster</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowTrial"> <b style="display:inline">Deneme Sınavı</b><span>Deneme başvurusunu göster</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowResult"> <b style="display:inline">Sonuç Sorgula</b><span>Sonuç sorgulama kartını göster</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowQr"> <b style="display:inline">QR Kod</b><span>QR alanını göster</span></label>
+      <label class="quick-action"><input type="checkbox" id="nfcShowSaveContact"> <b style="display:inline">Rehbere Kaydet</b><span>VCF kişi kaydet butonunu göster</span></label>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:18px">
+      <button class="primary" id="saveNfcCard" type="button" style="min-width:220px;font-size:15px;padding:13px 18px">NFC Kartı Kaydet</button>
+      <span id="nfcCardSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
+    </div>
+  </div>
+</section>
+
 <section id="settings" class="section"><div class="box"><h2>Site Ayarları</h2><div class="form">
 <div class="field"><label>WhatsApp / Cep</label><input id="settingMobile" value="0552 695 97 57"></div>
 <div class="field"><label>Sabit Telefon</label><input id="settingLandline" value="0236 238 00 66"></div>
@@ -451,7 +497,7 @@ var RESULT_KEY='tsa_results_v1';
 var CAT_KEY='tsa_result_categories_v1';
 var HERO_KEY='tsa_hero_slides_v1';
 var SIMPLE={announcement:['tsa_announcements_v1','announcementList','Duyuru'],teacher:['tsa_teachers_v1','teacherList','Öğretmen'],success:['tsa_success_v1','successList','Başarı'],review:['tsa_reviews_v1','reviewList','Yorum']};
-var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],'site-content':['Web Sayfası İçerikleri','Ana sayfada görünen metinleri buradan düzenleyin.'],banner:['Ana Sayfa Banner','Ana sayfadaki slider bannerlarını yönetin.'],gallery:['Galeri Yönetimi','PNG, JPG/JPEG ve video içeriklerini yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],settings:['Site Ayarları','İletişim bilgileri.']};
+var pages={dashboard:['Genel Bakış','Başvuruları ve site içeriklerini yönetin.'],applications:['Başvurular','Başvuruları yönetin.'],people:['Veli & Öğrenci','Velileri ve öğrenci kayıtlarını tek merkezden yönetin.'],results:['Sonuçlar','Öğrenci sınav sonuçlarını yönetin.'],'result-categories':['Sonuç Kategorileri','Sonuç filtrelerini yönetin.'],announcements:['Duyuru & Kampanya','Duyuruları yönetin.'],'site-content':['Web Sayfası İçerikleri','Ana sayfada görünen metinleri buradan düzenleyin.'],banner:['Ana Sayfa Banner','Ana sayfadaki slider bannerlarını yönetin.'],gallery:['Galeri Yönetimi','PNG, JPG/JPEG ve video içeriklerini yönetin.'],teachers:['Öğretmenler','Kadroyu yönetin.'],success:['Başarılar','Başarıları yönetin.'],reviews:['Yorumlar','Yorumları yönetin.'],programs:['Programlar','Eğitim programları.'],'nfc-card':['NFC Kart Yönetimi','Dijital kartın görünümünü ve bağlantılarını yönetin.'],settings:['Site Ayarları','İletişim bilgileri.']};
 function el(id){return document.getElementById(id)}
 function get(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function set(key,val){localStorage.setItem(key,JSON.stringify(val))}
@@ -475,6 +521,7 @@ function showPage(id){
  if(id==='teachers')renderSimple('teacher');
  if(id==='success')renderSimple('success');
  if(id==='reviews')renderSimple('review');
+ if(id==='nfc-card')renderNfcCardSettings();
  if(id==='settings')renderSiteSettings();
  updateStats();
 }
@@ -790,7 +837,78 @@ var SITE_CONTENT_FIELDS={
 };
 function siteContentData(){return Object.assign(defaultSiteContent(),get(SITE_CONTENT_KEY,{}))}
 var SETTINGS_KEY='tsa_site_settings_v1';
-function siteSettingsData(){return Object.assign({mobile:'0552 695 97 57',landline:'0236 238 00 66',address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',instagram:'@manisateksecenekakademi',cardSlogan:'Geleceğin için Tek Seçenek',cardBadge:'DİJİTAL İLETİŞİM KARTI',cardWebsite:'https://manisateksecenekakademi.com'},get(SETTINGS_KEY,{}))}
+function siteSettingsData(){return Object.assign({
+ mobile:'0552 695 97 57',
+ landline:'0236 238 00 66',
+ address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',
+ instagram:'@manisateksecenekakademi',
+ cardSlogan:'Geleceğin için Tek Seçenek',
+ cardBadge:'DİJİTAL İLETİŞİM KARTI',
+ cardWebsite:'https://manisateksecenekakademi.com',
+ cardLogo:'../logo.png',
+ cardBackground:'../bina.png',
+ cardShowCall:true,
+ cardShowWhatsapp:true,
+ cardShowLocation:true,
+ cardShowInstagram:true,
+ cardShowPreRegister:true,
+ cardShowScholarship:true,
+ cardShowTrial:true,
+ cardShowResult:true,
+ cardShowQr:true,
+ cardShowSaveContact:true
+},get(SETTINGS_KEY,{}))}
+function renderNfcCardSettings(){
+ var d=siteSettingsData();
+ if(el('nfcLogo'))el('nfcLogo').value=d.cardLogo||'../logo.png';
+ if(el('nfcBackground'))el('nfcBackground').value=d.cardBackground||'../bina.png';
+ if(el('nfcSlogan'))el('nfcSlogan').value=d.cardSlogan||'';
+ if(el('nfcBadge'))el('nfcBadge').value=d.cardBadge||'';
+ if(el('nfcWebsite'))el('nfcWebsite').value=d.cardWebsite||'';
+ if(el('nfcMobile'))el('nfcMobile').value=d.mobile||'';
+ if(el('nfcLandline'))el('nfcLandline').value=d.landline||'';
+ if(el('nfcAddress'))el('nfcAddress').value=d.address||'';
+ if(el('nfcInstagram'))el('nfcInstagram').value=d.instagram||'';
+ [
+  ['nfcShowCall','cardShowCall'],['nfcShowWhatsapp','cardShowWhatsapp'],
+  ['nfcShowLocation','cardShowLocation'],['nfcShowInstagram','cardShowInstagram'],
+  ['nfcShowPreRegister','cardShowPreRegister'],['nfcShowScholarship','cardShowScholarship'],
+  ['nfcShowTrial','cardShowTrial'],['nfcShowResult','cardShowResult'],
+  ['nfcShowQr','cardShowQr'],['nfcShowSaveContact','cardShowSaveContact']
+ ].forEach(function(x){if(el(x[0]))el(x[0]).checked=d[x[1]]!==false;});
+}
+function saveNfcCardSettingsNow(){
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ var d=siteSettingsData();
+ d.cardLogo=el('nfcLogo').value.trim()||'../logo.png';
+ d.cardBackground=el('nfcBackground').value.trim()||'../bina.png';
+ d.cardSlogan=el('nfcSlogan').value.trim();
+ d.cardBadge=el('nfcBadge').value.trim();
+ d.cardWebsite=el('nfcWebsite').value.trim();
+ d.mobile=el('nfcMobile').value.trim();
+ d.landline=el('nfcLandline').value.trim();
+ d.address=el('nfcAddress').value.trim();
+ d.instagram=el('nfcInstagram').value.trim();
+ d.cardShowCall=el('nfcShowCall').checked;
+ d.cardShowWhatsapp=el('nfcShowWhatsapp').checked;
+ d.cardShowLocation=el('nfcShowLocation').checked;
+ d.cardShowInstagram=el('nfcShowInstagram').checked;
+ d.cardShowPreRegister=el('nfcShowPreRegister').checked;
+ d.cardShowScholarship=el('nfcShowScholarship').checked;
+ d.cardShowTrial=el('nfcShowTrial').checked;
+ d.cardShowResult=el('nfcShowResult').checked;
+ d.cardShowQr=el('nfcShowQr').checked;
+ d.cardShowSaveContact=el('nfcShowSaveContact').checked;
+ var btn=el('saveNfcCard'),old=btn.textContent;btn.disabled=true;btn.textContent='Kaydediliyor...';
+ window.TSAFirebaseSite.saveSettings(d)
+  .then(function(){
+   localStorage.setItem(SETTINGS_KEY,JSON.stringify(d));
+   var s=el('nfcCardSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+   alert('NFC kart ayarları Firebase’e kaydedildi.');
+  })
+  .catch(function(err){alert('NFC kart ayarları kaydedilemedi: '+(err&&err.message?err.message:err));})
+  .finally(function(){btn.disabled=false;btn.textContent=old;});
+}
 function renderSiteSettings(){
  var d=siteSettingsData();
  if(el('settingMobile'))el('settingMobile').value=d.mobile||'';
@@ -1469,6 +1587,7 @@ el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
 if(el('saveSettings'))el('saveSettings').addEventListener('click',saveSiteSettingsNow);
+if(el('saveNfcCard'))el('saveNfcCard').addEventListener('click',saveNfcCardSettingsNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){
  if(!confirm('Bannerlar varsayılan haline dönsün mü?'))return;
