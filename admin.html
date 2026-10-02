@@ -1475,9 +1475,22 @@ document.body.addEventListener('click',function(e){
    try{
     if(studentAppId)await window.TSAFirebaseApplications.remove(studentAppId);
     for(var i=0;i<resultIds.length;i++)await window.TSAFirebaseResults.remove(resultIds[i]);
+
+    var localResults=get(RESULT_KEY,[]);
+    if(resultIds.length){
+      localResults=localResults.filter(function(r){return resultIds.indexOf(String(r.id||''))===-1;});
+      set(RESULT_KEY,localResults);
+    }else if(!studentAppId){
+      localResults=localResults.filter(function(r){
+        return String(r.name||'').trim().toLocaleLowerCase('tr-TR')!==String(studentName||'').trim().toLocaleLowerCase('tr-TR');
+      });
+      set(RESULT_KEY,localResults);
+    }
+
+    if(window.TSAFirebaseResults)await window.TSAFirebaseResults.load();
     if(window.TSAFirebasePortalAdmin)await window.TSAFirebasePortalAdmin.sync().catch(function(){});
     renderPeople();renderApps();renderResults();updateStats();
-    alert(studentName+' kaydı silindi.');
+    alert(studentName+' kaydı silindi ve liste yenilendi.');
    }catch(err){
     alert('Öğrenci kaydı silinemedi: '+(err&&err.message?err.message:err));
    }finally{
@@ -1761,7 +1774,7 @@ window.addEventListener('load',function(){setTimeout(updateFirebaseSystemStatus,
 </script>
 <script type="module" src="firebase-announcements-admin.js?v=5"></script>
 <script type="module" src="firebase-applications-admin.js?v=2"></script>
-<script type="module" src="firebase-results-admin.js?v=2"></script>
+<script type="module" src="firebase-results-admin.js?v=3"></script>
 <script type="module" src="firebase-portal-admin.js?v=3"></script>
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
