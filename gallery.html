@@ -62,11 +62,18 @@ const fallback=[
 const grid=document.getElementById('galleryGrid'),lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
 let currentFilter='all',allItems=[];
 function esc(v){return String(v||'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function cloudinaryOptimizedUrl(url,type,width){
+ url=String(url||'');
+ if(!url||url.indexOf('res.cloudinary.com/')===-1||url.indexOf('/upload/')===-1)return url;
+ if(type==='video')return url;
+ const w=Math.max(320,parseInt(width||1200,10)||1200);
+ return url.replace('/upload/','/upload/f_auto,q_auto:eco,c_limit,w_'+w+'/');
+}
 function render(){
  const items=allItems.filter(x=>currentFilter==='all'||x.type===currentFilter);
  if(!items.length){grid.innerHTML='<div class="empty">Bu kategoride henüz içerik yok.</div>';return}
  grid.innerHTML=items.map(x=>{
-  const src=x.src||'';
+  const src=cloudinaryOptimizedUrl(x.src||'',x.type,1200);
   const media=x.type==='video'
    ? '<div class="media"><span class="badge">VİDEO</span><video controls preload="metadata" playsinline src="'+esc(src)+'"></video></div>'
    : '<div class="media"><span class="badge">FOTOĞRAF</span><img data-full="'+esc(src)+'" src="'+esc(src)+'" alt="'+esc(x.title||'Galeri görseli')+'"></div>';
@@ -88,6 +95,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove(
 window.addEventListener('tsa:gallery-public-updated',e=>{allItems=(e.detail&&e.detail.length)?e.detail:fallback;render()});
 loadLocalFallback();
 </script>
-<script type="module" src="firebase-gallery-public.js?v=1"></script>
+<script type="module" src="firebase-gallery-public.js?v=2"></script>
 </body>
 </html>
