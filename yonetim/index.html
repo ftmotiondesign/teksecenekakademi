@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tek Seçenek Akademi | Yönetim Girişi</title>
+<meta name="theme-color" content="#292557">
+<style>
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f5f6fa;--muted:#707487;--white:#fff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,var(--navy),var(--dark));display:grid;place-items:center;padding:24px;color:var(--navy)}
+.login{width:min(440px,100%);background:#fff;border-radius:24px;padding:32px;box-shadow:0 24px 70px #0005}
+.logo{display:flex;align-items:center;gap:14px;margin-bottom:24px}.logo img{width:64px;height:64px;object-fit:contain}.logo b{display:block;font-size:20px}.logo span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+h1{font-size:27px;margin:0 0 8px}p{color:var(--muted);line-height:1.6;margin:0 0 22px}.field{display:grid;gap:7px;margin-bottom:14px}.field label{font-size:12px;font-weight:900}.field input{width:100%;padding:13px 14px;border:1px solid #dfe1ea;border-radius:11px;font:inherit;outline:none}.field input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #f28a0017}
+button{width:100%;border:0;border-radius:24px;padding:14px;background:var(--orange);color:#fff;font-weight:900;font-size:15px;cursor:pointer;margin-top:5px}.msg{display:none;margin-top:14px;padding:11px;border-radius:10px;font-size:13px;font-weight:800}.msg.show{display:block}.msg.error{background:#ffeded;color:#b73737}.back{display:block;text-align:center;margin-top:18px;color:var(--navy);font-size:13px;font-weight:800;text-decoration:none}
+.remember{display:flex;align-items:center;gap:9px;margin:4px 0 10px;color:var(--navy);font-size:13px;font-weight:800;cursor:pointer}.remember input{width:17px;height:17px;accent-color:var(--orange);cursor:pointer}
+.note{font-size:11px;color:#8a8d99;text-align:center;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<main class="login">
+<div class="logo"><img src="../logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Yönetim Paneli</span></div></div>
+<h1>Yönetim Girişi</h1>
+<p>Başvuruları, sonuçları ve site içeriklerini yönetmek için giriş yapın.</p>
+<form id="loginForm">
+<div class="field"><label>E-posta</label><input id="email" type="email" autocomplete="username" required placeholder="E-posta adresi"></div>
+<div class="field"><label>Şifre</label><input id="password" type="password" autocomplete="current-password" required placeholder="Şifreniz"></div>
+<label class="remember"><input id="rememberMe" type="checkbox"> Beni Hatırla</label>
+<button id="loginBtn" type="submit">Giriş Yap</button>
+<div id="msg" class="msg error">E-posta veya şifre hatalı.</div>
+</form>
+<a class="back" href="../index.html">← Web Sitesine Dön</a>
+<div class="note">“Beni Hatırla” seçiliyse bu tarayıcıda yönetim oturumu korunur. Ortak bilgisayarlarda kullanmayın.</div>
+</main>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyDtca9HS5LONXdLjbaCNpI_9GjhYqhOaDo',
+  authDomain: 'teksecenekakademi-1f2b6.firebaseapp.com',
+  projectId: 'teksecenekakademi-1f2b6',
+  storageBucket: 'teksecenekakademi-1f2b6.firebasestorage.app',
+  messagingSenderId: '908097319502',
+  appId: '1:908097319502:web:bfbcfaa843d60a88d3491f',
+  measurementId: 'G-QJRJHJRM5V'
+};
+
+const ADMIN_EMAIL='ftmotiondesign@gmail.com';
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+
+const form=document.getElementById('loginForm');
+const emailInput=document.getElementById('email');
+const passwordInput=document.getElementById('password');
+const rememberInput=document.getElementById('rememberMe');
+const msg=document.getElementById('msg');
+const loginBtn=document.getElementById('loginBtn');
+
+function showError(text){
+  msg.textContent=text;
+  msg.classList.add('show');
+}
+function hideError(){
+  msg.classList.remove('show');
+}
+function saveLegacySession(email,remember){
+  if(remember){
+    localStorage.setItem('tsa_admin_remember_v1','1');
+    localStorage.setItem('tsa_admin_email',email);
+    sessionStorage.removeItem('tsa_admin_session_v1');
+    sessionStorage.removeItem('tsa_admin_email');
+  }else{
+    sessionStorage.setItem('tsa_admin_session_v1','1');
+    sessionStorage.setItem('tsa_admin_email',email);
+    localStorage.removeItem('tsa_admin_remember_v1');
+    localStorage.removeItem('tsa_admin_email');
+  }
+}
+
+sessionStorage.removeItem('tsa_admin_session_v1');
+sessionStorage.removeItem('tsa_admin_email');
+localStorage.removeItem('tsa_admin_remember_v1');
+localStorage.removeItem('tsa_admin_email');
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  hideError();
+
+  const email=emailInput.value.trim().toLowerCase();
+  const password=passwordInput.value;
+  const remember=rememberInput.checked;
+
+  loginBtn.disabled=true;
+  loginBtn.textContent='Giriş yapılıyor...';
+
+  try{
+    await setPersistence(auth,browserLocalPersistence);
+    const credential=await signInWithEmailAndPassword(auth,email,password);
+
+    const signedInEmail=String(credential.user?.email||'').trim().toLowerCase();
+    if(signedInEmail!==ADMIN_EMAIL){
+      await auth.signOut();
+      showError('Giriş başarılı ancak bu Firebase hesabına yönetici yetkisi verilmemiş.');
+      return;
+    }
+
+    saveLegacySession(email,remember);
+    location.href='../admin.html?v=80#dashboard';
+  }catch(err){
+    console.error('Firebase giriş hatası:',err);
+    const code=err && err.code ? err.code : '';
+    let text='Firebase giriş hatası.';
+    if(code==='auth/invalid-credential') text='Firebase bu e-posta/şifre bilgisini kabul etmedi. Authentication > Kullanıcılar bölümünde bu e-postanın kayıtlı olduğunu ve şifrenin doğru olduğunu kontrol edin.';
+    else if(code==='auth/user-not-found') text='Bu e-posta ile Firebase Authentication kullanıcısı bulunamadı.';
+    else if(code==='auth/wrong-password') text='Şifre hatalı.';
+    else if(code==='auth/invalid-email') text='E-posta adresi geçersiz.';
+    else if(code==='auth/operation-not-allowed') text='Firebase’de E-posta/Şifre giriş yöntemi etkin değil.';
+    else if(code==='auth/too-many-requests') text='Çok fazla giriş denemesi yapıldı. Bir süre sonra tekrar deneyin.';
+    else if(code==='auth/network-request-failed') text='Firebase bağlantısı kurulamadı. İnternet bağlantısını kontrol edin.';
+    else if(code==='auth/unauthorized-domain') text='Bu web adresi Firebase Authentication için yetkilendirilmemiş.';
+    else if(code==='auth/api-key-not-valid.-please-pass-a-valid-api-key.') text='Firebase API anahtarı geçersiz görünüyor.';
+    else if(code) text='Firebase hatası: '+code;
+    showError(text);
+  }finally{
+    loginBtn.disabled=false;
+    loginBtn.textContent='Giriş Yap';
+  }
+});
+</script>
+</body>
+</html>
