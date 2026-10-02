@@ -75,43 +75,134 @@ button{font:inherit}
   padding:18px;
   box-shadow:0 22px 55px #0006;
 }
+.quick-wrap{
+  padding:4px 0 2px;
+}
+.quick-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 2px 14px;
+}
+.quick-head h2{
+  margin:0;
+  font-size:16px;
+  color:var(--navy);
+  letter-spacing:-.2px;
+}
+.quick-head span{
+  color:#9295a3;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
 .quick{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
 }
 .quick a{
+  position:relative;
   min-width:0;
   min-height:118px;
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding:16px 10px;
-  background:#f6f6fa;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  background:linear-gradient(180deg,#fff,#fafafd);
+  border:1px solid #ececf3;
   border-radius:20px;
   font-size:13px;
   font-weight:900;
-  text-align:center;
+  text-align:left;
+  box-shadow:0 8px 20px #1c18480a;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  overflow:hidden;
+}
+.quick a::after{
+  content:"›";
+  position:absolute;
+  right:14px;
+  bottom:12px;
+  color:#b8bac5;
+  font-size:20px;
+  font-weight:700;
+}
+.quick a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px #1c184814;
+  border-color:#dddfea;
 }
 .quick .ico{
-  width:58px;
-  height:58px;
-  border-radius:18px;
+  width:52px;
+  height:52px;
+  border-radius:16px;
   display:grid;
   place-items:center;
   color:#fff;
-  font-size:24px;
-  font-weight:900;
   background:var(--navy);
-  box-shadow:0 8px 18px #1c18481c;
+  box-shadow:0 10px 22px #29255726;
 }
-.quick a:nth-child(2) .ico{background:var(--green)}
-.quick a:nth-child(3) .ico{background:var(--orange)}
-.quick a:nth-child(4) .ico{background:var(--dark)}
-.quick a:nth-child(5) .ico{background:#3b82f6}
-.quick a:nth-child(5){grid-column:1/-1}
+.quick .ico svg{
+  width:25px;
+  height:25px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.quick .quick-label{
+  display:block;
+  font-size:13px;
+  line-height:1.2;
+  color:var(--navy);
+}
+.quick .quick-sub{
+  display:block;
+  margin-top:4px;
+  color:#8a8d98;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:700;
+}
+.quick a:nth-child(2) .ico{
+  background:#25D366;
+  box-shadow:0 10px 22px #25d3662b;
+}
+.quick a:nth-child(3) .ico{
+  background:var(--orange);
+  box-shadow:0 10px 22px #f28a002b;
+}
+.quick a:nth-child(4) .ico{
+  background:linear-gradient(135deg,#833AB4,#E1306C,#FCAF45);
+  box-shadow:0 10px 22px #e1306c25;
+}
+.quick a:nth-child(5){
+  grid-column:1/-1;
+  min-height:92px;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  padding-right:44px;
+}
+.quick a:nth-child(5)::after{
+  top:50%;
+  bottom:auto;
+  transform:translateY(-50%);
+}
+.quick a:nth-child(5) .ico{
+  flex:none;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  box-shadow:0 10px 22px #3b82f62b;
+}
+.quick a:nth-child(5) .quick-copy{
+  flex:1;
+}
 .section-title{
   margin:20px 2px 10px;
   font-size:12px;
@@ -181,10 +272,11 @@ button{font:inherit}
   line-height:1.5;
 }
 @media(max-width:390px){
-  .quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .quick a{min-height:108px;padding:14px 8px}
-  .quick .ico{width:54px;height:54px;font-size:22px}
-  .quick a:nth-child(5){grid-column:1/-1}
+  .quick{gap:10px}
+  .quick a{min-height:110px;padding:14px}
+  .quick .ico{width:48px;height:48px;border-radius:15px}
+  .quick a:nth-child(5){min-height:86px}
+  .quick-head{margin-bottom:12px}
   .cta-grid{grid-template-columns:1fr}
 }
 .qr-note{font-size:11px;color:var(--text)}
@@ -201,12 +293,47 @@ button{font:inherit}
   </section>
 
   <section class="card">
-    <div class="quick">
-      <a id="quickCall" href="tel:+905526959757"><div class="ico">☎</div><span>Ara</span></a>
-      <a id="quickWhatsapp" href="https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><div class="ico">WA</div><span>WhatsApp</span></a>
-      <a id="quickLocation" href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa" target="_blank" rel="noopener"><div class="ico">⌖</div><span>Konum</span></a>
-      <a id="quickInstagram" href="https://instagram.com/manisateksecenekakademi" target="_blank" rel="noopener"><div class="ico">◎</div><span>Instagram</span></a>
-      <a id="quickWebsite" href="https://manisateksecenekakademi.com" target="_blank" rel="noopener"><div class="ico">🌐</div><span>Web Sitesi</span></a>
+    <div class="quick-wrap">
+      <div class="quick-head">
+        <h2>Hızlı İletişim</h2>
+        <span>TEK DOKUNUŞLA</span>
+      </div>
+      <div class="quick">
+        <a id="quickCall" href="tel:+905526959757">
+          <div class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div class="quick-copy"><span class="quick-label">Ara</span><span class="quick-sub">Telefonla hemen ulaşın</span></div>
+        </a>
+
+        <a id="quickWhatsapp" href="https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.45L3 20.5l1.35-4.75A8.5 8.5 0 1 1 20.5 11.7z"/><path d="M8.2 7.8c.4 2.9 3 5.5 5.9 5.9"/><path d="M8.1 7.7l1.3 2-1 1.1"/><path d="M14.1 13.7l-2-.9-1 1.2"/></svg>
+          </div>
+          <div class="quick-copy"><span class="quick-label">WhatsApp</span><span class="quick-sub">Mesaj gönderin</span></div>
+        </a>
+
+        <a id="quickLocation" href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          </div>
+          <div class="quick-copy"><span class="quick-label">Konum</span><span class="quick-sub">Yol tarifini açın</span></div>
+        </a>
+
+        <a id="quickInstagram" href="https://instagram.com/manisateksecenekakademi" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="quick-copy"><span class="quick-label">Instagram</span><span class="quick-sub">Bizi takip edin</span></div>
+        </a>
+
+        <a id="quickWebsite" href="https://manisateksecenekakademi.com" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18"/><path d="M12 3a15 15 0 0 0 0 18"/></svg>
+          </div>
+          <div class="quick-copy"><span class="quick-label">Web Sitesi</span><span class="quick-sub">Programları ve duyuruları inceleyin</span></div>
+        </a>
+      </div>
     </div>
 
     <div class="section-title">HIZLI İŞLEMLER</div>
