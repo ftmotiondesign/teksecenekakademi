@@ -273,10 +273,10 @@ const defaults={
   cardWhatsappLabel:'WhatsApp',cardWhatsappLink:'https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum.',
   cardLocationLabel:'Konum',cardLocationLink:'https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa',
   cardInstagramLabel:'Instagram',cardInstagramLink:'https://instagram.com/manisateksecenekakademi',
-  cardPreTitle:'Ön Kayıt Oluştur',cardPreLink:'../index.html#basvurular',
-  cardScholarTitle:'Bursluluk Başvurusu',cardScholarLink:'../index.html#basvurular',
-  cardTrialTitle:'Deneme Sınavı',cardTrialLink:'../index.html#basvurular',
-  cardResultTitle:'Sonuç Sorgula',cardResultLink:'../index.html#sonuc'
+  cardPreTitle:'Ön Kayıt Oluştur',cardPreLink:'../on-kayit/',
+  cardScholarTitle:'Bursluluk Başvurusu',cardScholarLink:'../bursluluk/',
+  cardTrialTitle:'Deneme Sınavı',cardTrialLink:'../deneme-sinavi/',
+  cardResultTitle:'Sonuç Sorgula',cardResultLink:'../sonuc-sorgula/'
 };
 
 function digits(v){return String(v||'').replace(/\D/g,'')}
@@ -303,10 +303,10 @@ function applySettings(data){
   if(wa){wa.href=d.cardWhatsappLink||('https://wa.me/'+digits(mob)+'?text='+encodeURIComponent('Merhaba Tek Seçenek Akademi, bilgi almak istiyorum.'));wa.style.display=d.cardShowWhatsapp===false?'none':'';var s2=wa.querySelector('span');if(s2)s2.textContent=d.cardWhatsappLabel||'WhatsApp';}
   if(loc){loc.href=d.cardLocationLink||('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(d.address||defaults.address));loc.style.display=d.cardShowLocation===false?'none':'';var s3=loc.querySelector('span');if(s3)s3.textContent=d.cardLocationLabel||'Konum';}
   if(ig){ig.href=d.cardInstagramLink||instagramUrl(d.instagram);ig.style.display=d.cardShowInstagram===false?'none':'';var s4=ig.querySelector('span');if(s4)s4.textContent=d.cardInstagramLabel||'Instagram';}
-  const pre=document.getElementById('actionPreRegister');if(pre){pre.style.display=d.cardShowPreRegister===false?'none':'';pre.href=d.cardPreLink||'../index.html#basvurular';var b=pre.querySelector('b');if(b)b.textContent=d.cardPreTitle||'Ön Kayıt Oluştur';}
-  const sch=document.getElementById('actionScholarship');if(sch){sch.style.display=d.cardShowScholarship===false?'none':'';sch.href=d.cardScholarLink||'../index.html#basvurular';var b2=sch.querySelector('b');if(b2)b2.textContent=d.cardScholarTitle||'Bursluluk Başvurusu';}
-  const tri=document.getElementById('actionTrial');if(tri){tri.style.display=d.cardShowTrial===false?'none':'';tri.href=d.cardTrialLink||'../index.html#basvurular';var b3=tri.querySelector('b');if(b3)b3.textContent=d.cardTrialTitle||'Deneme Sınavı';}
-  const res=document.getElementById('actionResult');if(res){res.style.display=d.cardShowResult===false?'none':'';res.href=d.cardResultLink||'../index.html#sonuc';var b4=res.querySelector('b');if(b4)b4.textContent=d.cardResultTitle||'Sonuç Sorgula';}
+  const pre=document.getElementById('actionPreRegister');if(pre){pre.style.display=d.cardShowPreRegister===false?'none':'';pre.href=d.cardPreLink||'../on-kayit/';var b=pre.querySelector('b');if(b)b.textContent=d.cardPreTitle||'Ön Kayıt Oluştur';}
+  const sch=document.getElementById('actionScholarship');if(sch){sch.style.display=d.cardShowScholarship===false?'none':'';sch.href=d.cardScholarLink||'../bursluluk/';var b2=sch.querySelector('b');if(b2)b2.textContent=d.cardScholarTitle||'Bursluluk Başvurusu';}
+  const tri=document.getElementById('actionTrial');if(tri){tri.style.display=d.cardShowTrial===false?'none':'';tri.href=d.cardTrialLink||'../deneme-sinavi/';var b3=tri.querySelector('b');if(b3)b3.textContent=d.cardTrialTitle||'Deneme Sınavı';}
+  const res=document.getElementById('actionResult');if(res){res.style.display=d.cardShowResult===false?'none':'';res.href=d.cardResultLink||'../sonuc-sorgula/';var b4=res.querySelector('b');if(b4)b4.textContent=d.cardResultTitle||'Sonuç Sorgula';}
   const ctas=document.querySelectorAll('.cta-grid a');
   if(ctas[0]){ctas[0].href='tel:'+land;ctas[0].textContent=d.landline||defaults.landline}
   if(ctas[1]){ctas[1].href='tel:'+mob;ctas[1].textContent=d.mobile||defaults.mobile}
