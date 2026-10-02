@@ -1,11 +1,597 @@
 <!doctype html>
 <html lang="tr">
 <head>
+<base href="../">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Başarılar | Tek Seçenek Akademi</title>
-<meta http-equiv="refresh" content="0;url=../index.html#basarilar">
-<script>location.replace('../index.html#basarilar');</script>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="description" content="Tek Seçenek Akademi Manisa Şehzadeler. 5–12. sınıflar, LGS, TYT, AYT, YDT, İngilizce, deneme kulübü, bursluluk ve ön kayıt.">
+<meta name="theme-color" content="#292557">
+<style>
+:root{--navy:#292557;--dark:#1c1848;--orange:#f28a00;--bg:#f6f7fb;--text:#5f6472;--white:#fff;--green:#25b96b;--red:#d94a4a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--navy);background:#fff}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}.container{width:min(1180px,92%);margin:auto}section{padding:82px 0}section[id]{scroll-margin-top:88px}
+header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 4px 18px #1c184812}.login-strip{background:var(--navy);color:#fff}.login-strip-inner{min-height:34px;display:flex;align-items:center;justify-content:flex-end;gap:8px}.login-link{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:16px;font-size:12px;font-weight:800;color:#fff;opacity:.95}.login-link:hover{background:#ffffff14;color:#fff}.login-link.admin{background:var(--orange);color:#fff}.head{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo img{width:68px;height:68px;object-fit:contain}.nav{display:flex;align-items:center;gap:22px;font-weight:800;font-size:14px}.nav a:hover{color:var(--orange)}.nav .cta{background:var(--orange);color:#fff;padding:12px 18px;border-radius:24px}.nav .cta:hover{color:#fff;background:#d97700}.mobile-menu-toggle{display:none;border:0;background:var(--navy);color:#fff;width:44px;height:44px;border-radius:12px;font-size:24px;cursor:pointer;align-items:center;justify-content:center}
+.hero-slider{position:relative;min-height:72vh;overflow:hidden;background:var(--dark);touch-action:pan-y}.hero-slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .65s ease,visibility .65s ease;background-position:center;background-size:cover;display:flex;align-items:center;color:#fff}.hero-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#171344f2,#171344c9 50%,#17134455)}.hero-slide.active{opacity:1;visibility:visible;z-index:2}.hero-slide .container{position:relative;z-index:3}.hero-slide-content{max-width:730px}.hero-slide .tag{display:inline-block;background:var(--orange);padding:8px 14px;border-radius:22px;font-weight:900}.hero-slide h1{font-size:clamp(42px,6vw,76px);line-height:1.02;margin:18px 0}.hero-slide h1 span{color:var(--orange)}.hero-slide p{font-size:18px;line-height:1.7;max-width:660px}.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:48px;height:48px;border:0;border-radius:50%;background:#ffffff26;color:#fff;font-size:28px;font-weight:900;cursor:pointer;backdrop-filter:blur(5px)}.hero-arrow:hover{background:var(--orange)}.hero-prev{left:22px}.hero-next{right:22px}.hero-dots{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;display:flex;gap:8px}.hero-dot{width:11px;height:11px;border:0;border-radius:50%;background:#ffffff77;cursor:pointer;padding:0}.hero-dot.active{background:var(--orange);transform:scale(1.2)}.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{border:0;border-radius:28px;padding:14px 21px;font-weight:900;cursor:pointer;display:inline-block}.btn.orange{background:var(--orange);color:#fff}.btn.white{background:#fff;color:var(--navy)}.btn.navy{background:var(--navy);color:#fff}.btn.green{background:var(--green);color:#fff}
+.top-actions{background:var(--bg);padding:22px 0}.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.action-card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 7px 26px #1c18480e}.action-card b{display:block;font-size:18px;margin:7px 0}.action-card span{font-size:13px;color:var(--text)}.action-card .ico{font-size:24px}
+.section-head{text-align:center;max-width:760px;margin:0 auto 38px}.section-head small{color:var(--orange);font-weight:900;letter-spacing:1.5px}.section-head h2{font-size:clamp(30px,4vw,42px);margin:9px 0 12px}.section-head p{color:var(--text);line-height:1.7}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border:1px solid #ececf2;border-radius:20px;padding:26px;box-shadow:0 8px 28px #1c18480c}.card .icon{width:48px;height:48px;border-radius:14px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:900}.card h3{margin:16px 0 8px}.card p{color:var(--text);line-height:1.6;font-size:14px}
+.bg{background:var(--bg)}.dark{background:var(--navy);color:#fff}.dark .section-head p{color:#d9d7e5}.dark .section-head small{color:#ffae43}
+.forms{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.form-card{background:#fff;color:var(--navy);border-radius:22px;padding:26px}.form-card h3{margin-top:0}.form-card p{color:var(--text);font-size:14px;line-height:1.55}.form-grid{display:grid;gap:10px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid #dddfea;border-radius:11px;padding:12px;background:#fff}.form-grid textarea{min-height:88px;resize:vertical}
+.form-logo-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.form-logo-btn img{width:30px;height:30px;object-fit:contain;background:#fff;border-radius:50%;padding:3px;flex-shrink:0}
+.form-logo-btn span{display:inline-block}
+.form-message{display:none;margin-top:10px;padding:11px;border-radius:10px;background:#e9f8f0;color:#187f4a;font-size:13px;font-weight:700}.form-message.show{display:block}
+.status-flow{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.chip{background:#eef0f7;border-radius:18px;padding:7px 10px;font-size:12px;font-weight:800}
+.finder{background:linear-gradient(135deg,var(--navy),var(--dark));color:#fff;border-radius:25px;padding:30px}.finder-options{display:flex;gap:10px;flex-wrap:wrap}.finder-options button{border:1px solid #ffffff42;background:#ffffff12;color:#fff;border-radius:24px;padding:11px 16px;font-weight:800;cursor:pointer}.finder-options button.active,.finder-options button:hover{background:var(--orange);border-color:var(--orange)}.finder-result{display:none;background:#fff;color:var(--navy);margin-top:18px;padding:18px;border-radius:16px}.finder-result.show{display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{background:#fff;border-radius:20px;padding:26px;box-shadow:0 8px 28px #1c18480c}.panel h3{margin-top:0}.panel p{color:var(--text);line-height:1.6}
+.result-box{margin-top:12px;padding:14px;border-radius:12px;background:#f3f4f8;display:none}.result-box.show{display:block}.result-box strong{display:block;margin-bottom:5px}
+.teacher-grid,.success-grid,.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.teacher,.success,.review{background:#fff;border:1px solid #ececf2;border-radius:20px;padding:24px}.teacher{text-align:center;overflow:hidden}.teacher .avatar{width:120px;height:120px;border-radius:50%;background:#eef0f7;display:grid;place-items:center;font-weight:900;font-size:20px;margin:0 auto 14px;object-fit:cover}.teacher h3{margin:8px 0 5px;font-size:19px}.teacher .teacher-field{margin:0;color:var(--orange);font-weight:900;font-size:14px}.teacher p,.success p,.review p{color:var(--text);line-height:1.6;font-size:14px}.review-stars{color:#f5a623;font-size:18px;letter-spacing:1px;margin:7px 0}.review-source{display:inline-block;margin-top:10px;background:#f3f4f8;border-radius:14px;padding:5px 9px;font-size:11px;font-weight:900;color:#555b70}.review a.review-source:hover{color:var(--orange)}.review-time{display:block;margin-top:7px;color:#8a8e9c;font-size:12px}.success strong{font-size:24px;color:var(--orange)}
+.announcement-list{display:grid;gap:10px}.announcement-wa{width:54px;height:54px;display:inline-flex;align-items:center;justify-content:center;background:#25D366;color:#fff;border-radius:50%;text-decoration:none;box-shadow:0 6px 18px #25d36633;transition:.2s;flex:none}.announcement-wa:hover{transform:translateY(-1px);filter:brightness(.96)}.announcement-wa svg{width:27px;height:27px;flex:none}.announcement{background:#fff8ee;border-left:4px solid var(--orange);border-radius:12px;padding:15px}.announcement b{display:block;margin-bottom:4px}.announcement span{color:var(--text);font-size:13px}
+.contact{background:var(--bg)}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.contact-card,.map{background:#fff;border-radius:22px;padding:28px}.contact-line{padding:11px 0;border-bottom:1px solid #eee;color:var(--text)}.map iframe{width:100%;height:320px;border:0;border-radius:16px;display:block;margin:14px 0}
+footer{background:var(--dark);color:#fff;padding:52px 0 22px}.footer-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr;gap:42px;align-items:start}.footer-brand{display:flex;align-items:flex-start}.footer-brand img{width:112px;height:112px;object-fit:contain;background:#fff;border-radius:50%;padding:13px;box-shadow:0 0 22px #ffffff33}.footer-col{display:grid;gap:14px}.footer-col h4,.footer-contact h4{margin:0 0 8px;font-size:14px;color:#fff}.footer-col a{color:#fff;font-size:14px;font-weight:700;opacity:.92}.footer-col a:hover{color:var(--orange);opacity:1}.footer-contact .phone{font-size:34px;font-weight:900;letter-spacing:.5px;line-height:1.1;color:#fff}.footer-contact .mobile-phone{display:block;margin-top:10px;color:#fff;font-size:16px;font-weight:800}.footer-bottom{margin-top:34px;padding-top:18px;border-top:1px solid #ffffff18;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:#c8c7d8;font-size:12px}.footer-bottom a{color:#fff;font-weight:800}.footer-admin{opacity:.85}
+.mobile{display:none}.to-top{position:fixed;right:22px;bottom:92px;width:46px;height:46px;border:0;border-radius:50%;background:var(--navy);color:#fff;font-size:22px;font-weight:900;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 24px #0003;opacity:0;visibility:hidden;transform:translateY(10px);transition:.25s;z-index:95}.to-top.show{opacity:1;visibility:visible;transform:translateY(0)}.to-top:hover{background:var(--orange)}
+.new-app-float{position:fixed;right:22px;bottom:22px;z-index:94;display:flex;align-items:center;gap:12px;background:#fff;color:var(--navy);border:1px solid #ececf2;border-radius:18px;padding:12px 15px;box-shadow:0 12px 35px #0003;text-decoration:none;animation:floatNotice 2.2s ease-in-out infinite;max-width:310px}.new-app-float .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;font-size:20px;flex:none}.new-app-float b{display:block;font-size:13px}.new-app-float span{display:block;margin-top:3px;color:var(--orange);font-size:12px;font-weight:900}.new-app-float:hover{animation-play-state:paused;transform:translateY(-2px)}@keyframes floatNotice{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.025)}}@media(prefers-reduced-motion:reduce){.new-app-float{animation:none}}
+@media(max-width:900px){.login-strip-inner{justify-content:center;gap:4px}.login-link{font-size:11px;padding:7px 8px}.head{height:74px;flex-wrap:wrap;padding:4px 0;position:relative}.logo{width:auto;display:flex;justify-content:flex-start}.logo img{width:58px;height:58px}.mobile-menu-toggle{display:inline-flex;margin-left:auto}.nav{display:none;position:absolute;top:74px;left:0;right:0;width:100%;background:#fff;flex-direction:column;align-items:stretch;gap:6px;padding:12px;border-radius:0 0 18px 18px;box-shadow:0 12px 25px #1c184820;z-index:60}.nav.open{display:flex}.nav a{display:flex!important;width:100%;align-items:center;justify-content:flex-start;background:#f6f7fb;border-radius:12px;padding:12px 14px;font-size:13px}.nav a:hover{background:#ececf3}.nav .cta{background:var(--orange);color:#fff}.cards{grid-template-columns:1fr 1fr}.forms{grid-template-columns:1fr}.teacher-grid,.success-grid,.review-grid{grid-template-columns:1fr 1fr}.two,.contact-grid{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.footer-contact .phone{font-size:28px}.mobile{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:80;box-shadow:0 -5px 20px #0002}.mobile a{text-align:center;padding:12px 4px;font-weight:800;font-size:13px}.mobile a:nth-child(2){background:var(--green);color:#fff}.mobile a:nth-child(3){background:var(--orange);color:#fff}footer{padding-bottom:92px}}
+@media(max-width:600px){.new-app-float{left:auto;right:12px;bottom:76px;max-width:310px;padding:10px 12px}.new-app-float .ico{width:38px;height:38px;font-size:18px}section{padding:58px 0}.hero-slider{min-height:68vh}.hero-slide h1{font-size:40px}.hero-slide p{font-size:16px}.hero-arrow{width:40px;height:40px;font-size:22px}.hero-prev{left:10px}.hero-next{right:10px}.cards,.teacher-grid,.success-grid,.review-grid{grid-template-columns:1fr}.buttons .btn{width:100%;text-align:center}.form-card{padding:21px}.footer-grid{grid-template-columns:1fr;gap:28px}.footer-brand img{width:96px;height:96px;padding:11px}.footer-contact .phone{font-size:30px}.footer-bottom{align-items:flex-start;flex-direction:column}}
+</style>
 </head>
-<body><p>Başarılar sayfasına yönlendiriliyorsunuz...</p></body>
+<body>
+<header>
+  <div class="login-strip">
+    <div class="container login-strip-inner">
+      <a class="login-link" href="ogrenci-girisi/">🎓 Öğrenci Girişi</a>
+      <a class="login-link" href="veli-girisi/">👨‍👩‍👧 Veli Girişi</a>
+      <a class="login-link admin" href="login.html">🔐 Yönetim</a>
+    </div>
+  </div>
+  <div class="container head"><a class="logo" href="index.html" id="siteLogo"><img src="logo.png" alt="Tek Seçenek Akademi"></a><button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Menüyü aç/kapat" aria-expanded="false">☰</button><nav class="nav" id="mainNav"><a href="online-islemler/">Online İşlemler</a><a href="galeri/">Galeri</a><a href="programlar/">Programlar</a><a href="on-kayit/">Başvurular</a><a href="sonuc-sorgula/">Sonuç Sorgula</a><a href="basarilar/">Başarılar</a><a href="iletisim/">İletişim</a><a class="cta" href="on-kayit/">Ön Kayıt</a></nav></div>
+</header>
+
+<section class="hero-slider" id="heroSlider">
+  <article class="hero-slide active" style="background-image:url('bina.png')">
+    <div class="container"><div class="hero-slide-content">
+      <div class="tag">ŞEHZADELER • MANİSA</div>
+      <h1>Geleceğin İçin <span>Tek Seçenek</span></h1>
+      <p>5, 6, 7, 8, 9, 10, 11 ve 12. sınıflar; LGS, TYT, AYT, YDT, İngilizce ve Deneme Kulübü.</p>
+      <div class="buttons"><a href="on-kayit/" class="btn orange">Ön Kayıt Oluştur</a><a href="programini-bul/" class="btn white">Sana Uygun Programı Bul</a></div>
+    </div></div>
+  </article>
+  <article class="hero-slide" style="background-image:url('Başlıksız-1.png')">
+    <div class="container"><div class="hero-slide-content">
+      <div class="tag">BURSULULUK SINAVI</div>
+      <h1>Başarıya Giden Yolda <span>Şansını Yakala</span></h1>
+      <p>Bursluluk sınavı başvurunu oluştur, eğitim fırsatlarını değerlendir ve geleceğin için güçlü bir adım at.</p>
+      <div class="buttons"><a href="bursluluk/" class="btn orange">Bursluluk Başvurusu</a><a href="iletisim/" class="btn white">Bilgi Al</a></div>
+    </div></div>
+  </article>
+  <article class="hero-slide" style="background-image:url('Başlıksız-2.png')">
+    <div class="container"><div class="hero-slide-content">
+      <div class="tag">DENEME KULÜBÜ</div>
+      <h1>Hedefini Ölç, <span>Gelişimini Takip Et</span></h1>
+      <p>Türkiye geneli ve kurum içi denemelerle seviyeni gör, eksiklerini belirle ve sınava daha güçlü hazırlan.</p>
+      <div class="buttons"><a href="deneme-sinavi/" class="btn orange">Deneme Başvurusu</a><a href="sonuc-sorgula/" class="btn white">Sonuç Sorgula</a></div>
+    </div></div>
+  </article>
+  <button class="hero-arrow hero-prev" id="heroPrev" aria-label="Önceki banner">‹</button>
+  <button class="hero-arrow hero-next" id="heroNext" aria-label="Sonraki banner">›</button>
+  <div class="hero-dots" id="heroDots"></div>
+</section>
+
+<div class="top-actions"><div class="container action-grid">
+<a class="action-card" href="bursluluk/"><div class="ico">🏆</div><b>Bursluluk Sınavı</b><span>Başvuru formunu doldur, kaydını oluştur.</span></a>
+<a class="action-card" href="deneme-sinavi/"><div class="ico">📝</div><b>Deneme Sınavı</b><span>Türkiye geneli ve kurum içi denemelere başvur.</span></a>
+<a class="action-card" href="on-kayit/"><div class="ico">🎓</div><b>Ön Kayıt</b><span>Program ve sınıf bilgilerini bırak, kurum seni arasın.</span></a>
+</div></div>
+
+<section id="programlar" class="bg"><div class="container"><div class="section-head"><small>EĞİTİM PROGRAMLARI</small><h2>Her Sınıfa Uygun Eğitim</h2><p>Akademik gelişim, sınav hazırlığı, yabancı dil ve düzenli deneme takibi tek çatı altında.</p></div><div class="cards">
+<div class="card"><div class="icon">5–7</div><h3>Ortaokul</h3><p>5, 6 ve 7. sınıflar için okul destek, konu takibi ve akademik temel güçlendirme.</p></div>
+<div class="card"><div class="icon">LGS</div><h3>8. Sınıf LGS</h3><p>Yoğun LGS hazırlık, deneme analizi, eksik kazanım takibi ve rehberlik.</p></div>
+<div class="card"><div class="icon">TYT</div><h3>9–12. Sınıflar</h3><p>TYT ve AYT odaklı ders programı, soru çözümü, deneme ve performans takibi.</p></div>
+<div class="card"><div class="icon">YDT</div><h3>YDT & İngilizce</h3><p>Dil sınıfları, sınav İngilizcesi ve genel İngilizce programları.</p></div>
+</div></div></section>
+
+<section id="program-bul"><div class="container"><div class="finder"><h2 style="margin-top:0">Sana Uygun Programı Bul</h2><p style="color:#deddeb">Sınıfını seç, sana uygun programı hemen gösterelim.</p><div class="finder-options" id="finderOptions">
+<button data-title="Ortaokul Akademik Destek" data-text="5, 6 ve 7. sınıflar için konu takibi, okul desteği ve akademik gelişim programı.">5–7. Sınıf</button>
+<button data-title="LGS Hazırlık" data-text="8. sınıflar için LGS odaklı ders, deneme, analiz ve rehberlik sistemi.">8. Sınıf</button>
+<button data-title="TYT / AYT Hazırlık" data-text="9, 10, 11 ve 12. sınıflar için üniversite sınavına hazırlık ve okul destek programı.">9–12. Sınıf</button>
+<button data-title="YDT & İngilizce" data-text="YDT hedefi olan öğrenciler ve İngilizcesini geliştirmek isteyenler için dil programları.">YDT / İngilizce</button>
+</div><div class="finder-result" id="finderResult"><h3 id="finderTitle"></h3><p id="finderText"></p><a id="finderWa" class="btn green" target="_blank">WhatsApp'tan Bilgi Al</a></div></div></div></section>
+
+<section id="basvurular" class="dark"><div class="container"><div class="section-head"><small>BAŞVURU MERKEZİ</small><h2>Tek Formda Hızlı Başvuru</h2><p>Başvurular yönetim paneline düşecek ve Yeni Başvuru → Arandı → Görüşüldü → Kayıt Oldu / Kayıt Olmadı şeklinde takip edilecek.</p></div><div class="forms">
+<div class="form-card"><h3>🎓 Ön Kayıt</h3><p>Program hakkında bilgi almak ve kurum tarafından aranmak için.</p><form class="form-grid app-form" data-type="Ön Kayıt"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="veliAd" required placeholder="Veli Ad Soyad"><input name="ogrenciTelefon" type="tel" inputmode="numeric" value="05" placeholder="Öğrenci Cep Telefonu"><input name="telefon" type="tel" inputmode="numeric" value="05" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><select name="program"><option>Genel Bilgi</option><option>LGS</option><option>TYT / AYT</option><option>YDT</option><option>İngilizce</option><option>Deneme Kulübü</option></select><textarea name="not" placeholder="Notunuz (isteğe bağlı)"></textarea><button class="btn orange form-logo-btn" type="submit"><img src="logo.png" alt="Tek Seçenek Akademi"><span>Ön Kayıt Oluştur</span></button><div class="form-message"></div></form></div>
+<div class="form-card"><h3>🏆 Bursluluk Başvurusu</h3><p>Bursluluk sınavı için öğrenci ve veli bilgilerini kaydedin.</p><form class="form-grid app-form" data-type="Bursluluk"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="veliAd" required placeholder="Veli Ad Soyad"><input name="ogrenciTelefon" type="tel" inputmode="numeric" value="05" placeholder="Öğrenci Cep Telefonu"><input name="telefon" type="tel" inputmode="numeric" value="05" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option></select><select name="ilce" id="bursIlce" required><option value="">İlçe Seçin</option><option>Ahmetli</option><option>Akhisar</option><option>Alaşehir</option><option>Demirci</option><option>Gölmarmara</option><option>Gördes</option><option>Kırkağaç</option><option>Köprübaşı</option><option>Kula</option><option>Salihli</option><option>Sarıgöl</option><option>Saruhanlı</option><option>Selendi</option><option>Soma</option><option>Şehzadeler</option><option>Turgutlu</option><option>Yunusemre</option></select><select name="okul" id="bursOkul" required disabled><option value="">Önce ilçe seçin</option></select><input name="okulDiger" id="bursOkulDiger" placeholder="Okul adını yazın" style="display:none"><textarea name="not" placeholder="Notunuz"></textarea><button class="btn orange form-logo-btn" type="submit"><img src="logo.png" alt="Tek Seçenek Akademi"><span>Bursluluk Başvurusu Yap</span></button><div class="form-message"></div></form></div>
+<div class="form-card"><h3>📝 Deneme Sınavı</h3><p>Türkiye geneli veya kurum içi deneme sınavlarına katılmak için.</p><form class="form-grid app-form" data-type="Deneme Sınavı"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="veliAd" required placeholder="Veli Ad Soyad"><input name="ogrenciTelefon" type="tel" inputmode="numeric" value="05" placeholder="Öğrenci Cep Telefonu"><input name="telefon" type="tel" inputmode="numeric" value="05" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><select name="program"><option>Türkiye Geneli Deneme</option><option>Deneme Kulübü 70</option><option>Deneme Kulübü 120</option></select><textarea name="not" placeholder="Notunuz"></textarea><button class="btn orange form-logo-btn" type="submit"><img src="logo.png" alt="Tek Seçenek Akademi"><span>Deneme Başvurusu Yap</span></button><div class="form-message"></div></form></div>
+</div></div></section>
+
+<section id="sonuc" class="bg"><div class="container"><div class="section-head"><small>ÖĞRENCİ İŞLEMLERİ</small><h2>Sonuç Sorgulama ve Seviye Tespit</h2></div><div class="two">
+<div class="panel"><h3>📊 Deneme Sonucu Sorgula</h3><p>Takip numarası, öğrenci numarası veya sonuç kodunuz ile başvuruda kullanılan veli telefonunu girin.</p><div class="form-grid"><select id="resultType"><option value="all">Hepsi</option></select><input id="resultCode" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><input id="resultPhone" type="tel" inputmode="numeric" placeholder="Veli Telefonu"><button class="btn navy" id="resultBtn">Sonucu Sorgula</button></div><div id="resultBox" class="result-box"></div></div>
+<div class="panel"><h3>🎯 Ücretsiz Seviye Tespit Talebi</h3><p>Seviyenizi değerlendirelim, size uygun programı birlikte belirleyelim.</p><form class="form-grid app-form" data-type="Seviye Tespit"><input name="ad" required placeholder="Öğrenci Ad Soyad"><input name="veliAd" required placeholder="Veli Ad Soyad"><input name="ogrenciTelefon" type="tel" inputmode="numeric" value="05" placeholder="Öğrenci Cep Telefonu"><input name="telefon" type="tel" inputmode="numeric" value="05" required placeholder="Veli Telefon"><select name="sinif" required><option value="">Sınıf Seçin</option><option>5. Sınıf</option><option>6. Sınıf</option><option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option><option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option></select><textarea name="not" placeholder="Hangi derslerde destek istiyorsunuz?"></textarea><button class="btn orange" type="submit">Talep Oluştur</button><div class="form-message"></div></form></div>
+</div></div></section>
+
+<section id="duyurular"><div class="container"><div class="section-head">
+<div><small>DUYURULAR</small><h2>Güncel Duyuru ve Kampanyalar</h2></div>
+<a href="https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20g%C3%BCncel%20duyuru%20ve%20kampanyalar%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="announcement-wa" aria-label="WhatsApp'tan bilgi al">
+<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.31c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.15-.42-2.19-1.35-.81-.72-1.36-1.61-1.52-1.88-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.02-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.97 2.63 1.11 2.81c.14.18 1.91 2.91 4.63 4.08.65.28 1.15.45 1.54.57.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.29.23-.63.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32z"/><path fill="currentColor" d="M16.01 3.2A12.63 12.63 0 0 0 5.17 22.3L3.2 28.8l6.68-1.91a12.64 12.64 0 1 0 6.13-23.69zm0 22.96a10.3 10.3 0 0 1-5.25-1.44l-.38-.23-3.96 1.13 1.16-3.86-.25-.4a10.32 10.32 0 1 1 8.68 4.8z"/></svg>
+</a>
+</div><div class="announcement-list" id="announcementList">
+<div class="announcement"><b>2026–2027 Kayıtlarımız Devam Ediyor</b><span>5–12. sınıflar, LGS, TYT, AYT, YDT ve İngilizce programları için bilgi alabilirsiniz.</span></div>
+<div class="announcement"><b>Deneme Kulübü Kayıtları</b><span>70 ve 120 denemelik paket seçenekleriyle düzenli sınav takibi.</span></div>
+</div></div></section>
+
+<section class="bg"><div class="container"><div class="section-head"><small>KADROMUZ</small><h2>Öğretmen Kadrosu</h2><p>Öğretmen bilgileri yönetim panelinden eklenebilecek. Şimdilik bölüm yayına hazır durumda.</p></div><div class="teacher-grid" id="teacherGrid">
+<div class="teacher"><div class="avatar">TSA</div><h3>Branş Öğretmenlerimiz</h3><p>Kadromuzdaki öğretmenler, branş ve deneyim bilgileri yönetim panelinden yayınlanacaktır.</p></div>
+<div class="teacher"><div class="avatar">LGS</div><h3>LGS Ekibi</h3><p>8. sınıf öğrencileri için ders, deneme ve rehberlik sürecini birlikte yürütür.</p></div>
+<div class="teacher"><div class="avatar">YKS</div><h3>YKS Ekibi</h3><p>TYT, AYT ve YDT hedeflerine göre öğrenci gelişimini takip eder.</p></div>
+</div></div></section>
+
+<section id="basarilar"><div class="container"><div class="section-head"><small>BAŞARILARIMIZ</small><h2>Öğrenci Başarıları</h2></div><div class="success-grid" id="successGrid">
+<div class="success"><strong>Takip</strong><h3>Düzenli Gelişim</h3><p>Deneme sonuçları ve akademik gelişim düzenli takip edilir.</p></div>
+<div class="success"><strong>Hedef</strong><h3>Kişiye Özel Plan</h3><p>Öğrencinin ihtiyacına göre hedef ve çalışma planı oluşturulur.</p></div>
+<div class="success"><strong>Analiz</strong><h3>Eksik Kazanım</h3><p>Denemeler üzerinden eksik kazanımlar belirlenir ve çalışma yönlendirilir.</p></div>
+</div></div></section>
+
+<!-- Veli ve Öğrenci Yorumları ana sayfada geçici olarak pasif -->
+
+<section id="iletisim" class="contact"><div class="container"><div class="section-head"><small>İLETİŞİM</small><h2>Tek Seçenek Akademi'ye Ulaşın</h2></div><div class="contact-grid"><div class="contact-card"><h3>Tek Seçenek Akademi</h3><div class="contact-line">📍 Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa</div><div class="contact-line">📱 <a href="tel:+905526959757">0552 695 97 57</a></div><div class="contact-line">☎ <a href="tel:+902362380066">0236 238 00 66</a></div><div class="buttons"><a class="btn navy" href="tel:+905526959757">Hemen Ara</a><a class="btn green" target="_blank" href="https://wa.me/905526959757">WhatsApp</a></div></div><div class="map"><h3>📍 Şehzadeler / Manisa</h3><p style="color:var(--text);line-height:1.6">Tek Seçenek Akademi, Utku Mahallesi Çimentepe Caddesi No: 4/4 adresindedir.</p><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Utku%20Mah.%20%C3%87imentepe%20Cd.%20No%3A%204%2F4%2C%2045060%20%C5%9Eehzadeler%2FManisa&output=embed" title="Tek Seçenek Akademi Harita"></iframe><a class="btn orange" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa">Yol Tarifi Al</a></div></div></div></section>
+
+<footer>
+<div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="logo.png" alt="Tek Seçenek Akademi">
+    </div>
+
+    <div class="footer-col">
+      <h4>Kurumsal</h4>
+      <a href="programlar/">Programlarımız</a>
+      <a href="basarilar/">Başarılarımız</a>
+      <a href="iletisim/">İletişim</a>
+      <a href="on-kayit/">Ön Kayıt</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Öğrenci İşlemleri</h4>
+      <a href="on-kayit/">Bursluluk Başvurusu</a>
+      <a href="on-kayit/">Deneme Sınavı Başvurusu</a>
+      <a href="sonuc-sorgula/">Sonuç Sorgulama</a>
+      <a href="programini-bul/">Programını Bul</a>
+    </div>
+
+    <div class="footer-contact">
+      <h4>Bize Ulaşın</h4>
+      <a class="phone" href="tel:+902362380066">0236 238 00 66</a>
+      <a class="mobile-phone" href="tel:+905526959757">0552 695 97 57</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Tek Seçenek Akademi. Tüm hakları saklıdır.</span>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="online-islemler/">⚡ Online İşlemler</a><a href="galeri/">🖼️ Galeri</a><a href="ogrenci-girisi/">🎓 Öğrenci Girişi</a>
+      <a href="veli-girisi/">👨‍👩‍👧 Veli Girişi</a>
+      <a href="iletisim/">İletişim</a>
+      <a href="login.html" class="footer-admin">🔐 Yönetim Paneli</a>
+    </div>
+  </div>
+</div>
+</footer>
+<a class="new-app-float" href="on-kayit/" aria-label="Ön kayıt oluştur">
+  <div class="ico">✦</div>
+  <div><b>Henüz başvurunuz yok mu?</b><span>Ön Kayıt Oluştur →</span></div>
+</a>
+<div class="mobile"><a href="online-islemler/">⚡ İşlemler</a><a href="https://wa.me/905526959757">WhatsApp</a><a href="on-kayit/">Ön Kayıt</a></div><button class="to-top" id="toTop" aria-label="Yukarı çık">↑</button>
+
+<script>
+const STORAGE_KEY='tsa_applications_v1';
+const RESULTS_KEY='tsa_results_v1';
+const SETTINGS_KEY='tsa_site_settings_v1';
+const SITE_CONTENT_KEY='tsa_site_content_v1';
+const HERO_KEY='tsa_hero_slides_v1';
+const RESULT_CAT_KEY='tsa_result_categories_v1';
+function getApps(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
+function saveApps(x){localStorage.setItem(STORAGE_KEY,JSON.stringify(x))}
+function makeNo(){return 'TSA-'+Date.now().toString().slice(-8)}
+const MANISA_ILCELERI=['Ahmetli','Akhisar','Alaşehir','Demirci','Gölmarmara','Gördes','Kırkağaç','Köprübaşı','Kula','Salihli','Sarıgöl','Saruhanlı','Selendi','Soma','Şehzadeler','Turgutlu','Yunusemre'];
+const MEB_SCHOOL_CSV='https://raw.githubusercontent.com/dalgali/MEB-okul-listesi/main/data/meb-okullar.csv';
+let manisaSchoolsCache=null;
+const bursIlce=document.getElementById('bursIlce'),bursOkul=document.getElementById('bursOkul'),bursOkulDiger=document.getElementById('bursOkulDiger');
+
+function normalizeTR(v){return String(v||'').trim().toLocaleLowerCase('tr-TR')}
+function parseCsvLine(line){
+ const out=[];let cur='',q=false;
+ for(let i=0;i<line.length;i++){
+  const ch=line[i];
+  if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}
+  else if(ch===','&&!q){out.push(cur);cur='';}
+  else cur+=ch;
+ }
+ out.push(cur);return out;
+}
+function bursRelevantSchool(name,type){
+ const n=normalizeTR((name||'')+' '+(type||''));
+ return /(ilkokul|ortaokul|lise|imam hatip|fen lises|sosyal bilimler|mesleki ve teknik|çok programlı|özel eğitim)/.test(n)
+   && !/(halk eğitim|öğretmenevi|milli eğitim müdürlüğ|rehberlik ve araştırma|mesleki eğitim merkezi|bilim ve sanat merkezi|anaokulu)/.test(n);
+}
+async function loadManisaSchools(){
+ if(manisaSchoolsCache)return manisaSchoolsCache;
+ const res=await fetch(MEB_SCHOOL_CSV,{cache:'force-cache'});
+ if(!res.ok)throw new Error('Okul verisi alınamadı');
+ const text=await res.text(), lines=text.split(/\r?\n/).filter(Boolean);
+ if(!lines.length)throw new Error('Okul verisi boş');
+ const head=parseCsvLine(lines[0].replace(/^\uFEFF/,''));
+ const ixIl=head.indexOf('il'),ixIlce=head.indexOf('ilce'),ixAd=head.indexOf('okul_adi'),ixTur=head.indexOf('okul_turu');
+ const map={};MANISA_ILCELERI.forEach(x=>map[x]=[]);
+ for(let i=1;i<lines.length;i++){
+  const row=parseCsvLine(lines[i]);
+  if(normalizeTR(row[ixIl])!=='manisa')continue;
+  const ilce=MANISA_ILCELERI.find(x=>normalizeTR(x)===normalizeTR(row[ixIlce]));
+  if(!ilce)continue;
+  const ad=(row[ixAd]||'').trim(), tur=(row[ixTur]||'').trim();
+  if(!ad||!bursRelevantSchool(ad,tur))continue;
+  map[ilce].push(ad);
+ }
+ Object.keys(map).forEach(k=>map[k]=[...new Set(map[k])].sort((a,b)=>a.localeCompare(b,'tr')));
+ manisaSchoolsCache=map;return map;
+}
+function showOtherSchool(show){
+ bursOkulDiger.style.display=show?'block':'none';
+ bursOkulDiger.required=show;
+ if(!show)bursOkulDiger.value='';
+}
+if(bursIlce&&bursOkul){
+ bursIlce.addEventListener('change',async()=>{
+  const ilce=bursIlce.value;
+  showOtherSchool(false);
+  if(!ilce){bursOkul.disabled=true;bursOkul.innerHTML='<option value="">Önce ilçe seçin</option>';return;}
+  bursOkul.disabled=true;bursOkul.innerHTML='<option value="">Okullar yükleniyor...</option>';
+  try{
+   const data=await loadManisaSchools(), schools=data[ilce]||[];
+   bursOkul.innerHTML='<option value="">Okul Seçin</option>'+schools.map(x=>'<option value="'+escapeHtml(x)+'">'+escapeHtml(x)+'</option>').join('')+'<option value="__other">Okulum listede yok / Diğer</option>';
+   bursOkul.disabled=false;
+  }catch(err){
+   console.error('MEB okul listesi yüklenemedi:',err);
+   bursOkul.innerHTML='<option value="__other">Okulumu kendim yazacağım</option>';
+   bursOkul.disabled=false;bursOkul.value='__other';showOtherSchool(true);
+  }
+ });
+ bursOkul.addEventListener('change',()=>showOtherSchool(bursOkul.value==='__other'));
+}
+document.querySelectorAll('.app-form').forEach(form=>{
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const submitBtn=form.querySelector('button[type="submit"]');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.dataset.oldText=submitBtn.innerHTML;submitBtn.innerHTML='Gönderiliyor...';}
+  const msg=form.querySelector('.form-message');
+  try{
+   const fd=new FormData(form), data=Object.fromEntries(fd.entries());
+   const okulValue=data.okul==='__other'?(data.okulDiger||'Diğer'):(data.okul||'');
+   const app={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),basvuruNo:makeNo(),type:form.dataset.type,ad:data.ad||'',veliAd:data.veliAd||'',ogrenciTelefon:data.ogrenciTelefon||'',telefon:data.telefon||'',sinif:data.sinif||'',program:data.program||'',ilce:data.ilce||'',okul:okulValue,not:data.not||'',status:'Yeni Başvuru',createdAt:new Date().toISOString()};
+   if(!window.TSAFirebaseApplicationsPublic)throw new Error('Başvuru sistemi henüz hazır değil. Sayfayı yenileyip tekrar deneyin.');
+   await window.TSAFirebaseApplicationsPublic.submit(app);
+   const list=getApps();list.unshift(app);saveApps(list);
+   msg.textContent='Başvurunuz alındı. Takip No: '+app.basvuruNo+' — Bu numarayı saklayın; veli paneline girişte kullanacaksınız.';
+   msg.classList.add('show');
+   form.reset();
+  }catch(err){
+   console.error('Başvuru gönderme hatası:',err);
+   msg.textContent='Başvuru gönderilemedi. Lütfen tekrar deneyin.';
+   msg.classList.add('show');
+  }finally{
+   if(submitBtn){submitBtn.disabled=false;submitBtn.innerHTML=submitBtn.dataset.oldText||'Gönder';}
+  }
+ });
+});
+document.querySelectorAll('#finderOptions button').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('#finderOptions button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+ document.getElementById('finderTitle').textContent=btn.dataset.title;document.getElementById('finderText').textContent=btn.dataset.text;
+ document.getElementById('finderWa').href='https://wa.me/905526959757?text='+encodeURIComponent('Merhaba Tek Seçenek Akademi, '+btn.dataset.title+' hakkında bilgi almak istiyorum.');
+ document.getElementById('finderResult').classList.add('show');
+}));
+function loadResultCategories(){
+ let cats=[];try{cats=JSON.parse(localStorage.getItem(RESULT_CAT_KEY)||'[]')}catch(e){}
+ if(!cats.length)cats=[{name:'LGS',active:true},{name:'Kurum İçi Deneme',active:true},{name:'Türkiye Geneli Deneme',active:true}];
+ cats=cats.map(c=>typeof c==='string'?{name:c,active:true}:c).filter(c=>c.active!==false);
+ const s=document.getElementById('resultType');
+ s.innerHTML='<option value="all">Hepsi</option>'+cats.map(c=>'<option value="'+escapeHtml(c.name)+'">'+escapeHtml(c.name)+'</option>').join('');
+}
+loadResultCategories();
+window.addEventListener('tsa:result-categories-updated',loadResultCategories);
+document.getElementById('resultBtn').onclick=async()=>{
+ const code=document.getElementById('resultCode').value.trim(),phone=document.getElementById('resultPhone').value.trim(),type=document.getElementById('resultType').value,box=document.getElementById('resultBox');
+ box.classList.add('show');
+ if(!code||!phone){box.innerHTML='Takip/öğrenci/sonuç kodu ve veli telefonu birlikte girilmelidir.';return;}
+ if(!window.TSAFirebasePortal){box.innerHTML='Sonuç sistemi hazırlanıyor. Sayfayı yenileyip tekrar deneyin.';return;}
+ box.innerHTML='Sonuçlar kontrol ediliyor...';
+ try{
+  const data=await window.TSAFirebasePortal.lookup(code,phone);
+  if(!data){box.innerHTML='Girilen bilgilerle eşleşen kayıt bulunamadı.';return;}
+  window.TSAFirebasePortal.hydrate(data);
+  const matches=(data.results||[]).filter(x=>type==='all'||String(x.category||'')===type);
+  if(!matches.length){box.innerHTML='Seçtiğiniz kategoride yayınlanmış bir sonuç bulunamadı.';return;}
+  const name=(data.app&&data.app.ad)||matches[0].name||'Öğrenci';
+  box.innerHTML='<strong>'+escapeHtml(name)+'</strong><div style="margin:4px 0 12px;color:#5f6472">'+matches.length+' sınav sonucu bulundu.</div>'+matches.map(r=>'<div style="background:#fff;border:1px solid #dddfea;border-radius:12px;padding:12px;margin-top:9px"><b style="color:#292557">'+escapeHtml(r.examName||r.code||'Sınav Sonucu')+'</b><div style="margin:7px 0">Puan: '+escapeHtml(r.score||'-')+' · Yüzdelik: '+escapeHtml(r.percentile||'-')+' · Sıralama: '+escapeHtml(r.rank||'-')+'</div><div style="font-size:13px;line-height:1.7">Türkçe: '+escapeHtml(r.turkce||'-')+' · Matematik: '+escapeHtml(r.matematik||'-')+' · Fen: '+escapeHtml(r.fen||'-')+' · İnkılap: '+escapeHtml(r.inkilap||'-')+' · Din: '+escapeHtml(r.din||'-')+' · İngilizce: '+escapeHtml(r.ingilizce||'-')+'</div></div>').join('');
+ }catch(err){
+  console.error(err);box.innerHTML='Sonuç sorgulanamadı. Lütfen bilgileri kontrol edip tekrar deneyin.';
+ }
+};
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+
+function defaultSiteContent(){
+ return {
+  programsTitle:'Her Sınıfa Uygun Eğitim',
+  programsText:'Akademik gelişim, sınav hazırlığı, yabancı dil ve düzenli deneme takibi tek çatı altında.',
+  program1Title:'Ortaokul',program1Text:'5, 6 ve 7. sınıflar için okul destek, konu takibi ve akademik temel güçlendirme.',
+  program2Title:'8. Sınıf LGS',program2Text:'Yoğun LGS hazırlık, deneme analizi, eksik kazanım takibi ve rehberlik.',
+  program3Title:'9–12. Sınıflar',program3Text:'TYT ve AYT odaklı ders programı, soru çözümü, deneme ve performans takibi.',
+  program4Title:'YDT & İngilizce',program4Text:'Dil sınıfları, sınav İngilizcesi ve genel İngilizce programları.',
+  quick1Title:'Bursluluk Sınavı',quick1Text:'Başvuru formunu doldur, kaydını oluştur.',
+  quick2Title:'Deneme Sınavı',quick2Text:'Türkiye geneli ve kurum içi denemelere başvur.',
+  quick3Title:'Ön Kayıt',quick3Text:'Program ve sınıf bilgilerini bırak, kurum seni arasın.',
+  finderTitle:'Sana Uygun Programı Bul',finderText:'Sınıfını seç, sana uygun programı hemen gösterelim.',
+  applyTitle:'Tek Formda Hızlı Başvuru',applyText:'Başvurular yönetim paneline düşecek ve Yeni Başvuru → Arandı → Görüşüldü → Kayıt Oldu / Kayıt Olmadı şeklinde takip edilecek.',
+  resultTitle:'Sonuç Sorgulama ve Seviye Tespit',
+  announcementsTitle:'Güncel Duyuru ve Kampanyalar',
+  teachersTitle:'Öğretmen Kadrosu',teachersText:'Öğretmen bilgileri yönetim panelinden eklenebilecek. Şimdilik bölüm yayına hazır durumda.',
+  successTitle:'Öğrenci Başarıları',
+  reviewsTitle:'Veli ve Öğrenci Yorumları',reviewsText:'Yönetim panelinden onaylanan gerçek yorumlar burada yayınlanacak.',
+  contactTitle:"Tek Seçenek Akademi'ye Ulaşın",
+  contactName:'Tek Seçenek Akademi',
+  address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',
+  mobile:'0552 695 97 57',landline:'0236 238 00 66',
+  mapText:'Tek Seçenek Akademi, Utku Mahallesi Çimentepe Caddesi No: 4/4 adresindedir.',
+  floatTitle:'Henüz başvurunuz yok mu?',floatText:'Ön Kayıt Oluştur →',
+  copyright:'© 2026 Tek Seçenek Akademi. Tüm hakları saklıdır.'
+ };
+}
+function loadSiteContent(){
+ let d={};try{d=JSON.parse(localStorage.getItem(SITE_CONTENT_KEY)||'{}')}catch(e){}
+ d=Object.assign(defaultSiteContent(),d||{});
+ const quick=[...document.querySelectorAll('.action-card')];
+ [['quick1Title','quick1Text'],['quick2Title','quick2Text'],['quick3Title','quick3Text']].forEach((keys,i)=>{
+  const q=quick[i];if(!q)return;const b=q.querySelector('b'),s=q.querySelector('span');if(b)b.textContent=d[keys[0]];if(s)s.textContent=d[keys[1]];
+ });
+ const ph=document.querySelector('#programlar .section-head h2'),pp=document.querySelector('#programlar .section-head p');
+ if(ph)ph.textContent=d.programsTitle;if(pp)pp.textContent=d.programsText;
+ const cards=[...document.querySelectorAll('#programlar .card')];
+ [['program1Title','program1Text'],['program2Title','program2Text'],['program3Title','program3Text'],['program4Title','program4Text']].forEach((keys,i)=>{
+  const card=cards[i];if(!card)return;const h=card.querySelector('h3'),p=card.querySelector('p');if(h)h.textContent=d[keys[0]];if(p)p.textContent=d[keys[1]];
+ });
+ const finder=document.querySelector('#program-bul .finder');
+ if(finder){const h=finder.querySelector('h2'),p=finder.querySelector('p');if(h)h.textContent=d.finderTitle;if(p)p.textContent=d.finderText;}
+ const applyH=document.querySelector('#basvurular .section-head h2'),applyP=document.querySelector('#basvurular .section-head p');
+ if(applyH)applyH.textContent=d.applyTitle;if(applyP)applyP.textContent=d.applyText;
+ const resultH=document.querySelector('#sonuc .section-head h2');if(resultH)resultH.textContent=d.resultTitle;
+ const annH=document.querySelector('#duyurular .section-head h2');if(annH)annH.textContent=d.announcementsTitle;
+ const teachSec=document.querySelector('#teacherGrid')?.closest('section');
+ if(teachSec){const h=teachSec.querySelector('.section-head h2'),p=teachSec.querySelector('.section-head p');if(h)h.textContent=d.teachersTitle;if(p)p.textContent=d.teachersText;}
+ const successSec=document.querySelector('#basarilar');if(successSec){const h=successSec.querySelector('.section-head h2');if(h)h.textContent=d.successTitle;}
+ const reviewSec=document.querySelector('#reviewGrid')?.closest('section');
+ if(reviewSec){const h=reviewSec.querySelector('.section-head h2'),p=reviewSec.querySelector('.section-head p');if(h)h.textContent=d.reviewsTitle;if(p)p.textContent=d.reviewsText;}
+ const contact=document.querySelector('#iletisim');
+ if(contact){
+  const h=contact.querySelector('.section-head h2');if(h)h.textContent=d.contactTitle;
+  const cc=contact.querySelector('.contact-card');if(cc){
+   const ch=cc.querySelector('h3');if(ch)ch.textContent=d.contactName;
+   const lines=cc.querySelectorAll('.contact-line');
+   if(lines[0])lines[0].textContent='📍 '+d.address;
+   if(lines[1])lines[1].innerHTML='📱 <a href="tel:+90'+d.mobile.replace(/\D/g,'').replace(/^0/,'')+'">'+escapeHtml(d.mobile)+'</a>';
+   if(lines[2])lines[2].innerHTML='☎ <a href="tel:+90'+d.landline.replace(/\D/g,'').replace(/^0/,'')+'">'+escapeHtml(d.landline)+'</a>';
+  }
+  const mp=contact.querySelector('.map p');if(mp)mp.textContent=d.mapText;
+ }
+ const float=document.querySelector('.new-app-float');if(float){const b=float.querySelector('b'),s=float.querySelector('span');if(b)b.textContent=d.floatTitle;if(s)s.textContent=d.floatText;}
+ const copy=document.querySelector('.footer-bottom > span');if(copy)copy.textContent=d.copyright;
+}
+
+function applySiteSettings(){
+ let d={};try{d=JSON.parse(localStorage.getItem('tsa_site_settings_v1')||'{}')}catch(e){}
+ const mobile=d.mobile||'0552 695 97 57',landline=d.landline||'0236 238 00 66',address=d.address||'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa';
+ const md=mobile.replace(/\D/g,'').replace(/^0/,'');
+ const ld=landline.replace(/\D/g,'').replace(/^0/,'');
+ const contact=document.querySelector('#iletisim');
+ if(contact){
+  const lines=contact.querySelectorAll('.contact-line');
+  if(lines[0])lines[0].textContent='📍 '+address;
+  if(lines[1])lines[1].innerHTML='📱 <a href="tel:+90'+md+'">'+escapeHtml(mobile)+'</a>';
+  if(lines[2])lines[2].innerHTML='☎ <a href="tel:+90'+ld+'">'+escapeHtml(landline)+'</a>';
+  const btns=contact.querySelectorAll('.buttons a');
+  if(btns[0])btns[0].href='tel:+90'+md;
+  if(btns[1])btns[1].href='https://wa.me/90'+md;
+ }
+ const topPhone=document.querySelector('.phone');if(topPhone){topPhone.textContent=landline;topPhone.href='tel:+90'+ld;}
+ const topMobile=document.querySelector('.mobile-phone');if(topMobile){topMobile.textContent=mobile;topMobile.href='tel:+90'+md;}
+}
+
+function loadManagedContent(){
+ const ann=jgetSite('tsa_announcements_v1'),teachers=jgetSite('tsa_teachers_v1'),success=jgetSite('tsa_success_v1'),reviews=jgetSite('tsa_reviews_v1');
+ if(ann.length){document.getElementById('announcementList').innerHTML=ann.map(x=>'<div class="announcement"><b>'+escapeHtml(x.head)+'</b><span>'+escapeHtml(x.text)+'</span></div>').join('')}
+ if(teachers.length){document.getElementById('teacherGrid').innerHTML=teachers.map(x=>{
+  const photo=x.image?'<img class="avatar" src="'+escapeHtml(x.image)+'" alt="'+escapeHtml(x.head||'Öğretmen')+'">':'<div class="avatar">TSA</div>';
+  return '<div class="teacher">'+photo+'<h3>'+escapeHtml(x.head||'')+'</h3><p class="teacher-field">'+escapeHtml(x.text||'')+'</p></div>';
+ }).join('')}
+ if(success.length){document.getElementById('successGrid').innerHTML=success.map(x=>'<div class="success"><strong>★</strong><h3>'+escapeHtml(x.head)+'</h3><p>'+escapeHtml(x.text)+'</p></div>').join('')}
+ if(reviews.length){document.getElementById('reviewGrid').innerHTML=reviews.map(x=>{
+  const rating=Math.max(0,Math.min(5,Math.round(Number(x.rating)||0)));
+  const stars=rating?'<div class="review-stars">'+('★'.repeat(rating))+('☆'.repeat(5-rating))+'</div>':'';
+  const source=x.source==='google'
+   ?(x.authorUri?'<a class="review-source" href="'+escapeHtml(x.authorUri)+'" target="_blank" rel="noopener">Google Yorumu</a>':'<span class="review-source">Google Yorumu</span>')
+   :'';
+  const time=x.relativeTime?'<span class="review-time">'+escapeHtml(x.relativeTime)+'</span>':'';
+  return '<div class="review"><h3>'+escapeHtml(x.head||'')+'</h3>'+stars+'<p>'+escapeHtml(x.text||'')+'</p>'+time+source+'</div>';
+ }).join('')}
+}
+function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+loadManagedContent();
+window.addEventListener('tsa:simple-public-updated',loadManagedContent);
+loadSiteContent();
+applySiteSettings();
+window.addEventListener('tsa:site-content-updated',loadSiteContent);
+
+function loadManagedHero(){
+ let slides=[];try{slides=JSON.parse(localStorage.getItem(HERO_KEY)||'[]')}catch(e){}
+ if(!Array.isArray(slides)||!slides.length)return;
+ const els=[...document.querySelectorAll('.hero-slide')];
+ slides.slice(0,els.length).forEach((x,i)=>{
+  const el=els[i]; if(!el)return;
+  if(x.image)el.style.backgroundImage='url("'+String(x.image).replace(/"/g,'')+'")';
+  const tag=el.querySelector('.tag'),h1=el.querySelector('h1'),p=el.querySelector('p'),btns=el.querySelectorAll('.buttons a');
+  if(tag)tag.textContent=x.tag||'';
+  if(h1)h1.innerHTML=escapeHtml(x.title||'')+(x.highlight?' <span>'+escapeHtml(x.highlight)+'</span>':'');
+  if(p)p.textContent=x.text||'';
+  if(btns[0]){btns[0].textContent=x.btn1||'';btns[0].setAttribute('href',x.link1||'#');}
+  if(btns[1]){btns[1].textContent=x.btn2||'';btns[1].setAttribute('href',x.link2||'#');}
+ });
+}
+
+loadManagedHero();
+window.addEventListener('tsa:hero-updated',loadManagedHero);
+window.addEventListener('tsa:settings-updated',applySiteSettings);
+const heroSlides=[...document.querySelectorAll('.hero-slide')];
+const heroDots=document.getElementById('heroDots');
+let heroIndex=0,heroTimer=null;
+function showHeroSlide(i){
+ if(!heroSlides.length)return;
+ heroIndex=(i+heroSlides.length)%heroSlides.length;
+ heroSlides.forEach((s,n)=>s.classList.toggle('active',n===heroIndex));
+ [...heroDots.children].forEach((d,n)=>d.classList.toggle('active',n===heroIndex));
+}
+if(heroSlides.length){
+ heroSlides.forEach((_,i)=>{const b=document.createElement('button');b.className='hero-dot'+(i===0?' active':'');b.setAttribute('aria-label',(i+1)+'. banner');b.addEventListener('click',()=>{showHeroSlide(i);restartHero()});heroDots.appendChild(b)});
+ const nextHero=()=>showHeroSlide(heroIndex+1);
+ const restartHero=()=>{clearInterval(heroTimer);heroTimer=setInterval(nextHero,5500)};
+ document.getElementById('heroNext').addEventListener('click',()=>{nextHero();restartHero()});
+ document.getElementById('heroPrev').addEventListener('click',()=>{showHeroSlide(heroIndex-1);restartHero()});
+ restartHero();
+}
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{if(window.scrollY>500)toTop.classList.add('show');else toTop.classList.remove('show')});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefault();window.location.href='index.html';});
+</script>
+<script type="module" src="firebase-announcements-public.js?v=1"></script>
+<script type="module" src="firebase-applications-public.js?v=1"></script>
+<script type="module" src="firebase-portal-public.js?v=1"></script>
+<script type="module" src="firebase-result-categories-public.js?v=1"></script>
+<script type="module" src="firebase-simple-content-public.js?v=1"></script>
+<script type="module" src="firebase-site-public.js?v=3"></script>
+
+<script>
+(function(){
+  function removeReviewSection(){
+    document.querySelectorAll('section').forEach(function(section){
+      var h2=section.querySelector('h2');
+      if(h2 && h2.textContent.trim()==='Veli ve Öğrenci Yorumları'){
+        section.remove();
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', removeReviewSection);
+  else removeReviewSection();
+})();
+</script>
+
+<script>
+(function(){
+  const btn = document.getElementById('mobileMenuToggle');
+  const nav = document.getElementById('mainNav');
+  if(!btn || !nav) return;
+
+  btn.addEventListener('click', function(){
+    const isOpen = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    btn.textContent = isOpen ? '✕' : '☰';
+  });
+
+  nav.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      if(window.innerWidth <= 900){
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        btn.textContent = '☰';
+      }
+    });
+  });
+
+  window.addEventListener('resize', function(){
+    if(window.innerWidth > 900){
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+      btn.textContent = '☰';
+    }
+  });
+})();
+</script>
+
+
+<script data-mobile-hero-fix="1">
+(function(){
+  const slider = document.getElementById('heroSlider');
+  if(!slider) return;
+
+  const slides = Array.from(slider.querySelectorAll('.hero-slide'));
+  const dotsWrap = document.getElementById('heroDots');
+  const prev = document.getElementById('heroPrev');
+  const next = document.getElementById('heroNext');
+  if(slides.length < 2) return;
+
+  let index = Math.max(0, slides.findIndex(s => s.classList.contains('active')));
+  let timer = null;
+  let startX = 0;
+  let startY = 0;
+
+  function render(i){
+    index = (i + slides.length) % slides.length;
+    slides.forEach((slide,n)=>slide.classList.toggle('active', n === index));
+    if(dotsWrap){
+      Array.from(dotsWrap.children).forEach((dot,n)=>dot.classList.toggle('active', n === index));
+    }
+  }
+
+  function startAuto(){
+    clearInterval(timer);
+    timer = setInterval(()=>render(index + 1), 5500);
+  }
+
+  if(prev){
+    prev.onclick = function(e){ e.preventDefault(); render(index - 1); startAuto(); };
+  }
+  if(next){
+    next.onclick = function(e){ e.preventDefault(); render(index + 1); startAuto(); };
+  }
+
+  slider.addEventListener('touchstart', function(e){
+    if(!e.touches || !e.touches[0]) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, {passive:true});
+
+  slider.addEventListener('touchend', function(e){
+    if(!e.changedTouches || !e.changedTouches[0]) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)){
+      render(index + (dx < 0 ? 1 : -1));
+      startAuto();
+    }
+  }, {passive:true});
+
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) clearInterval(timer);
+    else startAuto();
+  });
+
+  render(index);
+  startAuto();
+})();
+</script>
+
+<script>
+window.addEventListener('DOMContentLoaded',function(){
+  var el=document.getElementById('basarilar');
+  if(el)setTimeout(function(){el.scrollIntoView({behavior:'auto',block:'start'});},50);
+});
+</script>
+</body>
 </html>
