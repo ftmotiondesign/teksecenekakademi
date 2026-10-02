@@ -260,7 +260,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div><h2>Galeri Yönetimi</h2><small>Kurum fotoğraf ve videolarını ekleyin, düzenleyin ve silin.</small></div>
       <a class="secondary" style="text-decoration:none" href="gallery.html" target="_blank" rel="noopener">↗ Galeriyi Gör</a>
     </div>
-    <div class="hint"><b>Bilgisayardan doğrudan yükleme:</b> Fotoğraf veya videoyu seçip “Galeriye Ekle” dediğinizde dosya Cloudinary'ye yüklenir, bağlantısı Firebase'e kaydedilir ve tüm cihazlarda görünür.</div>
+    <div class="hint"><b>Bilgisayardan doğrudan yükleme:</b> Fotoğraflar yüklenmeden önce otomatik küçültülüp WebP olarak sıkıştırılır. Galeride de optimize boyut gösterilir; böylece Cloudinary bant genişliği daha az kullanılır.</div>
     <div class="gallery-admin-form" style="margin-top:12px">
       <div class="field"><label>Cloudinary Cloud Name</label><input id="galleryCloudName" placeholder="Örn. dxxxxxxx"></div>
       <div class="field"><label>Unsigned Upload Preset</label><input id="galleryUploadPreset" placeholder="Örn. teksecenek_gallery"></div>
@@ -1014,7 +1014,14 @@ renderGoogleReviewSettings();
 
 var GALLERY_KEY='tsa_gallery_v1';
 function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
-function galleryItemUrl(x){return x&&x.src?x.src:''}
+function cloudinaryOptimizedUrl(url,type,width){
+ url=String(url||'');
+ if(!url||url.indexOf('res.cloudinary.com/')===-1||url.indexOf('/upload/')===-1)return url;
+ if(type==='video')return url;
+ var w=Math.max(320,parseInt(width||1200,10)||1200);
+ return url.replace('/upload/','/upload/f_auto,q_auto:eco,c_limit,w_'+w+'/');
+}
+function galleryItemUrl(x,width){return cloudinaryOptimizedUrl(x&&x.src?x.src:'',x&&x.type,width||700)}
 
 async function renderGalleryAdmin(){
  var listEl=el('galleryAdminList');if(!listEl)return;
@@ -1023,7 +1030,7 @@ async function renderGalleryAdmin(){
   el('galleryCount').textContent=items.length+' içerik';
   if(!items.length){listEl.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz galeri içeriği yok.</div>';return}
   listEl.innerHTML=items.map(function(x){
-   var url=galleryItemUrl(x);
+   var url=galleryItemUrl(x,700);
    var media=x.type==='video'
     ?'<video controls preload="metadata" src="'+esc(url)+'"></video>'
     :'<img src="'+esc(url)+'" alt="">';
@@ -1046,12 +1053,38 @@ function saveGalleryCloudinarySettings(){
  localStorage.setItem(GALLERY_CLOUDINARY_KEY,JSON.stringify(s));
  alert('Cloudinary ayarları kaydedildi.');
 }
+function optimizeGalleryImageFile(file){
+ return new Promise(function(resolve,reject){
+  if(!file||file.type.indexOf('image/')!==0){resolve(file);return}
+  if(file.size>20*1024*1024){reject(new Error('Fotoğraf çok büyük. En fazla 20 MB seçin.'));return}
+  var reader=new FileReader();
+  reader.onload=function(ev){
+   var img=new Image();
+   img.onload=function(){
+    var max=1600,ratio=Math.min(1,max/img.width,max/img.height),w=Math.max(1,Math.round(img.width*ratio)),h=Math.max(1,Math.round(img.height*ratio));
+    var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    var ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+    canvas.toBlob(function(blob){
+     if(!blob){resolve(file);return}
+     var name=String(file.name||'galeri').replace(/\.[^.]+$/,'')+'.webp';
+     resolve(new File([blob],name,{type:'image/webp',lastModified:Date.now()}));
+    },'image/webp',0.78);
+   };
+   img.onerror=function(){resolve(file)};
+   img.src=ev.target.result;
+  };
+  reader.onerror=function(){resolve(file)};
+  reader.readAsDataURL(file);
+ });
+}
 async function uploadGalleryFileToCloudinary(file){
  var s=galleryCloudinarySettings();
  if(!s.cloudName||!s.uploadPreset)throw new Error('Önce Cloudinary Cloud Name ve Unsigned Upload Preset bilgilerini kaydedin.');
- if(file.size>50*1024*1024)throw new Error('Dosya çok büyük. Şimdilik en fazla 50 MB yükleyin.');
+ var uploadFile=file;
+ if(file.type.indexOf('image/')===0)uploadFile=await optimizeGalleryImageFile(file);
+ if(uploadFile.type.indexOf('video/')===0&&uploadFile.size>20*1024*1024)throw new Error('Video çok büyük. Cloudinary kotasını korumak için en fazla 20 MB video yükleyin.');
  var fd=new FormData();
- fd.append('file',file);
+ fd.append('file',uploadFile);
  fd.append('upload_preset',s.uploadPreset);
  fd.append('folder','teksecenek-galeri');
  var res=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(s.cloudName)+'/auto/upload',{method:'POST',body:fd});
@@ -1109,7 +1142,7 @@ async function openGalleryEdit(id){
   el('galleryEditText').value=x.text||'';
   el('galleryEditType').value=x.type||'image';
   el('galleryEditSrc').value=x.src||'';
-  var url=galleryItemUrl(x),p=el('galleryEditPreview');
+  var url=galleryItemUrl(x,900),p=el('galleryEditPreview');
   p.innerHTML=x.type==='video'?'<video controls preload="metadata" src="'+esc(url)+'"></video>':'<img src="'+esc(url)+'" alt="">';
   var m=el('galleryEditModal');m.classList.add('show');m.setAttribute('aria-hidden','false');
  }catch(err){console.error(err);alert('İçerik açılamadı.')}
@@ -1487,6 +1520,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
 <script type="module" src="firebase-site-admin.js?v=5"></script>
-<script type="module" src="firebase-gallery-admin.js?v=3"></script>
+<script type="module" src="firebase-gallery-admin.js?v=4"></script>
 </body>
 </html>
