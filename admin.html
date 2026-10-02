@@ -283,15 +283,16 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <section id="success" class="section"><div class="box"><div class="section-head"><h2>Başarılar</h2><button class="primary" data-addsimple="success">+ Başarı Ekle</button></div><div id="successList" class="list"></div></div></section>
 <section id="reviews" class="section">
 <div class="box">
-<div class="section-head"><div><h2>Yorumlar</h2><small>Manuel yorum ekleyin veya Google yorumlarını içe aktarın.</small></div><button class="primary" data-addsimple="review">+ Yorum Ekle</button></div>
-<div class="hint"><b>Google yorumlarını çek:</b> Google Maps JavaScript API ve Places API açık olmalı. API anahtarı yalnızca bu yönetici tarayıcısında saklanır.</div>
+<div class="section-head"><div><h2>Yorumlar</h2><small>Google'daki gerçek yorumları kolayca siteye ekleyin.</small></div><button class="secondary" data-addsimple="review">+ Normal Yorum Ekle</button></div>
+<div class="hint"><b>Ücretsiz yöntem:</b> Google yorumunu buraya kopyalayın. API, kart veya faturalandırma gerekmez.</div>
 <div class="form" style="margin-bottom:14px">
-<div class="field"><label>Google Maps API Anahtarı</label><input id="googleReviewsApiKey" type="password" placeholder="AIza..."></div>
-<div class="field"><label>Google Place ID</label><input id="googleReviewsPlaceId" placeholder="ChIJ..."></div>
+<div class="field"><label>Yorum Yapan Kişi</label><input id="googleManualAuthor" placeholder="Örn. Ahmet Yılmaz"></div>
+<div class="field"><label>Yıldız Puanı</label><select id="googleManualRating"><option value="5">★★★★★ 5 Yıldız</option><option value="4">★★★★☆ 4 Yıldız</option><option value="3">★★★☆☆ 3 Yıldız</option><option value="2">★★☆☆☆ 2 Yıldız</option><option value="1">★☆☆☆☆ 1 Yıldız</option></select></div>
+<div class="field full"><label>Google Yorum Metni</label><textarea id="googleManualText" placeholder="Google'daki yorumu buraya yapıştırın" style="min-height:110px"></textarea></div>
+<div class="field full"><label>Google Yorum / Profil Bağlantısı <span style="font-weight:400">(isteğe bağlı)</span></label><input id="googleManualUrl" placeholder="https://maps.google.com/..."></div>
 <div class="field full" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-<button class="secondary" id="saveGoogleReviewSettings" type="button">Ayarları Kaydet</button>
-<button class="primary" id="importGoogleReviews" type="button">★ Google Yorumlarını Getir</button>
-<span id="googleReviewStatus" style="font-size:12px;color:var(--muted)"></span>
+<button class="primary" id="saveGoogleManualReview" type="button">★ Google Yorumu Olarak Kaydet</button>
+<span id="googleManualStatus" style="font-size:12px;color:var(--muted)"></span>
 </div>
 </div>
 <div id="reviewList" class="list"></div>
@@ -936,81 +937,36 @@ window.addEventListener('tsa:gallery-updated',function(){renderGalleryAdmin();})
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
-var GOOGLE_REVIEW_SETTINGS_KEY='tsa_google_reviews_v1';
-function googleReviewSettings(){try{return JSON.parse(localStorage.getItem(GOOGLE_REVIEW_SETTINGS_KEY)||'{}')}catch(e){return{}}}
-function renderGoogleReviewSettings(){
- var s=googleReviewSettings();
- if(el('googleReviewsApiKey'))el('googleReviewsApiKey').value=s.apiKey||'';
- if(el('googleReviewsPlaceId'))el('googleReviewsPlaceId').value=s.placeId||'';
-}
-function saveGoogleReviewSettings(){
- var s={apiKey:(el('googleReviewsApiKey').value||'').trim(),placeId:(el('googleReviewsPlaceId').value||'').trim()};
- if(!s.apiKey||!s.placeId){alert('Google API anahtarı ve Place ID birlikte girilmeli.');return}
- localStorage.setItem(GOOGLE_REVIEW_SETTINGS_KEY,JSON.stringify(s));
- var st=el('googleReviewStatus');if(st){st.textContent='✓ Ayarlar kaydedildi';setTimeout(function(){st.textContent=''},2000)}
-}
-var __tsaGoogleMapsPromise=null;
-function loadGoogleMapsPlaces(apiKey){
- if(window.google&&window.google.maps&&window.google.maps.importLibrary)return Promise.resolve();
- if(__tsaGoogleMapsPromise)return __tsaGoogleMapsPromise;
- __tsaGoogleMapsPromise=new Promise(function(resolve,reject){
-  window.__tsaGoogleMapsReady=function(){resolve();delete window.__tsaGoogleMapsReady};
-  var s=document.createElement('script');
-  s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(apiKey)+'&libraries=places&v=weekly&loading=async&callback=__tsaGoogleMapsReady';
-  s.async=true;s.defer=true;
-  s.onerror=function(){reject(new Error('Google Maps API yüklenemedi. API anahtarını ve alan adı kısıtlamasını kontrol edin.'))};
-  document.head.appendChild(s);
- });
- return __tsaGoogleMapsPromise;
-}
-function googleReviewKey(r){
- var a=r&&r.authorAttribution&&r.authorAttribution.displayName?r.authorAttribution.displayName:'';
- var t=r&&r.text?r.text:'';
- var q=r&&r.rating?r.rating:'';
- var raw=(a+'|'+t+'|'+q).toLowerCase(),h=0;
- for(var i=0;i<raw.length;i++){h=((h<<5)-h)+raw.charCodeAt(i);h|=0}
- return 'g-'+Math.abs(h);
-}
-async function importGoogleReviewsNow(){
- var s={apiKey:(el('googleReviewsApiKey').value||'').trim(),placeId:(el('googleReviewsPlaceId').value||'').trim()};
- if(!s.apiKey||!s.placeId){alert('Önce Google API anahtarı ve Place ID girin.');return}
+async function saveGoogleManualReview(){
+ var author=(el('googleManualAuthor').value||'').trim();
+ var rating=Number(el('googleManualRating').value||5);
+ var text=(el('googleManualText').value||'').trim();
+ var url=(el('googleManualUrl').value||'').trim();
+ if(!author){alert('Yorum yapan kişinin adını yazın.');el('googleManualAuthor').focus();return}
+ if(!text){alert('Google yorum metnini yazın.');el('googleManualText').focus();return}
  if(!window.TSAFirebaseSimpleContent){alert('Firebase yorum bağlantısı henüz hazır değil.');return}
- localStorage.setItem(GOOGLE_REVIEW_SETTINGS_KEY,JSON.stringify(s));
- var btn=el('importGoogleReviews'),old=btn.textContent,st=el('googleReviewStatus');
- btn.disabled=true;btn.textContent='Google’dan alınıyor...';if(st)st.textContent='Google bağlantısı kuruluyor...';
+ var btn=el('saveGoogleManualReview'),old=btn.textContent,st=el('googleManualStatus');
+ btn.disabled=true;btn.textContent='Kaydediliyor...';if(st)st.textContent='';
  try{
-  await loadGoogleMapsPlaces(s.apiKey);
-  var lib=await google.maps.importLibrary('places');
-  var place=new lib.Place({id:s.placeId});
-  await place.fetchFields({fields:['displayName','reviews']});
-  var reviews=Array.isArray(place.reviews)?place.reviews:[];
-  if(!reviews.length)throw new Error('Google bu işletme için yorum döndürmedi.');
-  var existing=get('tsa_reviews_v1',[]),existingKeys={};
-  existing.forEach(function(x){if(x.googleReviewKey)existingKeys[x.googleReviewKey]=true});
-  var added=0,skipped=0;
-  for(var i=0;i<reviews.length;i++){
-   var r=reviews[i],key=googleReviewKey(r);
-   if(existingKeys[key]){skipped++;continue}
-   var author=r.authorAttribution&&r.authorAttribution.displayName?r.authorAttribution.displayName:'Google Kullanıcısı';
-   var uri=r.authorAttribution&&r.authorAttribution.uri?r.authorAttribution.uri:'';
-   var text=String(r.text||'').trim();
-   if(!text){skipped++;continue}
-   await window.TSAFirebaseSimpleContent.add('review',author,text,{
-    source:'google',rating:Number(r.rating||0),authorUri:uri,
-    relativeTime:String(r.relativePublishTimeDescription||''),googleReviewKey:key
-   });
-   existingKeys[key]=true;added++;
-  }
-  if(st)st.textContent='✓ '+added+' yorum eklendi'+(skipped?' · '+skipped+' zaten vardı':'');
-  alert(added+' Google yorumu Firebase’e aktarıldı.'+(skipped?' '+skipped+' yorum zaten kayıtlıydı.':''));
+  await window.TSAFirebaseSimpleContent.add('review',author,text,{
+   source:'google',
+   rating:rating,
+   authorUri:url,
+   relativeTime:'',
+   googleReviewKey:'manual-'+Date.now()
+  });
+  el('googleManualAuthor').value='';
+  el('googleManualRating').value='5';
+  el('googleManualText').value='';
+  el('googleManualUrl').value='';
+  if(st){st.textContent='✓ Google yorumu kaydedildi';setTimeout(function(){st.textContent=''},2500)}
+  alert('Google yorumu siteye eklendi.');
  }catch(err){
-  console.error(err);if(st)st.textContent='Hata: '+(err&&err.message?err.message:err);
-  alert('Google yorumları alınamadı: '+(err&&err.message?err.message:err));
+  console.error(err);
+  alert('Google yorumu kaydedilemedi: '+(err&&err.message?err.message:err));
  }finally{btn.disabled=false;btn.textContent=old}
 }
-if(el('saveGoogleReviewSettings'))el('saveGoogleReviewSettings').addEventListener('click',saveGoogleReviewSettings);
-if(el('importGoogleReviews'))el('importGoogleReviews').addEventListener('click',importGoogleReviewsNow);
-renderGoogleReviewSettings();
+if(el('saveGoogleManualReview'))el('saveGoogleManualReview').addEventListener('click',saveGoogleManualReview);
 
 var GALLERY_KEY='tsa_gallery_v1';
 function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
