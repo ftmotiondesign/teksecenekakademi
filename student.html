@@ -43,7 +43,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     <div class="brand"><img src="logo.png" alt="Tek Seçenek Akademi"><div><b>Tek Seçenek Akademi</b><span>Öğrenci Paneli</span></div></div>
     <h1>Öğrenci Girişi</h1>
     <div class="desc">Takip numaranı, öğrenci numaranı veya sonuç kodunu; başvuruda kullanılan veli telefonuyla birlikte gir.</div>
-    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><input id="studentPhone" type="tel" inputmode="numeric" autocomplete="off" placeholder="Veli Telefonu"></div><button id="studentBtn" class="login-btn">Giriş Yap</button>
+    <div class="login-grid"><input id="studentCode" autocomplete="off" placeholder="Takip No / Öğrenci No / Sonuç Kodu"><input id="studentPhone" type="tel" inputmode="numeric" autocomplete="off" placeholder="05xx xxx xx xx" maxlength="14" data-phone-mask></div><button id="studentBtn" class="login-btn">Giriş Yap</button>
     <div id="loginError"></div>
     <div id="studentChoices" style="display:none;margin-top:14px"></div>
     <a class="back" href="./">← Ana Sayfaya Dön</a>
@@ -316,5 +316,23 @@ document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorag
 const saved=sessionStorage.getItem(SESSION_KEY);if(saved){try{const ss=JSON.parse(saved);if(ss.identifier&&ss.phone){window.addEventListener('load',async()=>{try{const d=await window.TSAFirebasePortal.lookup(ss.identifier,ss.phone);if(d&&d.app){window.TSAFirebasePortal.hydrate(d);openPanel({app:d.app,results:d.results||[]})}else sessionStorage.removeItem(SESSION_KEY)}catch(e){sessionStorage.removeItem(SESSION_KEY)}})}}catch(e){sessionStorage.removeItem(SESSION_KEY)}}
 </script>
 <script type="module" src="firebase-portal-public.js?v=1"></script>
+<script>
+(function(){
+  function formatPhone(v){
+    var d=String(v||'').replace(/\D/g,'').slice(0,11);
+    if(d && d[0]!=='0') d='0'+d.slice(0,10);
+    var out=d.slice(0,4);
+    if(d.length>4) out+=' '+d.slice(4,7);
+    if(d.length>7) out+=' '+d.slice(7,9);
+    if(d.length>9) out+=' '+d.slice(9,11);
+    return out;
+  }
+  document.addEventListener('input',function(e){
+    if(e.target && e.target.matches('[data-phone-mask]')){
+      e.target.value=formatPhone(e.target.value);
+    }
+  });
+})();
+</script>
 </body>
 </html>
