@@ -110,7 +110,7 @@ form.addEventListener('submit',async e=>{
     }
 
     saveLegacySession(email,remember);
-    location.href='../admin.html?v=80#dashboard';
+    location.href='../admin.html?v=82#dashboard';
   }catch(err){
     console.error('Firebase giriş hatası:',err);
     const code=err && err.code ? err.code : '';
