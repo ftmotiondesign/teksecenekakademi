@@ -281,7 +281,22 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 
 <section id="teachers" class="section"><div class="box"><div class="section-head"><h2>Öğretmenler</h2><button class="primary" data-addsimple="teacher">+ Öğretmen Ekle</button></div><div id="teacherList" class="list"></div></div></section>
 <section id="success" class="section"><div class="box"><div class="section-head"><h2>Başarılar</h2><button class="primary" data-addsimple="success">+ Başarı Ekle</button></div><div id="successList" class="list"></div></div></section>
-<section id="reviews" class="section"><div class="box"><div class="section-head"><h2>Yorumlar</h2><button class="primary" data-addsimple="review">+ Yorum Ekle</button></div><div id="reviewList" class="list"></div></div></section>
+<section id="reviews" class="section">
+<div class="box">
+<div class="section-head"><div><h2>Yorumlar</h2><small>Manuel yorum ekleyin veya Google yorumlarını içe aktarın.</small></div><button class="primary" data-addsimple="review">+ Yorum Ekle</button></div>
+<div class="hint"><b>Google yorumlarını çek:</b> Google Maps JavaScript API ve Places API açık olmalı. API anahtarı yalnızca bu yönetici tarayıcısında saklanır.</div>
+<div class="form" style="margin-bottom:14px">
+<div class="field"><label>Google Maps API Anahtarı</label><input id="googleReviewsApiKey" type="password" placeholder="AIza..."></div>
+<div class="field"><label>Google Place ID</label><input id="googleReviewsPlaceId" placeholder="ChIJ..."></div>
+<div class="field full" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button class="secondary" id="saveGoogleReviewSettings" type="button">Ayarları Kaydet</button>
+<button class="primary" id="importGoogleReviews" type="button">★ Google Yorumlarını Getir</button>
+<span id="googleReviewStatus" style="font-size:12px;color:var(--muted)"></span>
+</div>
+</div>
+<div id="reviewList" class="list"></div>
+</div>
+</section>
 
 <div id="teacherEditModal" class="student-modal" aria-hidden="true">
   <div class="student-modal-card" style="width:min(620px,100%)">
@@ -898,6 +913,15 @@ function renderSimple(type){
   }).join(''):'<div class="empty">Henüz öğretmen kaydı yok.</div>';
   return;
  }
+ if(type==='review'){
+  el(m[1]).innerHTML=a.length?a.map(function(x){
+   var rating=Math.max(0,Math.min(5,Math.round(Number(x.rating)||0)));
+   var stars=rating?'<div style="color:#f5a623;font-size:15px;margin:4px 0">'+('★'.repeat(rating))+'</div>':'';
+   var source=x.source==='google'?'<span class="pill" style="margin-left:7px">Google</span>':'';
+   return '<div class="item"><div><b>'+esc(x.head||'-')+'</b>'+source+stars+'<small>'+esc(x.text||'')+'</small>'+(x.relativeTime?'<br><small>'+esc(x.relativeTime)+'</small>':'')+'</div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>';
+  }).join(''):'<div class="empty">Henüz yorum yok.</div>';
+  return;
+ }
  el(m[1]).innerHTML=a.length?a.map(function(x){return '<div class="item"><div><b>'+esc(x.head)+'</b><br><small>'+esc(x.text)+'</small></div><button class="danger" data-delsimple="'+type+'" data-id="'+esc(x.id)+'">Sil</button></div>'}).join(''):'<div class="empty">Henüz kayıt yok.</div>'
 }
 window.addEventListener('tsa:announcements-updated',function(){renderSimple('announcement')});
@@ -911,6 +935,82 @@ window.addEventListener('tsa:settings-updated',function(){renderSiteSettings();}
 window.addEventListener('tsa:gallery-updated',function(){renderGalleryAdmin();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
+
+var GOOGLE_REVIEW_SETTINGS_KEY='tsa_google_reviews_v1';
+function googleReviewSettings(){try{return JSON.parse(localStorage.getItem(GOOGLE_REVIEW_SETTINGS_KEY)||'{}')}catch(e){return{}}}
+function renderGoogleReviewSettings(){
+ var s=googleReviewSettings();
+ if(el('googleReviewsApiKey'))el('googleReviewsApiKey').value=s.apiKey||'';
+ if(el('googleReviewsPlaceId'))el('googleReviewsPlaceId').value=s.placeId||'';
+}
+function saveGoogleReviewSettings(){
+ var s={apiKey:(el('googleReviewsApiKey').value||'').trim(),placeId:(el('googleReviewsPlaceId').value||'').trim()};
+ if(!s.apiKey||!s.placeId){alert('Google API anahtarı ve Place ID birlikte girilmeli.');return}
+ localStorage.setItem(GOOGLE_REVIEW_SETTINGS_KEY,JSON.stringify(s));
+ var st=el('googleReviewStatus');if(st){st.textContent='✓ Ayarlar kaydedildi';setTimeout(function(){st.textContent=''},2000)}
+}
+var __tsaGoogleMapsPromise=null;
+function loadGoogleMapsPlaces(apiKey){
+ if(window.google&&window.google.maps&&window.google.maps.importLibrary)return Promise.resolve();
+ if(__tsaGoogleMapsPromise)return __tsaGoogleMapsPromise;
+ __tsaGoogleMapsPromise=new Promise(function(resolve,reject){
+  window.__tsaGoogleMapsReady=function(){resolve();delete window.__tsaGoogleMapsReady};
+  var s=document.createElement('script');
+  s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(apiKey)+'&libraries=places&v=weekly&loading=async&callback=__tsaGoogleMapsReady';
+  s.async=true;s.defer=true;
+  s.onerror=function(){reject(new Error('Google Maps API yüklenemedi. API anahtarını ve alan adı kısıtlamasını kontrol edin.'))};
+  document.head.appendChild(s);
+ });
+ return __tsaGoogleMapsPromise;
+}
+function googleReviewKey(r){
+ var a=r&&r.authorAttribution&&r.authorAttribution.displayName?r.authorAttribution.displayName:'';
+ var t=r&&r.text?r.text:'';
+ var q=r&&r.rating?r.rating:'';
+ var raw=(a+'|'+t+'|'+q).toLowerCase(),h=0;
+ for(var i=0;i<raw.length;i++){h=((h<<5)-h)+raw.charCodeAt(i);h|=0}
+ return 'g-'+Math.abs(h);
+}
+async function importGoogleReviewsNow(){
+ var s={apiKey:(el('googleReviewsApiKey').value||'').trim(),placeId:(el('googleReviewsPlaceId').value||'').trim()};
+ if(!s.apiKey||!s.placeId){alert('Önce Google API anahtarı ve Place ID girin.');return}
+ if(!window.TSAFirebaseSimpleContent){alert('Firebase yorum bağlantısı henüz hazır değil.');return}
+ localStorage.setItem(GOOGLE_REVIEW_SETTINGS_KEY,JSON.stringify(s));
+ var btn=el('importGoogleReviews'),old=btn.textContent,st=el('googleReviewStatus');
+ btn.disabled=true;btn.textContent='Google’dan alınıyor...';if(st)st.textContent='Google bağlantısı kuruluyor...';
+ try{
+  await loadGoogleMapsPlaces(s.apiKey);
+  var lib=await google.maps.importLibrary('places');
+  var place=new lib.Place({id:s.placeId});
+  await place.fetchFields({fields:['displayName','reviews']});
+  var reviews=Array.isArray(place.reviews)?place.reviews:[];
+  if(!reviews.length)throw new Error('Google bu işletme için yorum döndürmedi.');
+  var existing=get('tsa_reviews_v1',[]),existingKeys={};
+  existing.forEach(function(x){if(x.googleReviewKey)existingKeys[x.googleReviewKey]=true});
+  var added=0,skipped=0;
+  for(var i=0;i<reviews.length;i++){
+   var r=reviews[i],key=googleReviewKey(r);
+   if(existingKeys[key]){skipped++;continue}
+   var author=r.authorAttribution&&r.authorAttribution.displayName?r.authorAttribution.displayName:'Google Kullanıcısı';
+   var uri=r.authorAttribution&&r.authorAttribution.uri?r.authorAttribution.uri:'';
+   var text=String(r.text||'').trim();
+   if(!text){skipped++;continue}
+   await window.TSAFirebaseSimpleContent.add('review',author,text,{
+    source:'google',rating:Number(r.rating||0),authorUri:uri,
+    relativeTime:String(r.relativePublishTimeDescription||''),googleReviewKey:key
+   });
+   existingKeys[key]=true;added++;
+  }
+  if(st)st.textContent='✓ '+added+' yorum eklendi'+(skipped?' · '+skipped+' zaten vardı':'');
+  alert(added+' Google yorumu Firebase’e aktarıldı.'+(skipped?' '+skipped+' yorum zaten kayıtlıydı.':''));
+ }catch(err){
+  console.error(err);if(st)st.textContent='Hata: '+(err&&err.message?err.message:err);
+  alert('Google yorumları alınamadı: '+(err&&err.message?err.message:err));
+ }finally{btn.disabled=false;btn.textContent=old}
+}
+if(el('saveGoogleReviewSettings'))el('saveGoogleReviewSettings').addEventListener('click',saveGoogleReviewSettings);
+if(el('importGoogleReviews'))el('importGoogleReviews').addEventListener('click',importGoogleReviewsNow);
+renderGoogleReviewSettings();
 
 var GALLERY_KEY='tsa_gallery_v1';
 function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
