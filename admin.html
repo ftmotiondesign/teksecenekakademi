@@ -187,7 +187,7 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 <div class="status-row"><span>Web sitesi</span><span class="status-ok">Aktif</span></div>
 <div class="status-row"><span>Başvuru formları</span><span class="status-ok">Aktif</span></div>
 <div class="status-row"><span>Sonuç sorgulama</span><span class="status-ok">Aktif</span></div>
-<div class="status-row"><span>Firebase / Ortak veri</span><span class="status-warn">Bağlı değil</span></div>
+<div class="status-row"><span>Firebase / Ortak veri</span><span id="firebaseSystemStatus" class="status-warn">Kontrol ediliyor...</span></div>
 </div>
 </div>
 </section>
@@ -566,8 +566,14 @@ function renderDashboard(){
  if(newCount)alerts.push('<div class="alert-item"><b>'+newCount+' yeni başvuru</b> işlem bekliyor.</div>');
  if(passiveCount)alerts.push('<div class="alert-item"><b>'+passiveCount+' sonuç kategorisi</b> pasif durumda.</div>');
  if(!results.length)alerts.push('<div class="alert-item">Henüz yayınlanmış sınav sonucu yok.</div>');
- alerts.push('<div class="alert-item"><b>Firebase bağlı değil.</b> Veriler şu an bu tarayıcıda tutuluyor.</div>');
+ var firebaseOk=!!(window.TSAFirebaseApplications&&window.TSAFirebaseResults&&window.TSAFirebaseSite);
+ if(firebaseOk){
+  alerts.push('<div class="alert-item" style="background:#eefaf3;border-left-color:var(--green)"><b>✓ Firebase bağlı.</b> Veriler bulutta saklanıyor.</div>');
+ }else{
+  alerts.push('<div class="alert-item"><b>Firebase bağlantısı kontrol ediliyor.</b> Bağlantı birkaç saniye içinde doğrulanacak.</div>');
+ }
  el('dashAlerts').innerHTML=alerts.join('');
+ updateFirebaseSystemStatus();
 
  var types=['Ön Kayıt','Bursluluk','Deneme Sınavı','Seviye Tespit'];
  el('dashAppBreakdown').innerHTML=types.map(function(t){
@@ -583,6 +589,32 @@ function renderDashboard(){
  el('dashDistricts').innerHTML=districts.length?districts.map(function(x){return '<div class="rank-row"><div><b>'+esc(x.name)+'</b><small>Başvuru sayısı</small></div><span class="rank-num">'+x.count+'</span></div>'}).join(''):'<div class="empty">Henüz ilçe bilgili başvuru yok.</div>';
  var schools=topCounts('okul');
  el('dashSchools').innerHTML=schools.length?schools.map(function(x){return '<div class="rank-row"><div><b>'+esc(x.name)+'</b><small>Başvuru sayısı</small></div><span class="rank-num">'+x.count+'</span></div>'}).join(''):'<div class="empty">Henüz okul bilgili başvuru yok.</div>';
+}
+function updateFirebaseSystemStatus(){
+ var ok=!!(window.TSAFirebaseApplications&&window.TSAFirebaseResults&&window.TSAFirebaseSite);
+ var s=el('firebaseSystemStatus');
+ if(s){
+  s.textContent=ok?'Bağlı':'Kontrol ediliyor...';
+  s.className=ok?'status-ok':'status-warn';
+ }
+ if(location.hash==='#dashboard'||!location.hash){
+  var alerts=el('dashAlerts');
+  if(alerts){
+   var existing=alerts.querySelector('[data-firebase-alert]');
+   if(existing)existing.remove();
+   var d=document.createElement('div');
+   d.setAttribute('data-firebase-alert','1');
+   d.className='alert-item';
+   if(ok){
+    d.style.background='#eefaf3';
+    d.style.borderLeftColor='var(--green)';
+    d.innerHTML='<b>✓ Firebase bağlı.</b> Veriler bulutta saklanıyor.';
+   }else{
+    d.innerHTML='<b>Firebase bağlantısı kontrol ediliyor.</b> Bağlantı birkaç saniye içinde doğrulanacak.';
+   }
+   alerts.appendChild(d);
+  }
+ }
 }
 function renderApps(){var q=el('appSearch').value.toLowerCase(),type=el('appType').value,status=el('appStatus').value;var a=get(APP_KEY,[]).filter(function(x){return(!q||[x.ad,x.telefon,x.basvuruNo].join(' ').toLowerCase().indexOf(q)>-1)&&(!type||x.type===type)&&(!status||x.status===status)});el('appsBody').innerHTML=a.length?a.map(function(x){return '<tr><td>'+esc(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</td><td><b>'+esc(x.basvuruNo)+'</b><br>'+esc(x.type)+'</td><td>'+esc(x.ad)+'</td><td>'+esc(x.telefon)+'</td><td>'+esc(x.sinif)+'</td><td><b>'+esc(x.ilce||'-')+'</b><br><small>'+esc(x.okul||'-')+'</small></td><td><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select data-status="'+esc(x.id)+'"><option'+(x.status==='Yeni Başvuru'?' selected':'')+'>Yeni Başvuru</option><option'+(x.status==='Arandı'?' selected':'')+'>Arandı</option><option'+(x.status==='Görüşüldü'?' selected':'')+'>Görüşüldü</option><option'+(x.status==='Kayıt Oldu'?' selected':'')+'>Kayıt Oldu</option><option'+(x.status==='Kayıt Olmadı'?' selected':'')+'>Kayıt Olmadı</option></select><button class="primary" data-saveapp="'+esc(x.id)+'">Kaydet</button></div></td><td><button class="danger" data-delapp="'+esc(x.id)+'">Sil</button></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">Başvuru bulunamadı.</td></tr>'}
 
@@ -1672,6 +1704,10 @@ var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('
   .catch(function(err){alert('Bannerlar sıfırlanamadı: '+(err&&err.message?err.message:err));});
 });
 showPage(location.hash.slice(1)||'dashboard');
+setTimeout(updateFirebaseSystemStatus,500);
+setTimeout(updateFirebaseSystemStatus,1500);
+setTimeout(updateFirebaseSystemStatus,3000);
+window.addEventListener('load',function(){setTimeout(updateFirebaseSystemStatus,500);});
 })();
 </script>
 <script type="module" src="firebase-announcements-admin.js?v=5"></script>
