@@ -893,10 +893,10 @@ function siteSettingsData(){return Object.assign({
  cardShowResult:true,
  cardShowQr:true,
  cardShowSaveContact:true,
- cardCallLabel:'Ara',cardCallLink:'',
- cardWhatsappLabel:'WhatsApp',cardWhatsappLink:'',
- cardLocationLabel:'Konum',cardLocationLink:'',
- cardInstagramLabel:'Instagram',cardInstagramLink:'',
+ cardCallLabel:'Ara',cardCallLink:'tel:+905526959757',
+ cardWhatsappLabel:'WhatsApp',cardWhatsappLink:'https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum.',
+ cardLocationLabel:'Konum',cardLocationLink:'https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa',
+ cardInstagramLabel:'Instagram',cardInstagramLink:'https://instagram.com/manisateksecenekakademi',
  cardPreTitle:'Ön Kayıt Oluştur',cardPreLink:'../index.html#basvurular',
  cardScholarTitle:'Bursluluk Başvurusu',cardScholarLink:'../index.html#basvurular',
  cardTrialTitle:'Deneme Sınavı',cardTrialLink:'../index.html#basvurular',
@@ -939,13 +939,13 @@ function renderNfcCardSettings(){
  if(el('nfcAddress'))el('nfcAddress').value=d.address||'';
  if(el('nfcInstagram'))el('nfcInstagram').value=d.instagram||'';
  if(el('nfcCallLabel'))el('nfcCallLabel').value=d.cardCallLabel||'Ara';
- if(el('nfcCallLink'))el('nfcCallLink').value=d.cardCallLink||'';
+ if(el('nfcCallLink'))el('nfcCallLink').value=d.cardCallLink||'tel:+905526959757';
  if(el('nfcWhatsappLabel'))el('nfcWhatsappLabel').value=d.cardWhatsappLabel||'WhatsApp';
- if(el('nfcWhatsappLink'))el('nfcWhatsappLink').value=d.cardWhatsappLink||'';
+ if(el('nfcWhatsappLink'))el('nfcWhatsappLink').value=d.cardWhatsappLink||'https://wa.me/905526959757?text=Merhaba%20Tek%20Se%C3%A7enek%20Akademi%2C%20bilgi%20almak%20istiyorum.';
  if(el('nfcLocationLabel'))el('nfcLocationLabel').value=d.cardLocationLabel||'Konum';
- if(el('nfcLocationLink'))el('nfcLocationLink').value=d.cardLocationLink||'';
+ if(el('nfcLocationLink'))el('nfcLocationLink').value=d.cardLocationLink||'https://www.google.com/maps/search/?api=1&query=Utku+Mah.+%C3%87imentepe+Cd.+No%3A+4%2F4%2C+45060+%C5%9Eehzadeler%2FManisa';
  if(el('nfcInstagramLabel'))el('nfcInstagramLabel').value=d.cardInstagramLabel||'Instagram';
- if(el('nfcInstagramLink'))el('nfcInstagramLink').value=d.cardInstagramLink||'';
+ if(el('nfcInstagramLink'))el('nfcInstagramLink').value=d.cardInstagramLink||'https://instagram.com/manisateksecenekakademi';
  if(el('nfcPreTitle'))el('nfcPreTitle').value=d.cardPreTitle||'Ön Kayıt Oluştur';
  if(el('nfcPreLink'))el('nfcPreLink').value=d.cardPreLink||'../index.html#basvurular';
  if(el('nfcScholarTitle'))el('nfcScholarTitle').value=d.cardScholarTitle||'Bursluluk Başvurusu';
