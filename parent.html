@@ -36,7 +36,7 @@ h1{margin:24px 0 8px;color:var(--navy)}.desc{color:var(--muted);line-height:1.6;
     <div class="desc">Takip numaranızı ve başvuru sırasında kullandığınız veli telefon numarasını birlikte girin.</div>
     <div class="login-grid">
       <input id="parentLogin" placeholder="Takip No" autocomplete="off">
-      <input id="parentPhone" type="tel" inputmode="numeric" placeholder="Veli Telefonu" autocomplete="off">
+      <input id="parentPhone" type="tel" inputmode="numeric" placeholder="05xx xxx xx xx" maxlength="14" data-phone-mask autocomplete="off">
     </div>
     <button id="parentBtn" class="login-btn">Giriş Yap</button>
     <div id="loginError"></div>
@@ -282,5 +282,23 @@ document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorag
 const saved=sessionStorage.getItem(SESSION_KEY);if(saved){try{const s=JSON.parse(saved);if(s.identifier&&s.phone){window.addEventListener('load',async()=>{try{const d=await window.TSAFirebasePortal.lookup(s.identifier,s.phone);if(d&&d.app){window.TSAFirebasePortal.hydrate(d);openPanel(d.app)}else sessionStorage.removeItem(SESSION_KEY)}catch(e){sessionStorage.removeItem(SESSION_KEY)}})}}catch(e){sessionStorage.removeItem(SESSION_KEY)}}
 </script>
 <script type="module" src="firebase-portal-public.js?v=1"></script>
+<script>
+(function(){
+  function formatPhone(v){
+    var d=String(v||'').replace(/\D/g,'').slice(0,11);
+    if(d && d[0]!=='0') d='0'+d.slice(0,10);
+    var out=d.slice(0,4);
+    if(d.length>4) out+=' '+d.slice(4,7);
+    if(d.length>7) out+=' '+d.slice(7,9);
+    if(d.length>9) out+=' '+d.slice(9,11);
+    return out;
+  }
+  document.addEventListener('input',function(e){
+    if(e.target && e.target.matches('[data-phone-mask]')){
+      e.target.value=formatPhone(e.target.value);
+    }
+  });
+})();
+</script>
 </body>
 </html>
