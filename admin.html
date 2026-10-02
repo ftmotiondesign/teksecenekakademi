@@ -621,7 +621,11 @@ function defaultHeroSlides(){
   {image:'Başlıksız-2.png',tag:'DENEME KULÜBÜ',title:'Hedefini Ölç,',highlight:'Gelişimini Takip Et',text:'Türkiye geneli ve kurum içi denemelerle seviyeni gör, eksiklerini belirle ve sınava daha güçlü hazırlan.',btn1:'Deneme Başvurusu',link1:'#basvurular',btn2:'Sonuç Sorgula',link2:'#sonuc'}
  ];
 }
-function heroSlidesData(){var a=get(HERO_KEY,[]);return Array.isArray(a)&&a.length?a:defaultHeroSlides()}
+function heroSlidesData(){
+ var defs=defaultHeroSlides(),a=get(HERO_KEY,[]);
+ if(!Array.isArray(a)||!a.length)return defs;
+ return defs.map(function(def,i){return Object.assign({},def,a[i]||{})});
+}
 function renderHeroAdmin(){
  var a=heroSlidesData();
  el('heroAdminList').innerHTML=a.map(function(x,i){
@@ -1210,7 +1214,7 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-portal-admin.js?v=3"></script>
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
-<script type="module" src="firebase-site-admin.js?v=4"></script>
+<script type="module" src="firebase-site-admin.js?v=5"></script>
 <script type="module" src="firebase-gallery-admin.js?v=1"></script>
 </body>
 </html>
