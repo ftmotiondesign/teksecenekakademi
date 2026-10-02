@@ -432,21 +432,21 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
     </div>
 
     <h3 style="margin:22px 0 10px">Hızlı Butonlar</h3>
-    <div class="quick-grid">
-      <label class="quick-action"><input type="checkbox" id="nfcShowCall"> <b style="display:inline">Ara</b><span>Telefon arama butonu</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowWhatsapp"> <b style="display:inline">WhatsApp</b><span>WhatsApp iletişim butonu</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowLocation"> <b style="display:inline">Konum</b><span>Google Maps yönlendirmesi</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowInstagram"> <b style="display:inline">Instagram</b><span>Instagram profil bağlantısı</span></label>
+    <div class="form">
+      <div class="field"><label><input type="checkbox" id="nfcShowCall"> Ara butonunu göster</label><input id="nfcCallLabel" placeholder="Ara"><input id="nfcCallLink" placeholder="tel:+905..."></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowWhatsapp"> WhatsApp butonunu göster</label><input id="nfcWhatsappLabel" placeholder="WhatsApp"><input id="nfcWhatsappLink" placeholder="https://wa.me/..."></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowLocation"> Konum butonunu göster</label><input id="nfcLocationLabel" placeholder="Konum"><input id="nfcLocationLink" placeholder="https://www.google.com/maps/..."></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowInstagram"> Instagram butonunu göster</label><input id="nfcInstagramLabel" placeholder="Instagram"><input id="nfcInstagramLink" placeholder="https://instagram.com/..."></div>
     </div>
 
     <h3 style="margin:22px 0 10px">Hızlı İşlemler</h3>
-    <div class="quick-grid">
-      <label class="quick-action"><input type="checkbox" id="nfcShowPreRegister"> <b style="display:inline">Ön Kayıt</b><span>Ön kayıt kartını göster</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowScholarship"> <b style="display:inline">Bursluluk</b><span>Bursluluk başvurusunu göster</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowTrial"> <b style="display:inline">Deneme Sınavı</b><span>Deneme başvurusunu göster</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowResult"> <b style="display:inline">Sonuç Sorgula</b><span>Sonuç sorgulama kartını göster</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowQr"> <b style="display:inline">QR Kod</b><span>QR alanını göster</span></label>
-      <label class="quick-action"><input type="checkbox" id="nfcShowSaveContact"> <b style="display:inline">Rehbere Kaydet</b><span>VCF kişi kaydet butonunu göster</span></label>
+    <div class="form">
+      <div class="field"><label><input type="checkbox" id="nfcShowPreRegister"> Ön Kayıt göster</label><input id="nfcPreTitle" placeholder="Ön Kayıt Oluştur"><input id="nfcPreLink" placeholder="../index.html#basvurular"></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowScholarship"> Bursluluk göster</label><input id="nfcScholarTitle" placeholder="Bursluluk Başvurusu"><input id="nfcScholarLink" placeholder="../index.html#basvurular"></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowTrial"> Deneme Sınavı göster</label><input id="nfcTrialTitle" placeholder="Deneme Sınavı"><input id="nfcTrialLink" placeholder="../index.html#basvurular"></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowResult"> Sonuç Sorgula göster</label><input id="nfcResultTitle" placeholder="Sonuç Sorgula"><input id="nfcResultLink" placeholder="../index.html#sonuc"></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowQr"> QR Kod göster</label></div>
+      <div class="field"><label><input type="checkbox" id="nfcShowSaveContact"> Rehbere Kaydet göster</label></div>
     </div>
 
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:18px">
@@ -860,11 +860,19 @@ function siteSettingsData(){return Object.assign({
  cardShowTrial:true,
  cardShowResult:true,
  cardShowQr:true,
- cardShowSaveContact:true
+ cardShowSaveContact:true,
+ cardCallLabel:'Ara',cardCallLink:'',
+ cardWhatsappLabel:'WhatsApp',cardWhatsappLink:'',
+ cardLocationLabel:'Konum',cardLocationLink:'',
+ cardInstagramLabel:'Instagram',cardInstagramLink:'',
+ cardPreTitle:'Ön Kayıt Oluştur',cardPreLink:'../index.html#basvurular',
+ cardScholarTitle:'Bursluluk Başvurusu',cardScholarLink:'../index.html#basvurular',
+ cardTrialTitle:'Deneme Sınavı',cardTrialLink:'../index.html#basvurular',
+ cardResultTitle:'Sonuç Sorgula',cardResultLink:'../index.html#sonuc'
 },get(SETTINGS_KEY,{}))}
 function setNfcCardEditMode(editing){
  window.__nfcEditing=!!editing;
- var textIds=['nfcLogo','nfcBackground','nfcSlogan','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram'];
+ var textIds=['nfcLogo','nfcBackground','nfcSlogan','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram','nfcCallLabel','nfcCallLink','nfcWhatsappLabel','nfcWhatsappLink','nfcLocationLabel','nfcLocationLink','nfcInstagramLabel','nfcInstagramLink','nfcPreTitle','nfcPreLink','nfcScholarTitle','nfcScholarLink','nfcTrialTitle','nfcTrialLink','nfcResultTitle','nfcResultLink'];
  var checkIds=['nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
  textIds.forEach(function(id){
   var x=el(id); if(!x)return;
@@ -898,6 +906,22 @@ function renderNfcCardSettings(){
  if(el('nfcLandline'))el('nfcLandline').value=d.landline||'';
  if(el('nfcAddress'))el('nfcAddress').value=d.address||'';
  if(el('nfcInstagram'))el('nfcInstagram').value=d.instagram||'';
+ if(el('nfcCallLabel'))el('nfcCallLabel').value=d.cardCallLabel||'Ara';
+ if(el('nfcCallLink'))el('nfcCallLink').value=d.cardCallLink||'';
+ if(el('nfcWhatsappLabel'))el('nfcWhatsappLabel').value=d.cardWhatsappLabel||'WhatsApp';
+ if(el('nfcWhatsappLink'))el('nfcWhatsappLink').value=d.cardWhatsappLink||'';
+ if(el('nfcLocationLabel'))el('nfcLocationLabel').value=d.cardLocationLabel||'Konum';
+ if(el('nfcLocationLink'))el('nfcLocationLink').value=d.cardLocationLink||'';
+ if(el('nfcInstagramLabel'))el('nfcInstagramLabel').value=d.cardInstagramLabel||'Instagram';
+ if(el('nfcInstagramLink'))el('nfcInstagramLink').value=d.cardInstagramLink||'';
+ if(el('nfcPreTitle'))el('nfcPreTitle').value=d.cardPreTitle||'Ön Kayıt Oluştur';
+ if(el('nfcPreLink'))el('nfcPreLink').value=d.cardPreLink||'../index.html#basvurular';
+ if(el('nfcScholarTitle'))el('nfcScholarTitle').value=d.cardScholarTitle||'Bursluluk Başvurusu';
+ if(el('nfcScholarLink'))el('nfcScholarLink').value=d.cardScholarLink||'../index.html#basvurular';
+ if(el('nfcTrialTitle'))el('nfcTrialTitle').value=d.cardTrialTitle||'Deneme Sınavı';
+ if(el('nfcTrialLink'))el('nfcTrialLink').value=d.cardTrialLink||'../index.html#basvurular';
+ if(el('nfcResultTitle'))el('nfcResultTitle').value=d.cardResultTitle||'Sonuç Sorgula';
+ if(el('nfcResultLink'))el('nfcResultLink').value=d.cardResultLink||'../index.html#sonuc';
  [
   ['nfcShowCall','cardShowCall'],['nfcShowWhatsapp','cardShowWhatsapp'],
   ['nfcShowLocation','cardShowLocation'],['nfcShowInstagram','cardShowInstagram'],
@@ -919,6 +943,22 @@ function saveNfcCardSettingsNow(){
  d.landline=el('nfcLandline').value.trim();
  d.address=el('nfcAddress').value.trim();
  d.instagram=el('nfcInstagram').value.trim();
+ d.cardCallLabel=el('nfcCallLabel').value.trim();
+ d.cardCallLink=el('nfcCallLink').value.trim();
+ d.cardWhatsappLabel=el('nfcWhatsappLabel').value.trim();
+ d.cardWhatsappLink=el('nfcWhatsappLink').value.trim();
+ d.cardLocationLabel=el('nfcLocationLabel').value.trim();
+ d.cardLocationLink=el('nfcLocationLink').value.trim();
+ d.cardInstagramLabel=el('nfcInstagramLabel').value.trim();
+ d.cardInstagramLink=el('nfcInstagramLink').value.trim();
+ d.cardPreTitle=el('nfcPreTitle').value.trim();
+ d.cardPreLink=el('nfcPreLink').value.trim();
+ d.cardScholarTitle=el('nfcScholarTitle').value.trim();
+ d.cardScholarLink=el('nfcScholarLink').value.trim();
+ d.cardTrialTitle=el('nfcTrialTitle').value.trim();
+ d.cardTrialLink=el('nfcTrialLink').value.trim();
+ d.cardResultTitle=el('nfcResultTitle').value.trim();
+ d.cardResultLink=el('nfcResultLink').value.trim();
  d.cardShowCall=el('nfcShowCall').checked;
  d.cardShowWhatsapp=el('nfcShowWhatsapp').checked;
  d.cardShowLocation=el('nfcShowLocation').checked;
