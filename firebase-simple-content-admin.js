@@ -58,15 +58,17 @@ async function loadAll(){
   await requireAdmin();
   for(const type of Object.keys(MAP))await load(type);
 }
-async function add(type,head,text){
+async function add(type,head,text,extra){
   await requireAdmin();
   const cfg=MAP[type];
   if(!cfg)throw new Error('Geçersiz içerik türü.');
-  await addDoc(collection(db,cfg.collection),{
+  const payload={
     head:String(head||'').trim(),
     text:String(text||'').trim(),
     createdAt:serverTimestamp()
-  });
+  };
+  if(type==='teacher' && extra && extra.image)payload.image=String(extra.image||'').trim();
+  await addDoc(collection(db,cfg.collection),payload);
   return load(type);
 }
 async function remove(type,id){
