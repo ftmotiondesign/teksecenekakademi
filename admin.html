@@ -260,11 +260,16 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div><h2>Galeri Yönetimi</h2><small>Kurum fotoğraf ve videolarını ekleyin, düzenleyin ve silin.</small></div>
       <a class="secondary" style="text-decoration:none" href="gallery.html" target="_blank" rel="noopener">↗ Galeriyi Gör</a>
     </div>
-    <div class="hint"><b>Desteklenen dosyalar:</b> PNG, JPG/JPEG, MP4 ve WebM.<br>Dosyalar şimdilik bu tarayıcıda saklanır. Firebase Storage'a geçtiğimizde tüm cihazlarda ortak olacaktır.</div>
+    <div class="hint"><b>Galeri görselleri GitHub üzerinden yayınlanır.</b><br>Önce fotoğrafı GitHub'a yükleyin, sonra aşağıdaki listeden seçin. Böylece Firebase Storage ücreti gerekmez ve tüm cihazlarda görünür.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+      <a class="primary" style="text-decoration:none" href="https://github.com/ftmotiondesign/teksecenekakademi/upload/main" target="_blank" rel="noopener">⬆ Fotoğraf / Video Yükle</a>
+      <button class="secondary" id="galleryRefreshMedia" type="button">↻ Medya Listesini Yenile</button>
+    </div>
     <div class="gallery-admin-form">
       <div class="field"><label>Başlık</label><input id="galleryTitle" placeholder="Örn. Sınıflarımız"></div>
       <div class="field"><label>Açıklama</label><input id="galleryText" placeholder="Kısa açıklama"></div>
-      <div class="field full"><label>Görsel / Video Yolu veya URL</label><input id="gallerySrc" placeholder="Örn. bina.png veya https://..."></div>
+      <div class="field full"><label>GitHub Medya Dosyası</label><select id="galleryMediaSelect"><option value="">Medya dosyası seçin</option></select></div>
+      <div class="field full"><label>Görsel / Video Yolu veya URL</label><input id="gallerySrc" placeholder="Listeden seçildiğinde otomatik dolar"></div>
       <div class="field"><label>Tür</label><select id="galleryType"><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
       <div class="field" style="align-self:end"><button class="primary" id="galleryAdd" type="button">+ Galeriye Ekle</button></div>
     </div>
@@ -803,6 +808,27 @@ window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase
 var GALLERY_KEY='tsa_gallery_v1';
 function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
 function galleryItemUrl(x){return x&&x.src?x.src:''}
+async function loadGithubMediaList(){
+ var select=el('galleryMediaSelect');if(!select)return;
+ select.innerHTML='<option value="">Yükleniyor...</option>';
+ try{
+  var res=await fetch('https://api.github.com/repos/ftmotiondesign/teksecenekakademi/git/trees/main?recursive=1',{headers:{'Accept':'application/vnd.github+json'}});
+  if(!res.ok)throw new Error('GitHub medya listesi alınamadı.');
+  var data=await res.json(),tree=Array.isArray(data.tree)?data.tree:[];
+  var media=tree.filter(function(x){
+   if(x.type!=='blob')return false;
+   return /\.(png|jpe?g|webp|gif|mp4|webm)$/i.test(x.path||'');
+  }).map(function(x){return x.path}).sort(function(a,b){return a.localeCompare(b,'tr')});
+  select.innerHTML='<option value="">Medya dosyası seçin</option>'+media.map(function(path){
+   return '<option value="'+esc(path)+'">'+esc(path)+'</option>';
+  }).join('');
+  if(!media.length)select.innerHTML='<option value="">Uygun medya dosyası bulunamadı</option>';
+ }catch(err){
+  console.error(err);
+  select.innerHTML='<option value="">Medya listesi yüklenemedi</option>';
+ }
+}
+
 async function renderGalleryAdmin(){
  var listEl=el('galleryAdminList');if(!listEl)return;
  try{
@@ -837,6 +863,19 @@ async function addGalleryItem(){
  }catch(err){console.error(err);alert('Galeri içeriği kaydedilemedi: '+(err&&err.message?err.message:err));info.style.display='none'}
 }
 if(el('galleryAdd'))el('galleryAdd').addEventListener('click',addGalleryItem);
+if(el('galleryRefreshMedia'))el('galleryRefreshMedia').addEventListener('click',loadGithubMediaList);
+if(el('galleryMediaSelect'))el('galleryMediaSelect').addEventListener('change',function(){
+ var path=this.value||'';
+ if(!path)return;
+ el('gallerySrc').value=path;
+ el('galleryType').value=/\.(mp4|webm)$/i.test(path)?'video':'image';
+ if(!el('galleryTitle').value.trim()){
+  var name=path.split('/').pop().replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ');
+  el('galleryTitle').value=name;
+ }
+});
+loadGithubMediaList();
+
 
 function closeGalleryEdit(){
  var m=el('galleryEditModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}
