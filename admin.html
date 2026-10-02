@@ -363,11 +363,11 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
 </div></div></section>
 
 <section id="settings" class="section"><div class="box"><h2>Site Ayarları</h2><div class="form">
-<div class="field"><label>WhatsApp / Cep</label><input value="0552 695 97 57"></div>
-<div class="field"><label>Sabit Telefon</label><input value="0236 238 00 66"></div>
-<div class="field full"><label>Adres</label><input value="Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa"></div>
-<div class="field full"><label>Instagram</label><input value="@manisateksecenekakademi"></div>
-</div></div></section>
+<div class="field"><label>WhatsApp / Cep</label><input id="settingMobile" value="0552 695 97 57"></div>
+<div class="field"><label>Sabit Telefon</label><input id="settingLandline" value="0236 238 00 66"></div>
+<div class="field full"><label>Adres</label><input id="settingAddress" value="Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa"></div>
+<div class="field full"><label>Instagram</label><input id="settingInstagram" value="@manisateksecenekakademi"></div>
+</div><div style="display:flex;gap:8px;align-items:center;margin-top:14px"><button class="primary" id="saveSettings">Kaydet</button><span id="settingsSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span></div></div></section>
 
 <div id="galleryEditModal" class="gallery-edit-modal" aria-hidden="true">
   <div class="gallery-edit-card">
@@ -425,6 +425,7 @@ function showPage(id){
  if(id==='teachers')renderSimple('teacher');
  if(id==='success')renderSimple('success');
  if(id==='reviews')renderSimple('review');
+ if(id==='settings')renderSiteSettings();
  updateStats();
 }
 function updateStats(){
@@ -734,6 +735,32 @@ var SITE_CONTENT_FIELDS={
  floatTitle:'scFloatTitle',floatText:'scFloatText',copyright:'scCopyright'
 };
 function siteContentData(){return Object.assign(defaultSiteContent(),get(SITE_CONTENT_KEY,{}))}
+var SETTINGS_KEY='tsa_site_settings_v1';
+function siteSettingsData(){return Object.assign({mobile:'0552 695 97 57',landline:'0236 238 00 66',address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',instagram:'@manisateksecenekakademi'},get(SETTINGS_KEY,{}))}
+function renderSiteSettings(){
+ var d=siteSettingsData();
+ if(el('settingMobile'))el('settingMobile').value=d.mobile||'';
+ if(el('settingLandline'))el('settingLandline').value=d.landline||'';
+ if(el('settingAddress'))el('settingAddress').value=d.address||'';
+ if(el('settingInstagram'))el('settingInstagram').value=d.instagram||'';
+}
+function saveSiteSettingsNow(){
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ var d={
+  mobile:el('settingMobile').value.trim(),
+  landline:el('settingLandline').value.trim(),
+  address:el('settingAddress').value.trim(),
+  instagram:el('settingInstagram').value.trim()
+ };
+ var btn=el('saveSettings'),old=btn.textContent;btn.disabled=true;btn.textContent='Kaydediliyor...';
+ window.TSAFirebaseSite.saveSettings(d)
+  .then(function(){
+   var s=el('settingsSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+   alert('Site ayarları Firebase’e kaydedildi.');
+  })
+  .catch(function(err){alert('Site ayarları kaydedilemedi: '+(err&&err.message?err.message:err));})
+  .finally(function(){btn.disabled=false;btn.textContent=old;});
+}
 function renderSiteContentEditor(){
  var d=siteContentData();
  Object.keys(SITE_CONTENT_FIELDS).forEach(function(k){var x=el(SITE_CONTENT_FIELDS[k]);if(x)x.value=d[k]||''});
@@ -764,6 +791,7 @@ window.addEventListener('tsa:result-categories-updated',function(){renderCategor
 window.addEventListener('tsa:simple-content-updated',function(e){var t=e.detail&&e.detail.type;if(t)renderSimple(t);});
 window.addEventListener('tsa:site-content-updated',function(){renderSiteContentEditor();});
 window.addEventListener('tsa:hero-updated',function(){renderHeroAdmin();});
+window.addEventListener('tsa:settings-updated',function(){renderSiteSettings();});
 window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase senkronizasyon hatası:',e.detail)});
 
 
@@ -1194,6 +1222,7 @@ el('bulkStartQueue').addEventListener('click',function(){var n=buildBulkQueue();
 el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
+if(el('saveSettings'))el('saveSettings').addEventListener('click',saveSiteSettingsNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){
  if(!confirm('Bannerlar varsayılan haline dönsün mü?'))return;
