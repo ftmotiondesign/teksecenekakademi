@@ -54,7 +54,6 @@ footer{background:var(--dark);color:#c9c8d7;text-align:center;padding:22px;font-
 <div class="lightbox" id="lightbox"><button class="close" id="closeLightbox">×</button><img id="lightboxImg" alt=""></div>
 <footer>© 2026 Tek Seçenek Akademi · Şehzadeler / Manisa</footer>
 <script>
-const GALLERY_DB='tsa_gallery_db',GALLERY_STORE='media',GALLERY_INIT_KEY='tsa_gallery_initialized_v1';
 const fallback=[
  {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız',createdAt:'2026-01-03T00:00:00.000Z'},
  {id:'g2',type:'image',src:'Başlıksız-1.png',title:'Kurum Galerisi',text:'Kurum görseli',createdAt:'2026-01-02T00:00:00.000Z'},
@@ -63,42 +62,11 @@ const fallback=[
 const grid=document.getElementById('galleryGrid'),lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
 let currentFilter='all',allItems=[];
 function esc(v){return String(v||'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
-function openGalleryDb(){
- return new Promise((resolve,reject)=>{
-  const req=indexedDB.open(GALLERY_DB,1);
-  req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(GALLERY_STORE))db.createObjectStore(GALLERY_STORE,{keyPath:'id'})};
-  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
- });
-}
-function galleryAll(){
- return openGalleryDb().then(db=>new Promise((resolve,reject)=>{
-  const tx=db.transaction(GALLERY_STORE,'readonly'),r=tx.objectStore(GALLERY_STORE).getAll();
-  r.onsuccess=()=>resolve((r.result||[]).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))));
-  r.onerror=()=>reject(r.error);
- }));
-}
-function galleryPut(item){
- return openGalleryDb().then(db=>new Promise((resolve,reject)=>{
-  const tx=db.transaction(GALLERY_STORE,'readwrite');tx.objectStore(GALLERY_STORE).put(item);
-  tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);
- }));
-}
-async function ensureGallerySeeded(){
- let items=await galleryAll();
- if(localStorage.getItem(GALLERY_INIT_KEY)==='1')return items;
- if(!items.length){
-  for(const x of fallback)await galleryPut(x);
-  items=await galleryAll();
- }
- localStorage.setItem(GALLERY_INIT_KEY,'1');
- return items;
-}
-function urlFor(x){if(x.blob){try{return URL.createObjectURL(x.blob)}catch(e){}}return x.src||''}
 function render(){
  const items=allItems.filter(x=>currentFilter==='all'||x.type===currentFilter);
  if(!items.length){grid.innerHTML='<div class="empty">Bu kategoride henüz içerik yok.</div>';return}
  grid.innerHTML=items.map(x=>{
-  const src=urlFor(x);
+  const src=x.src||'';
   const media=x.type==='video'
    ? '<div class="media"><span class="badge">VİDEO</span><video controls preload="metadata" playsinline src="'+esc(src)+'"></video></div>'
    : '<div class="media"><span class="badge">FOTOĞRAF</span><img data-full="'+esc(src)+'" src="'+esc(src)+'" alt="'+esc(x.title||'Galeri görseli')+'"></div>';
@@ -106,18 +74,20 @@ function render(){
  }).join('');
  grid.querySelectorAll('img[data-full]').forEach(img=>img.addEventListener('click',()=>{lbImg.src=img.dataset.full;lb.classList.add('show')}));
 }
-async function loadGallery(){
+function loadLocalFallback(){
  try{
-  const saved=await ensureGallerySeeded();
-  allItems=saved;
- }catch(e){console.error(e);allItems=fallback}
+  const rows=JSON.parse(localStorage.getItem('tsa_gallery_v1')||'[]');
+  allItems=Array.isArray(rows)&&rows.length?rows:fallback;
+ }catch(e){allItems=fallback}
  render();
 }
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentFilter=b.dataset.filter;render()}));
 document.getElementById('closeLightbox').onclick=()=>lb.classList.remove('show');
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('show')});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('show')});
-loadGallery();
+window.addEventListener('tsa:gallery-public-updated',e=>{allItems=(e.detail&&e.detail.length)?e.detail:fallback;render()});
+loadLocalFallback();
 </script>
+<script type="module" src="firebase-gallery-public.js?v=1"></script>
 </body>
 </html>
