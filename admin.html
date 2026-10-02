@@ -866,12 +866,38 @@ function setNfcCardEditMode(editing){
  window.__nfcEditing=!!editing;
  var textIds=['nfcLogo','nfcBackground','nfcSlogan','nfcBadge','nfcWebsite','nfcMobile','nfcLandline','nfcAddress','nfcInstagram'];
  var checkIds=['nfcShowCall','nfcShowWhatsapp','nfcShowLocation','nfcShowInstagram','nfcShowPreRegister','nfcShowScholarship','nfcShowTrial','nfcShowResult','nfcShowQr','nfcShowSaveContact'];
- textIds.forEach(function(id){var x=el(id);if(x){x.readOnly=!editing;x.disabled=false;x.style.background=editing?'#fff':'#f6f7fb';}});
- checkIds.forEach(function(id){var x=el(id);if(x)x.disabled=!editing;});
+ textIds.forEach(function(id){
+  var x=el(id); if(!x)return;
+  if(editing){
+   x.removeAttribute('readonly');
+   x.removeAttribute('disabled');
+   x.readOnly=false;
+   x.disabled=false;
+   x.style.pointerEvents='auto';
+   x.style.userSelect='text';
+   x.style.background='#fff';
+   x.style.cursor='text';
+  }else{
+   x.setAttribute('readonly','readonly');
+   x.readOnly=true;
+   x.disabled=false;
+   x.style.pointerEvents='auto';
+   x.style.background='#f6f7fb';
+   x.style.cursor='default';
+  }
+ });
+ checkIds.forEach(function(id){
+  var x=el(id); if(!x)return;
+  x.disabled=!editing;
+  x.style.pointerEvents=editing?'auto':'none';
+ });
  var editBtn=el('editNfcCard'),saveBtn=el('saveNfcCard');
  if(editBtn){editBtn.disabled=false;editBtn.textContent=editing?'Düzenlemeyi İptal Et':'Düzenle';}
  if(saveBtn)saveBtn.disabled=!editing;
- if(editing&&el('nfcCardSaved'))el('nfcCardSaved').style.display='none';
+ if(editing){
+  var first=el('nfcLogo'); if(first)setTimeout(function(){first.focus();},0);
+  if(el('nfcCardSaved'))el('nfcCardSaved').style.display='none';
+ }
 }
 function renderNfcCardSettings(){
  var d=siteSettingsData();
