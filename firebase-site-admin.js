@@ -6,6 +6,7 @@ import {
 const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const SITE_CONTENT_KEY='tsa_site_content_v1';
 const HERO_KEY='tsa_hero_slides_v1';
+const SETTINGS_KEY='tsa_site_settings_v1';
 
 async function requireAdmin(){
   if(typeof auth.authStateReady==='function')await auth.authStateReady();
@@ -77,13 +78,45 @@ async function saveHero(slides){
   return normalized;
 }
 
+async function loadSettings(){
+  await requireAdmin();
+  const snap=await getDoc(doc(db,'siteConfig','settings'));
+  if(snap.exists()){
+    const data=snap.data()||{};
+    localStorage.setItem(SETTINGS_KEY,JSON.stringify(data));
+    emit('tsa:settings-updated',data);
+    return data;
+  }
+  let local={};
+  try{local=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(e){}
+  const defaults={
+    mobile:'0552 695 97 57',
+    landline:'0236 238 00 66',
+    address:'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa',
+    instagram:'@manisateksecenekakademi'
+  };
+  const data=Object.keys(local||{}).length?local:defaults;
+  await saveSettings(data);
+  return data;
+}
+
+async function saveSettings(data){
+  await requireAdmin();
+  const payload={...(data||{})};
+  await setDoc(doc(db,'siteConfig','settings'),{...payload,updatedAt:serverTimestamp()},{merge:true});
+  localStorage.setItem(SETTINGS_KEY,JSON.stringify(payload));
+  emit('tsa:settings-updated',payload);
+  return payload;
+}
+
 async function loadAll(){
   await requireAdmin();
   await loadSiteContent();
   await loadHero();
+  await loadSettings();
 }
 
-window.TSAFirebaseSite={loadAll,loadSiteContent,saveSiteContent,loadHero,saveHero};
+window.TSAFirebaseSite={loadAll,loadSiteContent,saveSiteContent,loadHero,saveHero,loadSettings,saveSettings};
 
 if(typeof auth.authStateReady==='function'){
   auth.authStateReady().then(()=>{if(auth.currentUser)loadAll().catch(err=>console.error('Site Firebase yükleme hatası:',err))});
