@@ -24,8 +24,11 @@ function normId(v){
   return String(v||'').trim().replace(/\s+/g,'').toUpperCase();
 }
 async function sha256(v){
+  if(!window.crypto || !window.crypto.subtle || typeof window.crypto.subtle.digest!=='function'){
+    throw new Error('Portal senkronizasyonu için HTTPS gereklidir. SSL sertifikası aktif olana kadar yönetim panelini GitHub Pages HTTPS adresinden açın.');
+  }
   const bytes=new TextEncoder().encode(v);
-  const hash=await crypto.subtle.digest('SHA-256',bytes);
+  const hash=await window.crypto.subtle.digest('SHA-256',bytes);
   return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 function publicApp(a){
