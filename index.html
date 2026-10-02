@@ -382,6 +382,25 @@ function loadSiteContent(){
  const copy=document.querySelector('.footer-bottom > span');if(copy)copy.textContent=d.copyright;
 }
 
+function applySiteSettings(){
+ let d={};try{d=JSON.parse(localStorage.getItem('tsa_site_settings_v1')||'{}')}catch(e){}
+ const mobile=d.mobile||'0552 695 97 57',landline=d.landline||'0236 238 00 66',address=d.address||'Utku Mah. Çimentepe Cd. No: 4/4, 45060 Şehzadeler / Manisa';
+ const md=mobile.replace(/\D/g,'').replace(/^0/,'');
+ const ld=landline.replace(/\D/g,'').replace(/^0/,'');
+ const contact=document.querySelector('#iletisim');
+ if(contact){
+  const lines=contact.querySelectorAll('.contact-line');
+  if(lines[0])lines[0].textContent='📍 '+address;
+  if(lines[1])lines[1].innerHTML='📱 <a href="tel:+90'+md+'">'+escapeHtml(mobile)+'</a>';
+  if(lines[2])lines[2].innerHTML='☎ <a href="tel:+90'+ld+'">'+escapeHtml(landline)+'</a>';
+  const btns=contact.querySelectorAll('.buttons a');
+  if(btns[0])btns[0].href='tel:+90'+md;
+  if(btns[1])btns[1].href='https://wa.me/90'+md;
+ }
+ const topPhone=document.querySelector('.phone');if(topPhone){topPhone.textContent=landline;topPhone.href='tel:+90'+ld;}
+ const topMobile=document.querySelector('.mobile-phone');if(topMobile){topMobile.textContent=mobile;topMobile.href='tel:+90'+md;}
+}
+
 function loadManagedContent(){
  const ann=jgetSite('tsa_announcements_v1'),teachers=jgetSite('tsa_teachers_v1'),success=jgetSite('tsa_success_v1'),reviews=jgetSite('tsa_reviews_v1');
  if(ann.length){document.getElementById('announcementList').innerHTML=ann.map(x=>'<div class="announcement"><b>'+escapeHtml(x.head)+'</b><span>'+escapeHtml(x.text)+'</span></div>').join('')}
@@ -393,6 +412,7 @@ function jgetSite(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(
 loadManagedContent();
 window.addEventListener('tsa:simple-public-updated',loadManagedContent);
 loadSiteContent();
+applySiteSettings();
 window.addEventListener('tsa:site-content-updated',loadSiteContent);
 
 function loadManagedHero(){
@@ -413,6 +433,7 @@ function loadManagedHero(){
 
 loadManagedHero();
 window.addEventListener('tsa:hero-updated',loadManagedHero);
+window.addEventListener('tsa:settings-updated',applySiteSettings);
 const heroSlides=[...document.querySelectorAll('.hero-slide')];
 const heroDots=document.getElementById('heroDots');
 let heroIndex=0,heroTimer=null;
@@ -440,6 +461,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 <script type="module" src="firebase-portal-public.js?v=1"></script>
 <script type="module" src="firebase-result-categories-public.js?v=1"></script>
 <script type="module" src="firebase-simple-content-public.js?v=1"></script>
-<script type="module" src="firebase-site-public.js?v=2"></script>
+<script type="module" src="firebase-site-public.js?v=3"></script>
 </body>
 </html>
