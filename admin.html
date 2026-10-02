@@ -453,6 +453,29 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
   </div>
 </section>
 
+<section id="nfc-card" class="section">
+<div class="box">
+  <div class="section-head">
+    <div><h2>NFC Kart Yönetimi</h2><small>Kartta görünen iletişim ve profil bilgilerini buradan düzenleyin.</small></div>
+    <a class="top-link site" href="kart/" target="_blank" rel="noopener">📱 Kartı Önizle</a>
+  </div>
+  <div class="form">
+    <div class="field"><label>WhatsApp / Cep</label><input id="nfcMobile"></div>
+    <div class="field"><label>Sabit Telefon</label><input id="nfcLandline"></div>
+    <div class="field full"><label>Adres</label><input id="nfcAddress"></div>
+    <div class="field full"><label>Instagram</label><input id="nfcInstagram"></div>
+    <div class="field full"><label>Kart Sloganı</label><input id="nfcSlogan"></div>
+    <div class="field"><label>Üst Etiket</label><input id="nfcBadge"></div>
+    <div class="field"><label>Web Adresi</label><input id="nfcWebsite"></div>
+  </div>
+  <div class="hint" style="margin-top:14px">Kaydettiğiniz bilgiler <b>/kart/</b> sayfasına yansır. Fiziksel NFC karta yazılan bağlantıyı değiştirmeden içerikleri güncelleyebilirsiniz.</div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px">
+    <button class="primary" id="saveNfcSettings" type="button">NFC Kart Bilgilerini Kaydet</button>
+    <span id="nfcSettingsSaved" style="display:none;color:#187f4a;font-weight:900">✓ Kaydedildi</span>
+  </div>
+</div>
+</section>
+
 <section id="settings" class="section"><div class="box"><h2>Site Ayarları</h2><div class="form">
 <div class="field"><label>WhatsApp / Cep</label><input id="settingMobile" value="0552 695 97 57"></div>
 <div class="field"><label>Sabit Telefon</label><input id="settingLandline" value="0236 238 00 66"></div>
@@ -918,6 +941,37 @@ function renderSiteSettings(){
  if(el('settingCardSlogan'))el('settingCardSlogan').value=d.cardSlogan||'';
  if(el('settingCardBadge'))el('settingCardBadge').value=d.cardBadge||'';
  if(el('settingCardWebsite'))el('settingCardWebsite').value=d.cardWebsite||'';
+}
+function renderNfcSettings(){
+ var d=siteSettingsData();
+ if(el('nfcMobile'))el('nfcMobile').value=d.mobile||'';
+ if(el('nfcLandline'))el('nfcLandline').value=d.landline||'';
+ if(el('nfcAddress'))el('nfcAddress').value=d.address||'';
+ if(el('nfcInstagram'))el('nfcInstagram').value=d.instagram||'';
+ if(el('nfcSlogan'))el('nfcSlogan').value=d.cardSlogan||'';
+ if(el('nfcBadge'))el('nfcBadge').value=d.cardBadge||'';
+ if(el('nfcWebsite'))el('nfcWebsite').value=d.cardWebsite||'';
+}
+function saveNfcSettingsNow(){
+ if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
+ var current=siteSettingsData();
+ var d=Object.assign({},current,{
+  mobile:el('nfcMobile').value.trim(),
+  landline:el('nfcLandline').value.trim(),
+  address:el('nfcAddress').value.trim(),
+  instagram:el('nfcInstagram').value.trim(),
+  cardSlogan:el('nfcSlogan').value.trim(),
+  cardBadge:el('nfcBadge').value.trim(),
+  cardWebsite:el('nfcWebsite').value.trim()
+ });
+ var btn=el('saveNfcSettings'),old=btn.textContent;btn.disabled=true;btn.textContent='Kaydediliyor...';
+ window.TSAFirebaseSite.saveSettings(d)
+  .then(function(){
+   var s=el('nfcSettingsSaved');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none'},2200)}
+   alert('NFC kart bilgileri Firebase’e kaydedildi.');
+  })
+  .catch(function(err){alert('NFC kart bilgileri kaydedilemedi: '+(err&&err.message?err.message:err));})
+  .finally(function(){btn.disabled=false;btn.textContent=old;});
 }
 function saveSiteSettingsNow(){
  if(!window.TSAFirebaseSite){alert('Firebase site bağlantısı henüz hazır değil.');return;}
@@ -1587,6 +1641,7 @@ el('bulkNextQueue').addEventListener('click',openNextBulk);
 el('clearBulk').addEventListener('click',function(){el('bulkMessage').value='';el('bulkTemplate').value='';el('bulkRecipients').innerHTML='<div class="empty">Hedef grup seçip “Listeyi Hazırla”ya basın.</div>';el('bulkCount').textContent='0 kişi';el('bulkQueueBar').style.display='none';window.__bulkRecipients=[];window.__bulkQueue=[];window.__bulkQueueIndex=0});
 if(el('saveSiteContent'))el('saveSiteContent').addEventListener('click',saveSiteContentNow);
 if(el('saveSettings'))el('saveSettings').addEventListener('click',saveSiteSettingsNow);
+if(el('saveNfcSettings'))el('saveNfcSettings').addEventListener('click',saveNfcSettingsNow);
 if(el('saveNfcCard'))el('saveNfcCard').addEventListener('click',saveNfcCardSettingsNow);
 if(el('resetSiteContent'))el('resetSiteContent').addEventListener('click',resetSiteContentNow);
 var resetHeroBtn=el('resetHero');if(resetHeroBtn)resetHeroBtn.addEventListener('click',function(){
