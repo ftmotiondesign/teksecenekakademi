@@ -260,17 +260,15 @@ if(sessionStorage.getItem('tsa_admin_session_v1')!=='1'&&localStorage.getItem('t
       <div><h2>Galeri Yönetimi</h2><small>Kurum fotoğraf ve videolarını ekleyin, düzenleyin ve silin.</small></div>
       <a class="secondary" style="text-decoration:none" href="gallery.html" target="_blank" rel="noopener">↗ Galeriyi Gör</a>
     </div>
-    <div class="hint"><b>Galeri görselleri GitHub üzerinden yayınlanır.</b><br>Önce fotoğrafı GitHub'a yükleyin, sonra aşağıdaki listeden seçin. Böylece Firebase Storage ücreti gerekmez ve tüm cihazlarda görünür.</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
-      <a class="primary" style="text-decoration:none" href="https://github.com/ftmotiondesign/teksecenekakademi/upload/main" target="_blank" rel="noopener">⬆ Fotoğraf / Video Yükle</a>
-      <button class="secondary" id="galleryRefreshMedia" type="button">↻ Medya Listesini Yenile</button>
-    </div>
-    <div class="gallery-admin-form">
+    <div class="hint"><b>Bilgisayardan doğrudan yükleme:</b> Fotoğraf veya videoyu seçip “Galeriye Ekle” dediğinizde dosya Cloudinary'ye yüklenir, bağlantısı Firebase'e kaydedilir ve tüm cihazlarda görünür.</div>
+    <div class="gallery-admin-form" style="margin-top:12px">
+      <div class="field"><label>Cloudinary Cloud Name</label><input id="galleryCloudName" placeholder="Örn. dxxxxxxx"></div>
+      <div class="field"><label>Unsigned Upload Preset</label><input id="galleryUploadPreset" placeholder="Örn. teksecenek_gallery"></div>
+      <div class="field full"><button class="secondary" id="saveGalleryCloudinary" type="button">Cloudinary Ayarlarını Kaydet</button></div>
       <div class="field"><label>Başlık</label><input id="galleryTitle" placeholder="Örn. Sınıflarımız"></div>
       <div class="field"><label>Açıklama</label><input id="galleryText" placeholder="Kısa açıklama"></div>
-      <div class="field full"><label>GitHub Medya Dosyası</label><select id="galleryMediaSelect"><option value="">Medya dosyası seçin</option></select></div>
-      <div class="field full"><label>Görsel / Video Yolu veya URL</label><input id="gallerySrc" placeholder="Listeden seçildiğinde otomatik dolar"></div>
-      <div class="field"><label>Tür</label><select id="galleryType"><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
+      <div class="field full"><label>Fotoğraf / Video Seç</label><input id="galleryFile" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"></div>
+      <div class="field"><label>Tür</label><select id="galleryType"><option value="auto">Otomatik</option><option value="image">Fotoğraf</option><option value="video">Video</option></select></div>
       <div class="field" style="align-self:end"><button class="primary" id="galleryAdd" type="button">+ Galeriye Ekle</button></div>
     </div>
     <div id="galleryUploadInfo" class="hint" style="display:none;margin-top:12px"></div>
@@ -818,26 +816,6 @@ window.addEventListener('tsa:firebase-error',function(e){console.error('Firebase
 var GALLERY_KEY='tsa_gallery_v1';
 function galleryLocal(){try{return JSON.parse(localStorage.getItem(GALLERY_KEY)||'[]')}catch(e){return[]}}
 function galleryItemUrl(x){return x&&x.src?x.src:''}
-async function loadGithubMediaList(){
- var select=el('galleryMediaSelect');if(!select)return;
- select.innerHTML='<option value="">Yükleniyor...</option>';
- try{
-  var res=await fetch('https://api.github.com/repos/ftmotiondesign/teksecenekakademi/git/trees/main?recursive=1',{headers:{'Accept':'application/vnd.github+json'}});
-  if(!res.ok)throw new Error('GitHub medya listesi alınamadı.');
-  var data=await res.json(),tree=Array.isArray(data.tree)?data.tree:[];
-  var media=tree.filter(function(x){
-   if(x.type!=='blob')return false;
-   return /\.(png|jpe?g|webp|gif|mp4|webm)$/i.test(x.path||'');
-  }).map(function(x){return x.path}).sort(function(a,b){return a.localeCompare(b,'tr')});
-  select.innerHTML='<option value="">Medya dosyası seçin</option>'+media.map(function(path){
-   return '<option value="'+esc(path)+'">'+esc(path)+'</option>';
-  }).join('');
-  if(!media.length)select.innerHTML='<option value="">Uygun medya dosyası bulunamadı</option>';
- }catch(err){
-  console.error(err);
-  select.innerHTML='<option value="">Medya listesi yüklenemedi</option>';
- }
-}
 
 async function renderGalleryAdmin(){
  var listEl=el('galleryAdminList');if(!listEl)return;
@@ -854,37 +832,69 @@ async function renderGalleryAdmin(){
   }).join('');
  }catch(err){listEl.innerHTML='<div class="empty" style="grid-column:1/-1">Galeri yüklenemedi.</div>';console.error(err)}
 }
+var GALLERY_CLOUDINARY_KEY='tsa_gallery_cloudinary_v1';
+function galleryCloudinarySettings(){
+ try{return JSON.parse(localStorage.getItem(GALLERY_CLOUDINARY_KEY)||'{}')}catch(e){return{}}
+}
+function renderGalleryCloudinarySettings(){
+ var s=galleryCloudinarySettings();
+ if(el('galleryCloudName'))el('galleryCloudName').value=s.cloudName||'';
+ if(el('galleryUploadPreset'))el('galleryUploadPreset').value=s.uploadPreset||'';
+}
+function saveGalleryCloudinarySettings(){
+ var s={cloudName:(el('galleryCloudName').value||'').trim(),uploadPreset:(el('galleryUploadPreset').value||'').trim()};
+ if(!s.cloudName||!s.uploadPreset){alert('Cloud Name ve Unsigned Upload Preset birlikte girilmeli.');return;}
+ localStorage.setItem(GALLERY_CLOUDINARY_KEY,JSON.stringify(s));
+ alert('Cloudinary ayarları kaydedildi.');
+}
+async function uploadGalleryFileToCloudinary(file){
+ var s=galleryCloudinarySettings();
+ if(!s.cloudName||!s.uploadPreset)throw new Error('Önce Cloudinary Cloud Name ve Unsigned Upload Preset bilgilerini kaydedin.');
+ if(file.size>50*1024*1024)throw new Error('Dosya çok büyük. Şimdilik en fazla 50 MB yükleyin.');
+ var fd=new FormData();
+ fd.append('file',file);
+ fd.append('upload_preset',s.uploadPreset);
+ fd.append('folder','teksecenek-galeri');
+ var res=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(s.cloudName)+'/auto/upload',{method:'POST',body:fd});
+ var data=await res.json().catch(function(){return{}});
+ if(!res.ok)throw new Error((data.error&&data.error.message)||'Cloudinary yükleme başarısız.');
+ if(!data.secure_url)throw new Error('Cloudinary dosya adresi döndürmedi.');
+ return {url:data.secure_url,resourceType:data.resource_type||''};
+}
 async function addGalleryItem(){
- var src=(el('gallerySrc').value||'').trim();
- if(!src){alert('Görsel/video yolu veya URL girin.');return}
+ var file=el('galleryFile').files&&el('galleryFile').files[0];
+ if(!file){alert('Lütfen bilgisayarınızdan bir fotoğraf veya video seçin.');return}
+ var ok=['image/png','image/jpeg','image/webp','video/mp4','video/webm'];
+ if(ok.indexOf(file.type)===-1){alert('Desteklenmeyen dosya türü. PNG, JPG, WebP, MP4 veya WebM seçin.');return}
  if(!window.TSAFirebaseGallery){alert('Firebase galeri bağlantısı henüz hazır değil.');return}
- var info=el('galleryUploadInfo');info.style.display='block';info.textContent='Firebase’e kaydediliyor...';
+ var info=el('galleryUploadInfo'),btn=el('galleryAdd'),oldText=btn.textContent;
+ info.style.display='block';info.textContent='Dosya yükleniyor...';btn.disabled=true;btn.textContent='Yükleniyor...';
  try{
+  var up=await uploadGalleryFileToCloudinary(file);
+  var selectedType=el('galleryType').value;
+  var type=selectedType==='auto'?(up.resourceType==='video'?'video':'image'):selectedType;
   await window.TSAFirebaseGallery.add({
    id:'g-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),
-   title:el('galleryTitle').value.trim()||'Galeri',
+   title:el('galleryTitle').value.trim()||file.name,
    text:el('galleryText').value.trim(),
-   type:el('galleryType').value,
-   src:src,
+   type:type,
+   src:up.url,
    createdAt:new Date().toISOString()
   });
-  el('galleryTitle').value='';el('galleryText').value='';el('gallerySrc').value='';el('galleryType').value='image';
-  info.textContent='✓ Galeri içeriği Firebase’e kaydedildi.';setTimeout(function(){info.style.display='none'},2200);
- }catch(err){console.error(err);alert('Galeri içeriği kaydedilemedi: '+(err&&err.message?err.message:err));info.style.display='none'}
-}
-if(el('galleryAdd'))el('galleryAdd').addEventListener('click',addGalleryItem);
-if(el('galleryRefreshMedia'))el('galleryRefreshMedia').addEventListener('click',loadGithubMediaList);
-if(el('galleryMediaSelect'))el('galleryMediaSelect').addEventListener('change',function(){
- var path=this.value||'';
- if(!path)return;
- el('gallerySrc').value=path;
- el('galleryType').value=/\.(mp4|webm)$/i.test(path)?'video':'image';
- if(!el('galleryTitle').value.trim()){
-  var name=path.split('/').pop().replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ');
-  el('galleryTitle').value=name;
+  el('galleryTitle').value='';el('galleryText').value='';el('galleryFile').value='';el('galleryType').value='auto';
+  info.textContent='✓ Fotoğraf/video yüklendi ve Firebase galeriye kaydedildi.';
+  setTimeout(function(){info.style.display='none'},2500);
+ }catch(err){
+  console.error(err);
+  alert('Yükleme başarısız: '+(err&&err.message?err.message:err));
+  info.style.display='none';
+ }finally{
+  btn.disabled=false;btn.textContent=oldText;
  }
-});
-loadGithubMediaList();
+}
+if(el('saveGalleryCloudinary'))el('saveGalleryCloudinary').addEventListener('click',saveGalleryCloudinarySettings);
+if(el('galleryAdd'))el('galleryAdd').addEventListener('click',addGalleryItem);
+renderGalleryCloudinarySettings();
 
 
 function closeGalleryEdit(){
@@ -1266,6 +1276,6 @@ showPage(location.hash.slice(1)||'dashboard');
 <script type="module" src="firebase-result-categories-admin.js?v=1"></script>
 <script type="module" src="firebase-simple-content-admin.js?v=1"></script>
 <script type="module" src="firebase-site-admin.js?v=5"></script>
-<script type="module" src="firebase-gallery-admin.js?v=1"></script>
+<script type="module" src="firebase-gallery-admin.js?v=2"></script>
 </body>
 </html>
