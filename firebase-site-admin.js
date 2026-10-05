@@ -1,18 +1,11 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, requireAdmin } from './firebase-core.js';
 import {
   doc, getDoc, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const SITE_CONTENT_KEY='tsa_site_content_v1';
 const HERO_KEY='tsa_hero_slides_v1';
 const SETTINGS_KEY='tsa_site_settings_v1';
-
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function')await auth.authStateReady();
-  const u=auth.currentUser;
-  if(!u || String(u.email||'').trim().toLowerCase()!==ADMIN_EMAIL)throw new Error('Yönetici Firebase oturumu bulunamadı.');
-}
 
 function emit(name,detail){window.dispatchEvent(new CustomEvent(name,{detail}));}
 
