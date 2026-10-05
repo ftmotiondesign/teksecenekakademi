@@ -1,10 +1,9 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, requireAdmin, isAdminUser } from './firebase-core.js';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {
   collection, addDoc, deleteDoc, doc, getDocs, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const LOCAL_KEY='tsa_announcements_v1';
 
 function normalize(snapshot){
@@ -31,20 +30,6 @@ async function load(){
   mirror(rows);
   return rows;
 }
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function'){
-    await auth.authStateReady();
-  }else if(!auth.currentUser){
-    await new Promise(resolve=>{
-      const stop=onAuthStateChanged(auth,()=>{ stop(); resolve(); });
-    });
-  }
-  const user=auth.currentUser;
-  if(!user) throw new Error('Yönetici Firebase oturumu bulunamadı. Lütfen yönetim girişinden tekrar giriş yapın.');
-  if(String(user.email||'').trim().toLowerCase()!==ADMIN_EMAIL) throw new Error('Bu Firebase hesabının yönetici yetkisi yok.');
-  return user;
-}
-
 async function add(head,text){
   await requireAdmin();
   await addDoc(collection(db,'announcements'),{
@@ -64,7 +49,7 @@ window.TSAFirebaseAnnouncements={load,add,remove};
 onAuthStateChanged(auth,async user=>{
   // Firebase ilk yüklemede kısa süre null dönebilir. Bu durumda admin panelinden çıkış yaptırma.
   if(!user) return;
-  if(String(user.email||'').trim().toLowerCase()!==ADMIN_EMAIL) return;
+  if(!(await isAdminUser(user))) return;
   try{ await load(); }
   catch(err){
     console.error('Firestore duyuru yükleme hatası:',err);
