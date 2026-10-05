@@ -1,4 +1,4 @@
-import { auth, db, requireAdmin, isAdminUser } from './firebase-core.js';
+import { auth, db, requireAdmin, isAdminUser } from './firebase-core.js?v=2';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {
   collection, addDoc, deleteDoc, doc, getDocs, serverTimestamp
