@@ -34,28 +34,14 @@ button{width:100%;border:0;border-radius:24px;padding:14px;background:var(--oran
 <div class="note">“Beni Hatırla” seçiliyse bu tarayıcıda yönetim oturumu korunur. Ortak bilgisayarlarda kullanmayın.</div>
 </main>
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { auth, isAdminUser } from './firebase-core.js';
 import {
-  getAuth,
   signInWithEmailAndPassword,
+  signOut,
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyDtca9HS5LONXdLjbaCNpI_9GjhYqhOaDo',
-  authDomain: 'teksecenekakademi-1f2b6.firebaseapp.com',
-  projectId: 'teksecenekakademi-1f2b6',
-  storageBucket: 'teksecenekakademi-1f2b6.firebasestorage.app',
-  messagingSenderId: '908097319502',
-  appId: '1:908097319502:web:bfbcfaa843d60a88d3491f',
-  measurementId: 'G-QJRJHJRM5V'
-};
-
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
 
 const form=document.getElementById('loginForm');
 const emailInput=document.getElementById('email');
@@ -85,7 +71,6 @@ function saveLegacySession(email,remember){
   }
 }
 
-// Eski local/session kayıtları tek başına giriş sayılmamalı.
 sessionStorage.removeItem('tsa_admin_session_v1');
 sessionStorage.removeItem('tsa_admin_email');
 localStorage.removeItem('tsa_admin_remember_v1');
@@ -103,32 +88,30 @@ form.addEventListener('submit',async e=>{
   loginBtn.textContent='Giriş yapılıyor...';
 
   try{
-    // Firebase oturumunu yönetime geçişte kaybetmemek için kalıcı tutuyoruz.
-    await setPersistence(auth,browserLocalPersistence);
+    await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);
     const credential=await signInWithEmailAndPassword(auth,email,password);
 
-    const signedInEmail=String(credential.user?.email||'').trim().toLowerCase();
-    if(signedInEmail!==ADMIN_EMAIL){
-      await auth.signOut();
-      showError('Giriş başarılı ancak bu Firebase hesabına yönetici yetkisi verilmemiş.');
+    if(!(await isAdminUser(credential.user))){
+      await signOut(auth);
+      showError('Bu hesaba yönetici yetkisi verilmemiş veya hesap pasif durumda.');
       return;
     }
 
     saveLegacySession(email,remember);
-    location.href='admin.html?v=83#dashboard';
+    location.href='admin.html?v=84#dashboard';
   }catch(err){
     console.error('Firebase giriş hatası:',err);
     const code=err && err.code ? err.code : '';
     let text='Firebase giriş hatası.';
-    if(code==='auth/invalid-credential') text='Firebase bu e-posta/şifre bilgisini kabul etmedi. Authentication\u00a0> Kullanıcılar bölümünde bu e-postanın kayıtlı olduğunu ve şifrenin doğru olduğunu kontrol edin.';
-    else if(code==='auth/user-not-found') text='Bu e-posta ile Firebase Authentication kullanıcısı bulunamadı.';
+    if(code==='auth/invalid-credential') text='E-posta veya şifre hatalı.';
+    else if(code==='auth/user-not-found') text='Bu e-posta ile kullanıcı bulunamadı.';
     else if(code==='auth/wrong-password') text='Şifre hatalı.';
     else if(code==='auth/invalid-email') text='E-posta adresi geçersiz.';
     else if(code==='auth/operation-not-allowed') text='Firebase\'de E-posta/Şifre giriş yöntemi etkin değil.';
     else if(code==='auth/too-many-requests') text='Çok fazla giriş denemesi yapıldı. Bir süre sonra tekrar deneyin.';
     else if(code==='auth/network-request-failed') text='Firebase bağlantısı kurulamadı. İnternet bağlantısını kontrol edin.';
     else if(code==='auth/unauthorized-domain') text='Bu web adresi Firebase Authentication için yetkilendirilmemiş.';
-    else if(code==='auth/api-key-not-valid.-please-pass-a-valid-api-key.') text='Firebase API anahtarı geçersiz görünüyor.';
+    else if(code==='permission-denied') text='Yönetici yetkisi doğrulanamadı. Firebase güvenlik kurallarını kontrol edin.';
     else if(code) text='Firebase hatası: '+code;
     showError(text);
   }finally{
