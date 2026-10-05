@@ -45,7 +45,7 @@ footer{background:var(--dark);color:#fff;padding:52px 0 22px}.footer-grid{displa
 .exam-fast-form input,.exam-fast-form select{width:100%;border:1px solid #dddfea;border-radius:11px;padding:12px;background:#fff;color:#292557}
 .exam-choice-row{grid-column:1/-1;display:flex;gap:9px;flex-wrap:wrap}
 .exam-choice{display:flex;align-items:center;gap:8px;border:1px solid #e1e3ed;background:#f6f7fb;color:#292557;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;user-select:none}
-.exam-choice input{width:18px;height:18px;accent-color:#f28a00}
+.exam-choice input{width:18px;height:18px;accent-color:#f28a00}.exam-choice span{display:flex;flex-direction:column;line-height:1.15}.exam-choice small{display:block;margin-top:4px;color:#8a8e9c;font-size:10px;font-weight:800;white-space:nowrap}
 .exam-fast-submit{grid-column:1/-1;border:0;background:#f28a00;color:#fff;border-radius:12px;padding:13px 18px;font-weight:900;cursor:pointer}
 .exam-fast-submit:hover{background:#d97700}
 .exam-fast-message{grid-column:1/-1;display:none;border-radius:11px;padding:10px 12px;font-size:13px;font-weight:800;background:#e9f8f0;color:#187f4a}
@@ -96,9 +96,9 @@ body.exam-modal-open{overflow:hidden}
         <option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option>
       </select>
       <div class="exam-choice-row">
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"> TYT</label>
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"> LGS</label>
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="YKS"> YKS</label>
+        <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"><span>TYT<small>Son başvuru: 9 Ekim</small></span></label>
+        <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"><span>LGS<small>Son başvuru: 16 Ekim</small></span></label>
+        <label class="exam-choice"><input type="checkbox" name="sinav" value="YKS"><span>YKS<small>Son başvuru: 9 Ekim</small></span></label>
       </div>
       <button class="exam-fast-submit" type="submit">Hemen Kayıt Ol</button>
       <div class="exam-fast-message" aria-live="polite"></div>
