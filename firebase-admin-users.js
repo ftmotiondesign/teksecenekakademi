@@ -15,7 +15,7 @@ import {
   setDoc,
   updateDoc
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import { auth, db, firebaseConfig, OWNER_EMAIL, requireAdmin } from './firebase-core.js';
+import { auth, db, firebaseConfig, OWNER_EMAIL, requireAdmin } from './firebase-core.js?v=2';
 
 const SECONDARY_APP_NAME='tsa-admin-creator';
 
