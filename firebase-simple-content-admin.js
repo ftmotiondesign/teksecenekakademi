@@ -1,4 +1,4 @@
-import { auth, db, storage, requireAdmin } from './firebase-core.js';
+import { auth, db, storage, requireAdmin } from './firebase-core.js?v=2';
 import {
   addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
