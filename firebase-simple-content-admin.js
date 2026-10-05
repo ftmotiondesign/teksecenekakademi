@@ -1,21 +1,15 @@
-import { auth, db, storage } from './firebase-core.js';
+import { auth, db, storage, requireAdmin } from './firebase-core.js';
 import {
   addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const MAP={
   teacher:{collection:'teachers',local:'tsa_teachers_v1'},
   success:{collection:'success',local:'tsa_success_v1'},
   review:{collection:'reviews',local:'tsa_reviews_v1'}
 };
 
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function')await auth.authStateReady();
-  const u=auth.currentUser;
-  if(!u || String(u.email||'').trim().toLowerCase()!==ADMIN_EMAIL)throw new Error('Yönetici Firebase oturumu bulunamadı.');
-}
 function mirror(type,rows){
   const cfg=MAP[type];
   localStorage.setItem(cfg.local,JSON.stringify(rows));
