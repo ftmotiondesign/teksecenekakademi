@@ -1,9 +1,8 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, requireAdmin } from './firebase-core.js';
 import {
   addDoc, collection, deleteDoc, doc, getDocs, updateDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const LOCAL_KEY='tsa_result_categories_v1';
 const DEFAULTS=[
   {name:'LGS',active:true},
@@ -11,11 +10,6 @@ const DEFAULTS=[
   {name:'Türkiye Geneli Deneme',active:true}
 ];
 
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function')await auth.authStateReady();
-  const u=auth.currentUser;
-  if(!u || String(u.email||'').trim().toLowerCase()!==ADMIN_EMAIL)throw new Error('Yönetici Firebase oturumu bulunamadı.');
-}
 function mirror(rows){
   localStorage.setItem(LOCAL_KEY,JSON.stringify(rows));
   window.dispatchEvent(new CustomEvent('tsa:result-categories-updated',{detail:rows}));
