@@ -2,9 +2,20 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    function isAdmin() {
+    function isOwner() {
       return request.auth != null
         && request.auth.token.email == 'ftmotiondesign@gmail.com';
+    }
+
+    function hasAdminRecord() {
+      return request.auth != null
+        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.active == true
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.email == request.auth.token.email;
+    }
+
+    function isAdmin() {
+      return isOwner() || hasAdminRecord();
     }
 
     match /site/hero/{fileName} {
