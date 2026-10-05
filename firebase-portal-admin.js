@@ -1,9 +1,8 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, requireAdmin } from './firebase-core.js';
 import {
   collection, deleteDoc, doc, getDocs, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const APP_KEY='tsa_applications_v1';
 const RESULT_KEY='tsa_results_v1';
 
@@ -81,11 +80,6 @@ function matchingResults(app,all){
     if(no && String(r.studentNo||'').trim()===no)return true;
     return name && String(r.name||'').trim().toLocaleLowerCase('tr-TR')===name;
   }).map(publicResult);
-}
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function')await auth.authStateReady();
-  const u=auth.currentUser;
-  if(!u || String(u.email||'').trim().toLowerCase()!==ADMIN_EMAIL)throw new Error('Yönetici Firebase oturumu bulunamadı.');
 }
 let timer=null;
 async function syncNow(){
