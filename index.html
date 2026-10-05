@@ -90,11 +90,6 @@ body.exam-modal-open{overflow:hidden}
       <input name="ad" required placeholder="Öğrenci Ad Soyad">
       <input name="veliAd" required placeholder="Veli Ad Soyad">
       <input name="telefon" type="tel" inputmode="numeric" required maxlength="14" data-phone-mask placeholder="Veli Telefonu 05xx xxx xx xx">
-      <select name="sinif" required>
-        <option value="">Sınıf Seçin</option>
-        <option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option>
-        <option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option>
-      </select>
       <div class="exam-choice-row">
         <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"><span>TYT<small>Son başvuru: 9 Ekim</small></span></label>
         <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"><span>LGS<small>Son başvuru: 16 Ekim</small></span></label>
@@ -676,11 +671,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
       <input name="ad" required placeholder="Öğrenci Ad Soyad">
       <input name="veliAd" required placeholder="Veli Ad Soyad">
       <input name="telefon" type="tel" inputmode="numeric" required maxlength="14" data-phone-mask placeholder="Veli Telefonu 05xx xxx xx xx">
-      <select name="sinif" required>
-        <option value="">Sınıf Seçin</option>
-        <option>7. Sınıf</option><option>8. Sınıf</option><option>9. Sınıf</option>
-        <option>10. Sınıf</option><option>11. Sınıf</option><option>12. Sınıf</option><option>Mezun</option>
-      </select>
       <div class="exam-choice-row">
         <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"> TYT</label>
         <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"> LGS</label>
@@ -733,7 +723,7 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
         veliAd:String(fd.get('veliAd')||'').trim(),
         ogrenciTelefon:'',
         telefon:String(fd.get('telefon')||'').trim(),
-        sinif:String(fd.get('sinif')||''),
+        sinif:'',
         program:exams.join(' + '),
         ilce:'',okul:'',
         not:'Seçilen sınavlar: '+exams.join(', '),
