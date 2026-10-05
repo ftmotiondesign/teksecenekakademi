@@ -1,9 +1,8 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, requireAdmin } from './firebase-core.js';
 import {
   collection, deleteDoc, doc, getDoc, getDocs, setDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const LOCAL_KEY='tsa_gallery_v1';
 const DEFAULTS=[
   {id:'g1',type:'image',src:'bina.png',title:'Tek Seçenek Akademi',text:'Kurum binamız',createdAt:'2026-01-03T00:00:00.000Z'},
@@ -11,11 +10,6 @@ const DEFAULTS=[
   {id:'g3',type:'image',src:'Başlıksız-2.png',title:'Eğitim Ortamımız',text:'Kurum görseli',createdAt:'2026-01-01T00:00:00.000Z'}
 ];
 
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function')await auth.authStateReady();
-  const u=auth.currentUser;
-  if(!u || String(u.email||'').trim().toLowerCase()!==ADMIN_EMAIL)throw new Error('Yönetici Firebase oturumu bulunamadı.');
-}
 function mirror(rows){
   localStorage.setItem(LOCAL_KEY,JSON.stringify(rows));
   window.dispatchEvent(new CustomEvent('tsa:gallery-updated',{detail:rows}));
