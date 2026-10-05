@@ -1,19 +1,11 @@
-import { auth, db } from './firebase-core.js';
+import { auth, db, requireAdmin } from './firebase-core.js';
 import {
   collection, deleteDoc, doc, getDocs, setDoc, updateDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-const ADMIN_EMAIL='ftmotiondesign@gmail.com';
 const LOCAL_KEY='tsa_results_v1';
 const MIGRATION_KEY='tsa_results_migrated_v1';
 
-async function requireAdmin(){
-  if(typeof auth.authStateReady==='function') await auth.authStateReady();
-  const user=auth.currentUser;
-  if(!user) throw new Error('Yönetici Firebase oturumu bulunamadı.');
-  if(String(user.email||'').trim().toLowerCase()!==ADMIN_EMAIL) throw new Error('Bu Firebase hesabının yönetici yetkisi yok.');
-  return user;
-}
 function cleanResult(x,id){
   return {
     id:String(id||x.id||''),
