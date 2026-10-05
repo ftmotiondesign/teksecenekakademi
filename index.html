@@ -82,18 +82,17 @@ body.exam-modal-open{overflow:hidden}
   <div class="container exam-quick-grid">
     <div class="exam-quick-copy">
       <small>HEMEN KAYIT OL</small>
-      <h2>TYT • LGS • YKS Başvuru</h2>
+      <h2>TYT • YKS • LGS Deneme Sınavı Başvurusu</h2>
       <p>İstediğiniz sınavları aynı anda seçebilirsiniz. Bilgilerinizi bırakın, Tek Seçenek Akademi sizinle iletişime geçsin.</p>
-      <button class="exam-open-popup" type="button" data-exam-open>Formu Popup Olarak Aç</button>
     </div>
     <form class="exam-fast-form" data-exam-form>
       <input name="ad" required placeholder="Öğrenci Ad Soyad">
       <input name="veliAd" required placeholder="Veli Ad Soyad">
       <input name="telefon" type="tel" inputmode="numeric" required maxlength="14" data-phone-mask placeholder="Veli Telefonu 05xx xxx xx xx">
       <div class="exam-choice-row">
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"><span>TYT<small>Son başvuru: 9 Ekim</small></span></label>
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"><span>LGS<small>Son başvuru: 16 Ekim</small></span></label>
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="YKS"><span>YKS<small>Son başvuru: 9 Ekim</small></span></label>
+        <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"><span>TYT Deneme Sınavı<small>Son başvuru: 9 Ekim</small></span></label>
+        <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"><span>LGS Deneme Sınavı<small>Son başvuru: 16 Ekim</small></span></label>
+        <label class="exam-choice"><input type="checkbox" name="sinav" value="YKS"><span>YKS Deneme Sınavı<small>Son başvuru: 9 Ekim</small></span></label>
       </div>
       <button class="exam-fast-submit" type="submit">Hemen Kayıt Ol</button>
       <div class="exam-fast-message" aria-live="polite"></div>
@@ -664,7 +663,7 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
     <button class="exam-modal-close" type="button" data-exam-close aria-label="Kapat">×</button>
     <div class="exam-modal-head">
       <small>TEK SEÇENEK AKADEMİ • MANİSA</small>
-      <h2 id="examModalTitle">TYT • LGS • YKS İçin Hemen Kayıt Ol</h2>
+      <h2 id="examModalTitle">TYT • YKS • LGS Deneme Sınavı İçin Hemen Kayıt Ol</h2>
       <p>Birden fazla sınav seçebilirsiniz. Örneğin TYT ve YKS'yi birlikte işaretleyebilirsiniz.</p>
     </div>
     <form class="exam-fast-form" data-exam-form>
