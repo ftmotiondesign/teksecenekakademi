@@ -45,7 +45,9 @@ async function seed(type,rows){
 async function load(type){
   await requireAdmin();
   let rows=await read(type);
-  rows=await seed(type,rows);
+  // Firebase is authoritative: never recreate deleted records from stale browser storage.
+  // Existing records remain available directly from Firestore.
+
   mirror(type,rows);
   return rows;
 }
