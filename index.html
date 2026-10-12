@@ -428,7 +428,7 @@ function loadManagedContent(){
  if(teachers.length){document.getElementById('teacherGrid').innerHTML=teachers.map(x=>{
   const photo=x.image?'<img class="avatar" src="'+escapeHtml(x.image)+'" alt="'+escapeHtml(x.head||'Öğretmen')+'">':'<div class="avatar">TSA</div>';
   return '<div class="teacher">'+photo+'<h3>'+escapeHtml(x.head||'')+'</h3><p class="teacher-field">'+escapeHtml(x.text||'')+'</p></div>';
- }).join('')}
+ }).join('')}else{document.getElementById('teacherGrid').innerHTML='';}
  if(success.length){document.getElementById('successGrid').innerHTML=success.map(x=>'<div class="success"><strong>★</strong><h3>'+escapeHtml(x.head)+'</h3><p>'+escapeHtml(x.text)+'</p></div>').join('')}
  if(reviews.length){document.getElementById('reviewGrid').innerHTML=reviews.map(x=>{
   const rating=Math.max(0,Math.min(5,Math.round(Number(x.rating)||0)));
