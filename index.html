@@ -50,19 +50,8 @@ footer{background:var(--dark);color:#fff;padding:52px 0 22px}.footer-grid{displa
 .exam-fast-submit:hover{background:#d97700}
 .exam-fast-message{grid-column:1/-1;display:none;border-radius:11px;padding:10px 12px;font-size:13px;font-weight:800;background:#e9f8f0;color:#187f4a}
 .exam-fast-message.show{display:block}
-.exam-open-popup{display:inline-flex;margin-top:12px;border:1px solid #ffffff55;background:#ffffff12;color:#fff;border-radius:22px;padding:10px 15px;font-weight:900;cursor:pointer}
-.exam-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px;background:#0e0b2dbd;backdrop-filter:blur(5px)}
-.exam-modal.show{display:flex}
-.exam-modal-card{width:min(640px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 30px 80px #0005;position:relative}
-.exam-modal-close{position:absolute;right:14px;top:14px;width:38px;height:38px;border:0;border-radius:50%;background:#f1f2f6;color:#292557;font-size:22px;font-weight:900;cursor:pointer}
-.exam-modal-head{padding-right:44px;margin-bottom:16px}
-.exam-modal-head small{color:#f28a00;font-weight:900;letter-spacing:1px}
-.exam-modal-head h2{margin:7px 0 7px;font-size:30px;color:#292557}
-.exam-modal-head p{margin:0;color:#6c7080;line-height:1.5}
-.exam-modal .exam-fast-form{grid-template-columns:1fr 1fr;padding:0;box-shadow:none}
-body.exam-modal-open{overflow:hidden}
 @media(max-width:900px){.exam-quick-grid{grid-template-columns:1fr}.exam-fast-form{grid-template-columns:1fr 1fr}.exam-fast-form .exam-choice-row,.exam-fast-form .exam-fast-submit,.exam-fast-form .exam-fast-message{grid-column:1/-1}}
-@media(max-width:600px){.exam-quick{padding:18px 0}.exam-fast-form,.exam-modal .exam-fast-form{grid-template-columns:1fr}.exam-fast-form>*{grid-column:1!important}.exam-modal-card{padding:20px 16px}.exam-modal-head h2{font-size:25px}.exam-choice-row{display:grid;grid-template-columns:repeat(3,1fr)}.exam-choice{justify-content:center;padding:10px 6px}}
+@media(max-width:600px){.exam-quick{padding:18px 0}.exam-fast-form{grid-template-columns:1fr}.exam-fast-form>*{grid-column:1!important}.exam-choice-row{display:grid;grid-template-columns:repeat(3,1fr)}.exam-choice{justify-content:center;padding:10px 6px}}
 
 </style>
 </head>
@@ -658,47 +647,8 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
 })();
 </script>
 
-<div class="exam-modal" id="examQuickModal" aria-hidden="true">
-  <div class="exam-modal-card" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
-    <button class="exam-modal-close" type="button" data-exam-close aria-label="Kapat">×</button>
-    <div class="exam-modal-head">
-      <small>TEK SEÇENEK AKADEMİ • MANİSA</small>
-      <h2 id="examModalTitle">TYT • YKS • LGS Deneme Sınavı İçin Hemen Kayıt Ol</h2>
-      <p>Türkiye genelindeki sıralamanı gör ve sınava bir adım daha hazır ol.</p>
-    </div>
-    <form class="exam-fast-form" data-exam-form>
-      <input name="ad" required placeholder="Öğrenci Ad Soyad">
-      <input name="veliAd" required placeholder="Veli Ad Soyad">
-      <input name="telefon" type="tel" inputmode="numeric" required maxlength="14" data-phone-mask placeholder="Veli Telefonu 05xx xxx xx xx">
-      <div class="exam-choice-row">
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="TYT"><span>TYT Deneme Sınavı<small>Son başvuru: 9 Ekim</small></span></label>
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="YKS"><span>YKS Deneme Sınavı<small>Son başvuru: 9 Ekim</small></span></label>
-        <label class="exam-choice"><input type="checkbox" name="sinav" value="LGS"><span>LGS Deneme Sınavı<small>Son başvuru: 16 Ekim</small></span></label>
-      </div>
-      <button class="exam-fast-submit" type="submit">Başvuruyu Gönder</button>
-      <div class="exam-fast-message" aria-live="polite"></div>
-    </form>
-  </div>
-</div>
-
-
 <script data-exam-quick-registration="1">
 (function(){
-  const modal=document.getElementById('examQuickModal');
-  function openModal(){
-    if(!modal)return;
-    modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.classList.add('exam-modal-open');
-  }
-  function closeModal(){
-    if(!modal)return;
-    modal.classList.remove('show');modal.setAttribute('aria-hidden','true');document.body.classList.remove('exam-modal-open');
-    try{sessionStorage.setItem('tsa_exam_popup_seen','1')}catch(e){}
-  }
-  document.querySelectorAll('[data-exam-open]').forEach(b=>b.addEventListener('click',openModal));
-  document.querySelectorAll('[data-exam-close]').forEach(b=>b.addEventListener('click',closeModal));
-  if(modal)modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-
   function makeQuickNo(){
     const d=new Date(),p=String(d.getFullYear()).slice(-2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
     return 'TSA-'+p+'-'+Math.floor(1000+Math.random()*9000);
@@ -741,7 +691,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
         msg.textContent='Başvurunuz alındı. Takip No: '+app.basvuruNo;
         msg.classList.add('show');
         form.reset();
-        if(form.closest('.exam-modal'))setTimeout(closeModal,2200);
       }catch(err){
         console.error('Hızlı kayıt gönderme hatası:',err);
         msg.textContent='Başvuru gönderilemedi. Lütfen tekrar deneyin.';
@@ -752,9 +701,6 @@ document.getElementById('siteLogo').addEventListener('click',e=>{e.preventDefaul
     });
   });
 
-  setTimeout(()=>{
-    try{if(!sessionStorage.getItem('tsa_exam_popup_seen'))openModal()}catch(e){openModal()}
-  },1600);
 })();
 </script>
 
